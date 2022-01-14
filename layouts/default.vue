@@ -68,7 +68,7 @@
       <v-toolbar-title
         class="px-4 black--text"
         style="cursor: pointer; font-size: 16px"
-        @click="route('reference_code')"
+        @click="route('status')"
         ><v-icon class="pb-1">mdi-plus</v-icon> Status</v-toolbar-title
       >
     </v-app-bar>
