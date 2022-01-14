@@ -169,7 +169,7 @@ export default {
         this.$router.push("/");
         return;
       }
-      window.location.href = name;
+      this.$router.push("/"+name);
     },
   },
 };

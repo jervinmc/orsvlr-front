@@ -96,7 +96,7 @@ export default {
         if(this.users.username=='admin'){
             if(this.users.password=='adminadmin'){
                 localStorage.setItem('isAdmin','yes')
-                window.location.href="/dashboard"
+                window.location.href="/admin/book"
             }
         }
       try {
