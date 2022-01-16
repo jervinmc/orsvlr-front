@@ -7,11 +7,18 @@
     />
     <div class="text-h4">Status</div>
     <div class="pa-16">
-      <v-text-field
-        outlined
-        v-model="code"
-        @keyup.enter="searchCode"
-      ></v-text-field>
+      <v-row>
+        <v-col cols="12">
+          <v-text-field
+            outlined
+            placeholder="Enter Code"
+            v-model="code"
+            @keyup.enter="searchCode"
+          ></v-text-field>
+             <v-btn depressed color="#6609af" dark>Search Code </v-btn>
+        </v-col>
+        
+      </v-row>
     </div>
     <v-row class="pa-5" v-if="status != ''">
       <v-col align="start">
@@ -21,7 +28,9 @@
         <div>Email: {{ email }}</div>
         <div>Reservation Type : {{ reservation_type }}</div>
         <div>Reference Code : {{ code }}</div>
-        <div>Remaining Balance : {{ total_price }}</div>
+        <div>Remaining Balance : {{ formatPrice(remaining_balance) }}</div>
+         <div>To Pay : {{ formatPrice(to_pay) }}</div>
+         <div>Total Price : {{ formatPrice(total_price) }}</div>
         <v-row>
           <v-col cols="auto">
             <div>Reservation Information :</div>
@@ -78,7 +87,7 @@
 
       <v-col>
         <div>TIME REMAINING</div>
-        <div>{{remaining}} Minutes</div>
+        <div>{{ 0 > remaining ? 0 : remaining }} Minutes</div>
         <div class="red--text">Reminder</div>
         <div>
           If Duration of time count to 00:00 <br />
@@ -90,12 +99,13 @@
 </template>
 
 <script>
-import moment from 'moment';
+import moment from "moment";
 import Confirmation from "./Confirmation.vue";
 export default {
   components: { Confirmation },
   data() {
     return {
+      remaining_balance:0,
       code: "",
       name: "",
       to_pay: "",
@@ -109,32 +119,44 @@ export default {
       date_start: "",
       contact_number: "",
       img_holder: "",
-      remaining:'',
+      remaining: "",
       image: "",
       id: "",
       buttonLoad: false,
     };
   },
-  created(){
+  created() {
     //   this.getMinutes()
   },
   methods: {
-           formatDate(val){
-      return moment(String(val)).format('YYYY-MM-DD HH:mm')
+      formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
-    timeRemaining(val){
+    formatDate(val) {
+      return moment(String(val)).format("YYYY-MM-DD HH:mm");
+    },
+    timeRemaining(val) {
       var today = new Date();
-      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-      var time = today.getHours() + ":" + today.getMinutes()
-      var dateTime = date+' '+time;
-     var  diff= Math.abs(new Date(moment(String(val)).format('YYYY/MM/DD HH:mm')) - new Date(moment(String(dateTime)).format('YYYY/MM/DD HH:mm')));
-      return Math.floor((diff/1000)/60)
+      var date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes();
+      var dateTime = date + " " + time;
+      var diff = Math.abs(
+        new Date(moment(String(val)).format("YYYY/MM/DD HH:mm")) -
+          new Date(moment(String(dateTime)).format("YYYY/MM/DD HH:mm"))
+      );
+      return Math.floor(diff / 1000 / 60);
     },
     getMinutes(time) {
       var today = new Date();
-      alert(today)
-    //   var Christmas = new Date(today.getFullYear() + "-12-25");
-      var diffMs = Date('2022-01-16') - today; // milliseconds between now & Christmas
+      alert(today);
+      //   var Christmas = new Date(today.getFullYear() + "-12-25");
+      var diffMs = Date("2022-01-16") - today; // milliseconds between now & Christmas
       var diffDays = Math.floor(diffMs / 86400000); // days
       var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
       var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
@@ -212,6 +234,7 @@ export default {
             console.log(res);
             this.name = res.data[0].firstname + " " + res.data[0].lastname;
             this.total_price = res.data[0].price;
+            this.remaining_balance = res.data[0].price -  res.data[0].to_pay;
             this.status = res.data[0].status;
             this.reservation_package = res.data[0].package;
             this.email = res.data[0].email;
@@ -221,7 +244,9 @@ export default {
             this.to_pay = res.data[0].to_pay;
             this.date_start = res.data[0].date_start;
             this.id = res.data[0].id;
-            this.remaining =  60-this.timeRemaining(this.formatDate(res.data[0].transaction_date))
+            this.remaining =
+              60 -
+              this.timeRemaining(this.formatDate(res.data[0].transaction_date));
           });
       } catch (error) {
         alert(error);

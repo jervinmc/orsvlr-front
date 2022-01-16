@@ -32,9 +32,9 @@
             <div align="center" class="pt-10">
               Remaining Balance: {{items.price-items.to_pay}}
             </div>
-            <div align="center" class="pt-10">
+            <!-- <div align="center" class="pt-10">
               Time Remaining: {{items.remaining}} Minutes
-            </div>
+            </div> -->
             <div align="center" class="pt-10">
               Total Price: {{items.price}}
             </div>

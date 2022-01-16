@@ -17,34 +17,10 @@
       </v-col>
       <v-col>
         <div class="text-h6">{{i.package}}</div>
-        <!-- <v-row>
-          <v-col cols="auto">
-            <v-icon> mdi-arrow-right </v-icon>
-          </v-col>
-          <v-col>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="auto">
-            <v-icon> mdi-arrow-right </v-icon>
-          </v-col>
-          <v-col>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          </v-col>
-        </v-row>
-        <v-row class="mb-10">
-          <v-col cols="auto">
-            <v-icon> mdi-arrow-right </v-icon>
-          </v-col>
-          <v-col>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          </v-col>
-        </v-row> -->
         <div>
           {{i.descriptions}}
         </div>
-        <div>Php {{i.price}}/ per night</div>
+        <div>Php {{formatPrice(i.price)}}/ per night</div>
         <div class="pt-5">
           <v-btn depressed color="#6609af" dark @click="route"> Book now ! </v-btn>
         </div>
@@ -65,6 +41,10 @@ export default {
           this.loadData()
       },
   methods: {
+      formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
     route(){
         this.$router.push('/book')
     },

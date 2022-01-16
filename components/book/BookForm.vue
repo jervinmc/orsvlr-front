@@ -72,13 +72,13 @@
                   <div>Contact Number<span class="red--text">*</span></div>
                   <div>
                     <v-text-field
-                      :counter="12"
+                      :counter="11"
                       outlined
                       @keypress="typeNumber"
                       v-model="book.contact_number"
                       :error-messages="
                         isExceedText
-                          ? 'Maximum number of 12'
+                          ? 'Must be 11 numbers'
                           : isErrorContactNumber
                           ? 'this field is required'
                           : false
@@ -160,6 +160,7 @@
                         <v-date-picker
                           @change="changeDate"
                           v-model="date"
+
                           :allowed-dates="disablePastDates"
                           no-title
                       
@@ -365,13 +366,16 @@ export default {
   methods: {
 
     timestamp() {
-    const today = new Date();
-    const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
-    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    const timestamp = date + ' ' + time;
+      var today = new Date();
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes()
+      var dateTime = date+' '+time;
   
-    
-    return timestamp;
+    // const today = new Date();
+    // const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    // const timestamp = date + ' ' + time;
+    return dateTime;
   },
    formatDate(val){
       return moment(String(val)).format('YYYY-MM-DD hh:mm')
@@ -389,7 +393,7 @@ export default {
       if (this.book.contact_number == null) {
         this.isErrorContactNumber = true;
         return;
-      } else if (this.book.contact_number.length > 12) {
+      } else if (this.book.contact_number.length >= 11) {
         this.isExceedText = true;
         return;
       } else {
@@ -411,7 +415,7 @@ export default {
     },
     disablePastDates(val) {
       console.log(new Date().toISOString().substr(0, 10))
-       return val >= new Date().toISOString().substr(0, 10) && !this.confirmedDates.some(item=>{return item==val})
+       return val >= new Date().toISOString().substr(0, 10) && !this.confirmedDates.some(item=>{return item==val}) 
     },
 
     async confirm() {
@@ -437,7 +441,7 @@ export default {
         form_data.append("status", "To Pay");
         form_data.append("service_type", this.service_type);
         form_data.append("subtype",this.book.pool_type);
-        form_data.append("transaction_date",this.formatDate(this.timestamp()));
+        form_data.append("transaction_date",this.timestamp());
         form_data.append("contact_number", this.book.contact_number);
         const response = await this.$axios
           .post("/book/", form_data, {
@@ -497,8 +501,9 @@ export default {
     changeDate() {
     this.packageMapper()
     this.confirmedDates=[]
+    console.warn(this.items)
       this.items.map(item=>{
-        if(this.date==item.date_start && item.status=='confirmed'){
+        if((this.date==item.date_start && item.status=='confirmed') || (this.date==item.date_start && item.status=='To Pay' ) || (this.date==item.date_start && item.status=='pending') ){
           for(let x in this.package_list){
             if(item.package==this.package_list[x]){
                 this.package_list.splice(x,1)

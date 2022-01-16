@@ -30,7 +30,7 @@
             >
               <v-row class="tab-contents justify-start ml-6">
                 <v-icon class="mr-2 action-icons"
-                  >mdi-account-multiple-outline</v-icon
+                  >mdi-cash</v-icon
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
@@ -45,7 +45,7 @@
             >
               <v-row class="tab-contents justify-start ml-6">
                 <v-icon class="mr-2 action-icons"
-                  >mdi-account-multiple-outline</v-icon
+                  >mdi -account-clock</v-icon
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
@@ -57,10 +57,10 @@
               :class="active_page == 2 ? 'tab active pa-5' : 'tab pa-5'"
               align="center"
               @click="active_page = 2"
-            >
+            > 
               <v-row class="tab-contents justify-start ml-6">
                 <v-icon class="mr-2 action-icons"
-                  >mdi-format-list-bulleted</v-icon
+                  >mdi-marker-cancel</v-icon
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
@@ -75,7 +75,7 @@
             >
               <v-row class="tab-contents justify-start ml-6">
                 <v-icon class="mr-2 action-icons"
-                  >mdi-format-list-bulleted</v-icon
+                  >mdi-check-circle</v-icon
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
@@ -90,7 +90,7 @@
             >
               <v-row class="tab-contents justify-start ml-6">
                 <v-icon class="mr-2 action-icons"
-                  >mdi-format-list-bulleted</v-icon
+                  >mdi-close-circle</v-icon
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
@@ -105,7 +105,7 @@
             >
               <v-row class="tab-contents justify-start ml-6">
                 <v-icon class="mr-2 action-icons"
-                  >mdi-format-list-bulleted</v-icon
+                  >mdi-account-cancel</v-icon
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
@@ -113,7 +113,22 @@
                 >
               </v-row>
             </v-col>
-            <v-col></v-col>
+             <v-col
+              :class="active_page == 6 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 6"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-timer-sand-complete</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >Completed</b
+                >
+              </v-row>
+            </v-col>
+
           </v-row>
         </v-container>
        
@@ -148,7 +163,7 @@
       </template>
       <template v-slot:[`item.remaining`]="{ item }">
         <div>
-          {{60-timeRemaining(item.transaction_date,item)}} Minutes
+          {{0>(60-timeRemaining(item.transaction_date,item)) ? 0 :(60-timeRemaining(item.transaction_date,item)) }} Minutes
         </div>
       </template>
        <template #[`item.price`]="{ item }">
@@ -189,7 +204,7 @@
                 <v-list-item-title>Cofirm</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending'">
+            <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending' || item.status=='To Pay'">
               <v-list-item-content>
                 <v-list-item-title>Reject</v-list-item-title>
               </v-list-item-content>
@@ -312,6 +327,9 @@ export default {
       return moment(String(val)).format('YYYY-MM-DD HH:mm')
     },
     timeRemaining(val,status){
+      if(status==undefined){
+        return
+      }
       var today = new Date();
       var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
       var time = today.getHours() + ":" + today.getMinutes()
@@ -329,9 +347,9 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     getColorStatus(item) {
-      if (item == "Rejected") {
+      if (item == "rejected") {
         return "background-color:#FFCCCC;border-radius:15px;padding:7px; width:150px; color: #344557;";
-      } else if (item == "confirmed") {
+      } else if (item == "confirmed") { 
         return "background-color:#CCFFCE;border-radius:15px;padding:7px; width:150px; color: #344557;";
       } else if (item == "Request For Cancellation") {
         return "background-color:#CCEBFF;border-radius:15px;padding:7px; width:150px; color: #344557;";
@@ -342,6 +360,9 @@ export default {
       }
       else if (item == "To Pay") {
         return "border-radius:15px;padding:7px; width:150px; color: green;";
+      }
+       else if (item == "Completed") {
+        return "border-radius:15px;padding:7px; width:150px; color: yellow;";
       }
     },
     confirmItem(val) {

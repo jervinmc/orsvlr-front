@@ -14,7 +14,7 @@
             <v-col>
                 <v-btn color="success" text @click="logout"> Logout </v-btn>
             </v-col>
-        </v-row>
+        </v-row>  
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -37,13 +37,13 @@
         class="px-4 black--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('pools')"
-        ><v-icon class="pb-1">mdi-information</v-icon> Pools</v-toolbar-title
+        ><v-icon class="pb-1">mdi-pool</v-icon> Pools</v-toolbar-title
       >
       <v-toolbar-title
         class="px-4 black--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('events')"
-        ><v-icon class="pb-1">mdi-account</v-icon>Events</v-toolbar-title
+        ><v-icon class="pb-1">mdi-calendar-multiple</v-icon>Events</v-toolbar-title
       >
       <div></div>
       <v-toolbar-title
@@ -51,7 +51,7 @@
         style="cursor: pointer; font-size: 16px"
         @click="route('gallery')"
       >
-        <v-icon class="pb-1">mdi-login</v-icon>Gallery</v-toolbar-title
+        <v-icon class="pb-1">mdi-image</v-icon>Gallery</v-toolbar-title
       >
       <v-toolbar-title
         class="px-4 black--text"
@@ -62,14 +62,14 @@
       <v-toolbar-title
         class="px-4 black--text"
         style="cursor: pointer; font-size: 16px"
-        @click="route('book')"
-        ><v-icon class="pb-1">mdi-plus</v-icon> Book</v-toolbar-title
+        @click="route('status')"
+        ><v-icon class="pb-1">mdi-list-status</v-icon> Status</v-toolbar-title
       >
-      <v-toolbar-title
+       <v-toolbar-title
         class="px-4 black--text"
         style="cursor: pointer; font-size: 16px"
-        @click="route('status')"
-        ><v-icon class="pb-1">mdi-plus</v-icon> Status</v-toolbar-title
+        @click="route('book')"
+        ><v-icon class="pb-1">mdi-plus</v-icon> Book</v-toolbar-title
       >
     </v-app-bar>
     <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-else >

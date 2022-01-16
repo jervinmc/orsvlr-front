@@ -36,7 +36,6 @@ export default {
   },
   methods: {
          async decline() {
-           alert(this.book.id)
       this.buttonLoad = true;
       const res = await this.$axios
         .post(
