@@ -1,8 +1,10 @@
 <template>
   <div align="center">
-    <dialog-greetings :isOpen="dialogGreetings"
+    <dialog-greetings
+      :isOpen="dialogGreetings"
       @cancel="dialogGreetings = false"
-      :isAdd="isAdd" />
+      :isAdd="isAdd"
+    />
     <open-package
       :isOpen="dialogAdd"
       @cancel="dialogAdd = false"
@@ -133,88 +135,192 @@
                       ></v-select>
                     </div>
                   </v-col>
+                  <div
+                    v-if="
+                      book.pool_type == 'Private Pool 1' ||
+                      book.pool_type == 'Private Pool 2'
+                    "
+                  >
                     <v-col class="pa-0">
-                    <div>Check in Date</div>
-                    <div>
-                      <v-menu
-                        class="pa-0"
-                        ref="eventDate"
-                        v-model="eventDate"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        max-width="290px"
-                        min-width="auto"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
+                      <div>Check in Date</div>
+                      <div>
+                        <v-menu
+                          class="pa-0"
+                          ref="eventDate"
+                          v-model="eventDate"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="date"
+                              outlined
+                              label="Date"
+                              persistent-hint
+                              v-bind="attrs"
+                              @blur="date = date"
+                              v-on="on"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            @change="changeDate"
                             v-model="date"
-                            outlined
-                            label="Date"
-                            persistent-hint
-                            v-bind="attrs"
-                            @blur="date = date"
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          @change="changeDate"
-                          v-model="date"
-
-                          :allowed-dates="disablePastDates"
-                          no-title
-                      
-                        ></v-date-picker>
-                      </v-menu>
-                    </div>
-                  </v-col>
-                  <v-col cols="12" class="px-0">
-                    <div>Package</div>
-                    <div>
-                      <v-select
-                        @change="packageSetter"
-                        :items="package_list"
-                        v-model="book.package"
-                        outlined
-                        label="Standard"
-                      ></v-select>
-                    </div>
-                    <!-- <div class="red--text">
+                            :allowed-dates="disablePastDates"
+                            no-title
+                          ></v-date-picker>
+                        </v-menu>
+                      </div>
+                    </v-col>
+                    <v-col cols="12" class="px-0">
+                      <div>Package</div>
+                      <div>
+                        <v-select
+                          @change="packageSetter"
+                          :items="package_list"
+                          v-model="book.package"
+                          outlined
+                          label="Standard"
+                        ></v-select>
+                      </div>
+                      <!-- <div class="red--text">
                       {{ book.descriptions }}
                     </div> -->
-                  </v-col>
-                  <v-col align-self="center" align="center" class="pr-10">
-                    <v-btn
-                      class="rnd-btn"
-                      rounded
-                      large
-                      color="black"
-                      depressed
-                      dark
-                      width="170"
-                      @click="editItem"
-                    >
-                      <span class="text-none">View</span>
-                    </v-btn>
-                  </v-col>
-                  <v-col cols="12" class="px-0">
-                    <div>Price</div>
+                    </v-col>
+                    <v-col align-self="center" align="center" class="pr-10">
+                      <v-btn
+                        class="rnd-btn"
+                        rounded
+                        large
+                        color="black"
+                        depressed
+                        dark
+                        width="170"
+                        @click="editItem"
+                      >
+                        <span class="text-none">View</span>
+                      </v-btn>
+                    </v-col>
+                    <v-col cols="12" class="px-0">
+                      <div>Price</div>
+                      <div>
+                        <v-text-field
+                          outlined
+                          v-model="book.price"
+                          readonly
+                        ></v-text-field>
+                      </div>
+                    </v-col>
+                    <div class="red--text">Reminder</div>
+                    <div>
+                      To reserve the booking you need to pay 50%<br />
+                      of the said total prices
+                    </div>
+                    <v-divider></v-divider>
+                    <div class="text-h5">
+                      To be pay :
+                      {{
+                        formatPrice(
+                          priceToCompute * 0.5 == NaN ? 0 : priceToCompute * 0.5
+                        )
+                      }}
+                    </div>
+                  </div>
+                  <!-- end of pool private-->
+                  <div v-else-if="book.pool_type == 'Public Pool'">
+                    <div align="center">Cottage</div>
+                    <div>
+                      <v-row
+                        align="center"
+                        v-for="(x, index) in amenities"
+                        :key="x"
+                      >
+                        <v-col cols="auto">
+                          <div>
+                            {{ x.name }}
+                          </div>
+                        </v-col>
+                        <v-col cols="auto">
+                          <div>
+                            <v-checkbox
+                              v-model="selected_amenities[index]"
+                            ></v-checkbox>
+                          </div>
+                        </v-col>
+                        <v-col>
+                          {{ x.price }}
+                        </v-col>
+                      </v-row>
+                    </div>
+                    <v-radio-group v-model="book.dateoption">
+                      <v-row>
+                        <v-col>
+                          <v-radio
+                        label="Day-(Kids-50,Adults-100)"
+                        value="day"
+                      ></v-radio>
+                        </v-col>
+                        <v-col>
+                            <v-radio
+                        label="Night-(Kids-100,Adults-150)"
+                        value="night"
+                      ></v-radio>
+                        </v-col>
+                        <v-col>
+                           <v-radio
+                        label="Overnight-(Kids-150,Adults-200)"
+                        value="overnight"
+                      ></v-radio>
+                        </v-col>
+                      </v-row>
+                    </v-radio-group>
+                    <div>Adult</div>
                     <div>
                       <v-text-field
+                      placeholder="11 - 59 years old"
                         outlined
-                        v-model="book.price"
-                        readonly
+                        v-model="book.adults"
                       ></v-text-field>
                     </div>
-                  </v-col>
-                  <div class="red--text">Reminder</div>
-                  <div>
-                    To reserve the booking you need to pay 50%<br />
-                    of the said total prices
-                  </div>
-                  <v-divider></v-divider>
-                  <div class="text-h5">
-                    To be pay : {{formatPrice(priceToCompute*0.50==NaN ? 0 : priceToCompute*0.50)}}
+                    <div>Kids</div>
+                    <div>
+                      <v-text-field outlined v-model="book.kids" placeholder="4 - 10 years old"></v-text-field>
+                    </div>
+                   <div align="center">
+                      <v-date-picker
+                            @change="changeDate"
+                            v-model="date"
+                            :allowed-dates="disablePastDates"
+                            no-title
+                          ></v-date-picker>
+                   </div>
+                   <v-col cols="12" class="px-0">
+                      <div>Total Price</div>
+                      <div>
+                        <v-text-field
+                          outlined
+                          v-model="book.price"
+                          readonly
+                        ></v-text-field>
+                      </div>
+                    </v-col>
+
+                    <div class="red--text">Reminder</div>
+                    <div>
+                      To reserve the booking you need to pay 50%<br />
+                      of the said total prices
+                    </div>
+                    <v-divider></v-divider>
+                    <div class="text-h5">
+                      To be pay :
+                      {{
+                        formatPrice(
+                          book.price * 0.5 == NaN ? 0 : book.price * 0.5
+                        )
+                      }}
+                    </div>
                   </div>
                 </div>
                 <div v-if="service_type == 'Room'" style="width: 100%">
@@ -240,37 +346,34 @@
             <div class="text-h5">First Name: {{ book.firstname }}</div>
             <div class="text-h5">Last Name: {{ book.lastname }}</div>
             <div class="text-h5">Contact Number: {{ book.contact_number }}</div>
-                  <div class="text-h5">Email: {{ book.email }}</div>
+            <div class="text-h5">Email: {{ book.email }}</div>
             <v-row>
               <v-col cols="auto">
-                <div>
-                  Reservation Information:
-                </div>
+                <div>Reservation Information:</div>
               </v-col>
               <v-col align="start">
                 <div>
-                  {{book.pool_type}}
+                  {{ book.pool_type }}
                 </div>
                 <div>
-                  {{book.package}}
+                  {{ book.package }}
                 </div>
                 <div>
-                  {{date}}
+                  {{ date }}
                 </div>
                 <div class="text-h6">
-                  {{book.total_price}}
+                  {{ book.total_price }}
                 </div>
               </v-col>
             </v-row>
             <div align="center" class="pt-10">
-              To Pay: Php {{formatPrice(priceToCompute*0.50)}}
+              To Pay: Php {{ formatPrice(priceToCompute * 0.5) }}
             </div>
             <v-divider></v-divider>
-            <div class="red--text" align="center">
-              Reminder
-            </div>
+            <div class="red--text" align="center">Reminder</div>
             <div align="center" class="mb-5">
-              To reserve the booking you need to pay 50% of the said total price.
+              To reserve the booking you need to pay 50% of the said total
+              price.
             </div>
             <div align="center" class="text-h5">
               CODE : {{ this.book.code }}
@@ -280,7 +383,9 @@
               <div>Mode of Payment</div>
               <div>
                 <v-select
-                  :error-messages="isErrorMOP ? 'This field is required.' : false"
+                  :error-messages="
+                    isErrorMOP ? 'This field is required.' : false
+                  "
                   @change="mopSetter"
                   :items="mopList"
                   v-model="book.mode_of_payment"
@@ -290,16 +395,18 @@
                 ></v-select>
               </div>
             </v-col>
-              <div class="text-h6" align="center">{{mopAccountName}}</div>
-              <div class="text-h6" align="center">{{mopAccountNumber}}</div>
-              <div class="text-h6 pt-5">
-                downpayment should be settle within 5hrs inorder to confirm the
-                registrationof reservation will be deny<br />
-                Terms & Condition
-              </div>
+            <div class="text-h6" align="center">{{ mopAccountName }}</div>
+            <div class="text-h6" align="center">{{ mopAccountNumber }}</div>
+            <div class="text-h6 pt-5">
+              downpayment should be settle within 5hrs inorder to confirm the
+              registrationof reservation will be deny<br />
+              Terms & Condition
+            </div>
           </v-card>
           <v-btn text @click="e1 = 2"> Cancel </v-btn>
-          <v-btn color="primary" :loading="buttonLoad" @click="confirm"> Confirm </v-btn>
+          <v-btn color="primary" :loading="buttonLoad" @click="confirm">
+            Confirm
+          </v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -309,17 +416,19 @@
 <script >
 import { numberOnly } from "~/utils/helpers";
 import OpenPackage from "./OpenPackage.vue";
-import DialogGreetings from './DialogGreetings.vue';
-import moment from 'moment';
+import DialogGreetings from "./DialogGreetings.vue";
+import moment from "moment";
 export default {
-  components: { OpenPackage,DialogGreetings },
+  components: { OpenPackage, DialogGreetings },
   created() {
-    this.timestamp()
+    this.timestamp();
     this.loadData();
   },
   data() {
     return {
-      isErrorMOP:false,
+      selected_amenities: [],
+      amenities: [],
+      isErrorMOP: false,
       selectedItem: [],
       dialogAdd: false,
       isErrorLastName: false,
@@ -332,53 +441,57 @@ export default {
       eventDate: false,
       image: "",
       pool_list: ["Private Pool 1", "Private Pool 2", "Public Pool"],
-      service_list: ["Pool", "Room", "Events"],
+      service_list: ["Pool", "Room"],
       book: [],
       img_holder: "image_placeholder.png",
       image: "",
-      mopAccountName:'',
-      mopAccountNumber:'',
+      mopAccountName: "",
+      mopAccountNumber: "",
       url: "",
       eventDate: null,
       date: "",
-      e1:1,
-      mop:[],
+      e1: 1,
+      mop: [],
       service_type: "",
       users: [],
       e1: 1,
       isLoaded: false,
       time_range: "",
-      dialogGreetings:false,
-      mopList:[],
-      packageLister:[],
+      dialogGreetings: false,
+      mopList: [],
+      packageLister: [],
       rooms: [],
       pools: [],
       package_list: [],
       events: [],
-      buttonLoad:false,
-      confirmedDates:[],
-      items:[],
+      buttonLoad: false,
+      confirmedDates: [],
+      items: [],
       time_range_list: [],
-      mop:[],
+      mop: [],
     };
   },
 
   methods: {
-
     timestamp() {
       var today = new Date();
-      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-      var time = today.getHours() + ":" + today.getMinutes()
-      var dateTime = date+' '+time;
-  
-    // const today = new Date();
-    // const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
-    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    // const timestamp = date + ' ' + time;
-    return dateTime;
-  },
-   formatDate(val){
-      return moment(String(val)).format('YYYY-MM-DD hh:mm')
+      var date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes();
+      var dateTime = date + " " + time;
+
+      // const today = new Date();
+      // const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+      // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      // const timestamp = date + ' ' + time;
+      return dateTime;
+    },
+    formatDate(val) {
+      return moment(String(val)).format("YYYY-MM-DD hh:mm");
     },
     editItem() {
       this.dialogAdd = true;
@@ -414,34 +527,41 @@ export default {
       this.e1 = 2;
     },
     disablePastDates(val) {
-      console.log(new Date().toISOString().substr(0, 10))
-       return val >= new Date().toISOString().substr(0, 10) && !this.confirmedDates.some(item=>{return item==val}) 
+      console.log(new Date().toISOString().substr(0, 10));
+      return (
+        val >= new Date().toISOString().substr(0, 10) &&
+        !this.confirmedDates.some((item) => {
+          return item == val;
+        })
+      );
     },
 
     async confirm() {
- 
-      if(this.book.mode_of_payment=='' || this.book.mode_of_payment==null){
-        this.isErrorMOP=true
-        return
+      if (
+        this.book.mode_of_payment == "" ||
+        this.book.mode_of_payment == null
+      ) {
+        this.isErrorMOP = true;
+        return;
       }
-           this.buttonLoad = true;
+      this.buttonLoad = true;
       try {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
         form_data.append("price", this.priceToCompute);
-        form_data.append("to_pay", this.priceToCompute*0.50);
+        form_data.append("to_pay", this.priceToCompute * 0.5);
         form_data.append("date_start", this.date);
         // form_data.append("date_end", this.date);
         form_data.append("email", this.book.email);
-        form_data.append("firstname", this.book.firstname)
+        form_data.append("firstname", this.book.firstname);
         form_data.append("lastname", this.book.lastname);
         form_data.append("middlename", this.book.middlename);
         form_data.append("mode_of_payment", this.book.mode_of_payment);
         form_data.append("code", this.book.code);
         form_data.append("status", "To Pay");
         form_data.append("service_type", this.service_type);
-        form_data.append("subtype",this.book.pool_type);
-        form_data.append("transaction_date",this.timestamp());
+        form_data.append("subtype", this.book.pool_type);
+        form_data.append("transaction_date", this.timestamp());
         form_data.append("contact_number", this.book.contact_number);
         const response = await this.$axios
           .post("/book/", form_data, {
@@ -450,24 +570,21 @@ export default {
             },
           })
           .then(() => {
-            this.buttonLoad=false
-            this.dialogGreetings=true
+            this.buttonLoad = false;
+            this.dialogGreetings = true;
           });
       } catch (error) {
-       
-        
         this.buttonLoad = false;
       }
     },
     packageSetter() {
-      
       this.pools.map((val) => {
         if (
           this.book.pool_type == val.pool_type &&
           this.book.package == val.package
         ) {
           this.book.price = this.formatPrice(val.price);
-          this.priceToCompute=val.price
+          this.priceToCompute = val.price;
           this.image = val.image;
           this.book.descriptions = val.descriptions;
           this.selectedItem = val;
@@ -484,7 +601,7 @@ export default {
       this.pools.map((val) => {
         if (this.book.pool_type == val.pool_type) {
           this.package_list.push(val.package);
-          this.packageLister.push(val.package)
+          this.packageLister.push(val.package);
         }
       });
     },
@@ -499,19 +616,42 @@ export default {
       return Math.round((second - first) / (1000 * 60 * 60 * 24));
     },
     changeDate() {
-    this.packageMapper()
-    this.confirmedDates=[]
-    console.warn(this.items)
-      this.items.map(item=>{
-        if((this.date==item.date_start && item.status=='confirmed') || (this.date==item.date_start && item.status=='To Pay' ) || (this.date==item.date_start && item.status=='pending') ){
-          for(let x in this.package_list){
-            if(item.package==this.package_list[x]){
-                this.package_list.splice(x,1)
+      if(this.book.pool_type=='Public Pool'){
+        var total_amenities = 0;
+        var rate = 0;
+        var total_price_person = 0;
+        var total = 0;
+        for(let key in this.amenities){
+          if(this.selected_amenities[key]){
+            total_amenities = parseInt(total_amenities) + parseInt(this.amenities[key].price)
+          }
+        }
+        if(this.book.dateoption=='day')  rate = 50
+        else if(this.book.dateoption=='night')  rate = 100
+        else if(this.book.dateoption=='overnight')  rate = 150
+        total_price_person = (this.book.adults * (50+rate) ) + (this.book.kids * (0+rate))
+        this.book.price = total_price_person + total_amenities;
+        this.priceToCompute = this.book.price
+        // alert(this.book.price)
+        return
+      }
+      this.packageMapper();
+      this.confirmedDates = [];
+      console.warn(this.items);
+      this.items.map((item) => {
+        if (
+          (this.date == item.date_start && item.status == "confirmed") ||
+          (this.date == item.date_start && item.status == "To Pay") ||
+          (this.date == item.date_start && item.status == "pending")
+        ) {
+          for (let x in this.package_list) {
+            if (item.package == this.package_list[x]) {
+              this.package_list.splice(x, 1);
             }
           }
         }
-      })
-      
+      });
+
       // var start = moment(this.date[0]);
       // var end = moment(this.date[1]);
       // var val = end.diff(start, "days");
@@ -524,9 +664,24 @@ export default {
         .join("");
       this.poolsGetall();
       this.roomsGetall();
+      this.amenitiesGetall();
       this.eventsGetall();
       this.bookGetall();
       this.mopGetall();
+    },
+    async amenitiesGetall() {
+      this.isLoading = true;
+      const res = await this.$axios
+        .get(`/amenities/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.amenities = res.data;
+          this.isLoading = false;
+        });
     },
     async bookGetall() {
       const res = await this.$axios
@@ -541,13 +696,13 @@ export default {
           this.isLoading = false;
         });
     },
-    mopSetter(){
-      this.mop.map(item=>{
-        if(item.modeOfPayment==this.book.mode_of_payment){
-          this.mopAccountNumber=item.accountNumber
-          this.mopAccountName=item.accountName
+    mopSetter() {
+      this.mop.map((item) => {
+        if (item.modeOfPayment == this.book.mode_of_payment) {
+          this.mopAccountNumber = item.accountNumber;
+          this.mopAccountName = item.accountName;
         }
-      })
+      });
     },
     async eventsGetall() {
       this.isLoading = true;
@@ -573,9 +728,9 @@ export default {
         .then((res) => {
           this.mop = res.data;
           this.isLoading = false;
-          this.mop.map(item=>{   
-            this.mopList.push(item.modeOfPayment)
-          })
+          this.mop.map((item) => {
+            this.mopList.push(item.modeOfPayment);
+          });
         });
     },
     async poolsGetall() {

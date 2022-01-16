@@ -151,7 +151,7 @@
       class="pa-5"
       :search="search"
       :headers="headers"
-      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected :  bookCancelled "
+      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : bookCompleted "
       :loading="isLoading"
     >
       <template v-slot:[`item.status`]="{ item }">
@@ -204,9 +204,14 @@
                 <v-list-item-title>Cofirm</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending' || item.status=='To Pay'">
+            <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending' ">
               <v-list-item-content>
                 <v-list-item-title>Reject</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click.stop="rejectItem(item,'Completed')" v-if="item.status=='confirmed'">
+              <v-list-item-content>
+                <v-list-item-title>Check as Completed</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click.stop="rejectItem(item,'Cancel')" v-if="item.status=='Request For Cancellation'">
@@ -238,6 +243,11 @@ export default {
     bookToPay(){
       return this.book.filter(item=>{
         return item.status=='To Pay'
+      });
+    },
+    bookCompleted(){
+      return this.book.filter(item=>{
+        return item.status=='completed'
       });
     },
     bookConfirmed(){
@@ -361,8 +371,8 @@ export default {
       else if (item == "To Pay") {
         return "border-radius:15px;padding:7px; width:150px; color: green;";
       }
-       else if (item == "Completed") {
-        return "border-radius:15px;padding:7px; width:150px; color: yellow;";
+       else if (item == "completed") {
+        return "border-radius:15px;padding:7px; width:150px; color: black; background-color:yellow;";
       }
     },
     confirmItem(val) {
@@ -409,6 +419,8 @@ export default {
     },
     loadData() {
       this.eventsGetall();
+      this.dialogReject=false
+      this.dialogConfirm=false
     },
     async eventsGetall() {
       this.isLoading = true;

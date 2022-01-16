@@ -18,7 +18,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-    <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-events'  && isAdmin!='admin-book'  && isAdmin!='admin-settings'   " >
+    <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-events' && isAdmin!='admin-amenities'  && isAdmin!='admin-book'  && isAdmin!='admin-settings'   " >
       <div class="text-h6">Villa Leonora Resort</div>
       <v-spacer></v-spacer>
       <v-toolbar-title
@@ -130,6 +130,11 @@ export default {
           icon: "mdi-pool",
           title: "Pools",
           to: "/admin/pools",
+        },
+        {
+          icon: "mdi-application",
+          title: "Amenities",
+          to: "/admin/amenities",
         },
         {
           icon: "mdi-door",
