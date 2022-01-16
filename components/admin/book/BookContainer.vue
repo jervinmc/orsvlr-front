@@ -1,31 +1,167 @@
 <template>
-  <v-card elevation="5">
+  <v-card elevation="5" >
+    <dialog-delete :isOpen="dialogReject"
+      @cancel="dialogReject = false"
+      @refresh="loadData"
+      :items="selectedItem"/>
+    <dialog-actions
+      :isOpen="dialogConfirm"
+      @cancel="dialogConfirm = false"
+      @refresh="loadData"
+      :items="selectedItem"
+    />
+    <view-customer-details
+      :isOpen="dialogView"
+      @cancel="dialogView = false"
+      :items="selectedItem"
+    />
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
         <b>Booking Management</b>
       </v-col>
       <v-spacer></v-spacer>
-      <!-- <v-col align-self="center" align="end" class="pr-10">
-        <v-btn
-          class="rnd-btn"
-          rounded
-          large
-          color="black"
-          depressed
-          dark
-          width="170"
-          @click="addItem"
-        >
-          <span class="text-none">Add Event</span>
-        </v-btn>
-      </v-col> -->
     </v-row>
-    <v-data-table
+    <v-container fluid>
+          <v-row class="pl-3" align="start" elevation="10">
+            <v-col
+              :class="active_page == 0 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 0"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-account-multiple-outline</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >To Pay</b
+                >
+              </v-row>
+            </v-col>
+            <v-col
+              :class="active_page == 1 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 1"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-account-multiple-outline</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >Pending</b
+                >
+              </v-row>
+            </v-col>
+            <v-col
+              :class="active_page == 2 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 2"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-format-list-bulleted</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >Req for Cancel</b
+                >
+              </v-row>
+            </v-col>
+            <v-col
+              :class="active_page == 3 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 3"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-format-list-bulleted</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >Confirmed</b
+                >
+              </v-row>
+            </v-col>
+             <v-col
+              :class="active_page == 4 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 4"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-format-list-bulleted</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >Rejected</b
+                >
+              </v-row>
+            </v-col>
+             <v-col
+              :class="active_page == 5 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 5"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-format-list-bulleted</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >Cancelled</b
+                >
+              </v-row>
+            </v-col>
+            <v-col></v-col>
+          </v-row>
+        </v-container>
+       
+    <div class="px-3 ">
+      <v-card  class="card-settings pa-10 px-2" elevation="10" >
+      <v-row>
+          <v-spacer></v-spacer>
+          <v-col cols="6" align-self="center" class="pt-10 pa-10">
+        <div>
+          <v-text-field
+            outlined
+            placeholder="Search"
+            hide-details=""
+            v-model="search"
+          ></v-text-field>
+        </div>
+      </v-col>
+        </v-row>
+      <v-data-table
       class="pa-5"
+      :search="search"
       :headers="headers"
-      :items="book"
+      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected :  bookCancelled "
       :loading="isLoading"
     >
+      <template v-slot:[`item.status`]="{ item }">
+        <div>
+          <v-chip align="center" :style="getColorStatus(item.status)"
+            ><span>{{ item.status }} </span></v-chip
+          >
+        </div>
+      </template>
+      <template v-slot:[`item.remaining`]="{ item }">
+        <div>
+          {{60-timeRemaining(item.transaction_date,item)}} Minutes
+        </div>
+      </template>
+       <template #[`item.price`]="{ item }">
+          <div>
+            {{formatPrice(item.price)}}
+          </div>
+      </template>
+      <template #[`item.transaction_date`]="{ item }">
+          <div>
+            {{formatDate(item.transaction_date)}}
+          </div>
+      </template>
+
       <template v-slot:loading>
         <v-skeleton-loader
           v-for="n in 5"
@@ -43,68 +179,202 @@
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item @click.stop="status(item, 'Confirm')">
+            <v-list-item @click.stop="viewItem(item,60-timeRemaining(item.transaction_date))">
               <v-list-item-content>
-                <v-list-item-title>Confirm</v-list-item-title>
+                <v-list-item-title>View</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="status(item, 'Deactivate')">
+            <v-list-item @click.stop="confirmItem(item)" v-if="item.status=='pending'">
               <v-list-item-content>
-                <v-list-item-title>Delete</v-list-item-title>
+                <v-list-item-title>Cofirm</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending'">
+              <v-list-item-content>
+                <v-list-item-title>Reject</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click.stop="rejectItem(item,'Cancel')" v-if="item.status=='Request For Cancellation'">
+              <v-list-item-content>
+                <v-list-item-title>Cancel</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-menu>
       </template>
     </v-data-table>
+    </v-card>
+    </div>
   </v-card>
 </template>
 
 <script>
-
-
+import DialogActions from "./DialogActions.vue";
+import DialogDelete from './DialogDelete.vue';
+import ViewCustomerDetails from "./ViewCustomerDetails.vue";
+import moment from 'moment';
 export default {
+  components: {
+    ViewCustomerDetails,
+    DialogActions,
+    DialogDelete,
+  },
+  computed:{
+    bookToPay(){
+      return this.book.filter(item=>{
+        return item.status=='To Pay'
+      });
+    },
+    bookConfirmed(){
+      return this.book.filter(item=>{
+        return item.status=='confirmed'
+      });
+    },
+    bookPending(){
+      return this.book.filter(item=>{
+        return item.status=='pending'
+      });
+    },
+    bookCancellation(){
+      return this.book.filter(item=>{
+        return item.status=='Request For Cancellation'
+      });
+    },
+    bookRejected(){
+      return this.book.filter(item=>{
+        return item.status=='rejected'
+      });
+    },
+    bookCancelled(){
+      return this.book.filter(item=>{
+        return item.status=='cancelled'
+      });
+    }
+    
+  },
   created() {
     this.loadData();
   },
   data() {
     return {
-        book:[],
-      selectedItem:{},
+      active_page:0,
+      dialogConfirm: false,
+      dialogView: false,
+      book: [],
+      selectedItem: {},
       isLoading: false,
       users: [],
-      dialogAdd:false,
-      isAdd:true,
+      dialogAdd: false,
+      isAdd: true,
+      search:'',
+      dialogReject:false,
       headers: [
         { text: "ID", value: "id" },
-        { text: "Customer Name", value: "customer_name" },
-        { text: "Contact Number", value: "contact_number" },
+        { text: "First Name", value: "firstname" },
+        { text: "Last Name", value: "lastname" },
         { text: "Email", value: "email" },
         { text: "Date Start", value: "date_start" },
         { text: "Date End", value: "date_end" },
+        { text: "Code", value: "code" },
         { text: "Price", value: "price" },
+        { text: "Service Type", value: "service_type" },
         { text: "Status", value: "status" },
+        { text: "Time Remaining", value: "remaining" },
+        { text: "Trasanction Date", value: "transaction_date" },
         { text: "Actions", value: "opt" },
         ,
       ],
     };
   },
   methods: {
-    editItem(val){
-      this.selectedItem=val
-      this.dialogAdd=true
+      async confirm(val) {
+      this.buttonLoad = true;
+      const res = await this.$axios
+        .post(
+          `/confirmed/status/`,
+          {
+            status: "cancelled",
+            email: val.email,
+            id: val.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((res) => {
+        this.buttonLoad=false
+        this.$emit('refresh')
+        });
     },
-    addItem(){
-      this.isAdd=true
-      this.dialogAdd=true
+    formatDate(val){
+      return moment(String(val)).format('YYYY-MM-DD HH:mm')
+    },
+    timeRemaining(val,status){
+      var today = new Date();
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes()
+      var dateTime = date+' '+time;
+     var  diff= Math.abs(new Date(moment(String(val)).format('YYYY/MM/DD HH:mm')) - new Date(moment(String(dateTime)).format('YYYY/MM/DD HH:mm')));
+      if(60-(Math.floor((diff/1000)/60))<0){
+        if(status.status=='To Pay'){
+          this.confirm(status)
+        }
+      }
+      return Math.floor((diff/1000)/60)
+    },
+        formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    getColorStatus(item) {
+      if (item == "Rejected") {
+        return "background-color:#FFCCCC;border-radius:15px;padding:7px; width:150px; color: #344557;";
+      } else if (item == "confirmed") {
+        return "background-color:#CCFFCE;border-radius:15px;padding:7px; width:150px; color: #344557;";
+      } else if (item == "Request For Cancellation") {
+        return "background-color:#CCEBFF;border-radius:15px;padding:7px; width:150px; color: #344557;";
+      } else if (item == "pending") {
+        return "background-color:#FFF5CC;border-radius:15px;padding:7px; width:150px; color: #344557;";
+      } else if (item == "Cancelled") {
+        return "border-radius:15px;padding:7px; width:150px; color: #344557;";
+      }
+      else if (item == "To Pay") {
+        return "border-radius:15px;padding:7px; width:150px; color: green;";
+      }
+    },
+    confirmItem(val) {
+      this.selectedItem = val;
+      this.dialogConfirm = true;
+    },
+    rejectItem(val,status_action) {
+      this.selectedItem = val;
+      this.selectedItem.status_action = status_action
+      this.dialogReject = true;
+    },
+    editItem(val) {
+      this.selectedItem = val;
+      this.dialogAdd = true;
+    },
+    addItem() {
+      this.isAdd = true;
+      this.dialogAdd = true;
+    },
+    viewItem(val,remaining) {
+      this.dialogView = true;
+      this.selectedItem = val;
+      this.selectedItem.remaining = remaining
     },
     async status(data, status) {
       this.isLoading = true;
       const res = await this.$axios
-        .post(`/confirmed/status/`, {
-            status:'confirmed',
-            email:data.email,
-            id:data.id
+        .post(
+          `/confirmed/status/`,
+          {
+            status: "confirmed",
+            email: data.email,
+            id: data.id,
           },
           {
             headers: {
@@ -133,9 +403,32 @@ export default {
           this.isLoading = false;
         });
     },
+    formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
+.tab {
+  margin-right: -5px;
+  background: #ececec;
+  border-radius: 20px 60px 0px 0px;
+  cursor: pointer;
+  box-shadow: 0px 0px 2px #888888;
+  &:hover {
+    background: #fff;
+  }
+  &.active {
+    background: #fff;
+    // font-weight: bold;
+    color: primary;
+    // font-size: 20px;
+    font-family: avenir-black;
+    z-index: 1;
+    box-shadow: 0px 0px 0px;
+  }
+}
 </style>

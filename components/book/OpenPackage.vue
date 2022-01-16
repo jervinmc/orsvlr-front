@@ -1,71 +1,33 @@
 <template>
-<v-form ref="form">
   <v-dialog v-model="isOpen" width="1000" persistent>
     <v-card class="pa-10">
-      <div align="center" class="text-h6">Add Event</div>
-      <div class="text-h6">Event</div>
-      <v-col cols="12" class="px-0">
-        <div>Package</div>
-        <div>
-          <v-text-field outlined v-model="events.package"></v-text-field>
-        </div>
-      </v-col>
-      <v-col cols="12" class="px-0">
-        <div>Price</div>
-        <div>
-          <v-text-field outlined v-model="events.price"></v-text-field>
-        </div>
-      </v-col>
-      <v-col cols="12" class="px-0">
-        <div>Descriptions</div>
-        <div>
-          <v-textarea outlined v-model="events.descriptions"></v-textarea>
-        </div>
-      </v-col>
-       <v-col>
-        <span class="pt-2 pr-10 pb-10"><b>Upload Image<v-icon @click="$refs.file.click()">mdi-plus</v-icon></b></span>
-
-        <div class="hover_pointer pt-10">
-          <img
-            @click="$refs.file.click()"
-            :src="img_holder"
-            alt="item_.js"
-            height="150"
-            width="150"
-            class="mb-0"
-          />
-        </div>
-      </v-col>
-      <v-col class="d-none">
-        <input
-          style="display: none"
-          type="file"
-          id="fileInput"
-          ref="file"
-          accept="image/png, image/jpeg"
-          @change="onFileUpload"
-        />
-      </v-col>
+      <div align="center" class="text-h6">Package</div>
+        <v-row>
+            <v-col cols="6">
+                <v-img :src="items.image" height="200" width="200">
+                </v-img>
+            </v-col>
+            <v-col align="start">
+                <div class="pt-10 text-h6">
+                    {{items.package}}
+                </div>
+                <div>
+                    {{items.descriptions}}
+                </div>
+                <div class="red--text">
+                    {{items.price}}
+                </div>
+            </v-col>
+        </v-row>
       <v-card-actions>
         <v-row align="center">
           <v-col align="end">
-            <v-btn color="red" text @click="cancel"> Cancel </v-btn>
-          </v-col>
-          <v-col>
-            <v-btn
-              color="success"
-              text
-              @click="addEvents"
-              :loading="buttonLoad"
-            >
-              Save
-            </v-btn>
+            <v-btn color="red" text @click="cancel"> Close </v-btn>
           </v-col>
         </v-row>
       </v-card-actions>
     </v-card>
   </v-dialog>
-  </v-form>
 </template>
 
 <script>
@@ -73,8 +35,7 @@ export default {
   props: ["isOpen", "items", "isAdd"],
   watch: {
     items() {
-        this.events=this.items
-        this.img_holder=this.items.image
+      //   this.announcement=this.items
     },
   },
   data() {
@@ -107,12 +68,11 @@ export default {
               this.$refs.form.reset()
               this.buttonLoad = false;
               this.$emit("cancel");
-              this.$refs.form.reset()
               this.$emit("refresh");
             });
         } else {
           const response = await this.$axios
-            .patch(`/events/${this.events.id}/`, form_data, {
+            .patch(`/discussions/${this.discussions.id}/`, form_data, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
@@ -120,7 +80,6 @@ export default {
             .then(() => {
               this.buttonLoad = false;
               this.$emit("cancel");
-              this.$refs.form.reset()
               this.$emit("refresh");
             });
         }
@@ -129,6 +88,7 @@ export default {
         this.buttonLoad = false;
       }
     },
+    
     onFileUpload(e) {
       this.image = e;
       e = e.target.files[0];

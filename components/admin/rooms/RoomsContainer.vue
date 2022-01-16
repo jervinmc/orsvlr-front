@@ -27,6 +27,11 @@
       :items="rooms"
       :loading="isLoading"
     >
+     <template #[`item.price`]="{ item }">
+          <div>
+            {{formatPrice(item.price)}}
+          </div>
+      </template>
       <template v-slot:loading>
         <v-skeleton-loader
           v-for="n in 5"
@@ -44,7 +49,7 @@
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item @click.stop="status(item, 'Activate')">
+            <v-list-item @click.stop="editItem(item)">
               <v-list-item-content>
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item-content>
@@ -87,9 +92,14 @@ export default {
     };
   },
   methods: {
+     formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
     editItem(val){
       this.selectedItem=val
       this.dialogAdd=true
+      this.isAdd=false
     },
     addItem(){
       this.isAdd=true

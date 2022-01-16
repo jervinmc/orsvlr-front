@@ -1,4 +1,5 @@
 <template>
+<v-form ref="form" submit.prevent="addGallery">
   <v-dialog v-model="isOpen" width="1000" persistent>
     <v-card class="pa-10">
       <div align="center" class="text-h6">Add Gallery</div>
@@ -45,6 +46,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  </v-form>
 </template>
 
 <script>
@@ -82,6 +84,7 @@ export default {
             .then(() => {
               this.buttonLoad = false;
               this.$emit("cancel");
+              this.$refs.form.reset()
               this.$emit("refresh");
             });
         } else {
@@ -94,6 +97,7 @@ export default {
             .then(() => {
               this.buttonLoad = false;
               this.$emit("cancel");
+              this.$refs.form.reset()
               this.$emit("refresh");
             });
         }
@@ -126,6 +130,7 @@ export default {
     },
     cancel() {
       this.$emit("cancel");
+      this.$refs.form.reset()
     },
   },
 };

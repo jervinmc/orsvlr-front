@@ -1,4 +1,5 @@
 <template>
+<v-form ref="form">
   <v-dialog v-model="isOpen" width="1000" persistent>
     <v-card class="pa-10">
       <div align="center" class="text-h6">Add Pool</div>
@@ -74,14 +75,18 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  </v-form>
 </template>
 
 <script>
 export default {
   props: ["isOpen", "items", "isAdd"],
   watch: {
+    
     items() {
-      //   this.announcement=this.items
+        alert()
+        this.pools=this.items
+        this.img_holder=this.items.image
     },
   },
   data() {
@@ -115,6 +120,7 @@ export default {
             //   this.$refs.form.reset()
               this.buttonLoad = false;
               this.$emit("cancel");
+              this.$refs.form.reset()
               this.$emit("refresh");
             });
             // this.buttonLoad = false;
@@ -122,7 +128,7 @@ export default {
             //   this.$emit("refresh");
         } else {
           const response = await this.$axios
-            .patch(`/discussions/${this.discussions.id}/`, form_data, {
+            .patch(`/pools/${this.pools.id}/`, form_data, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
@@ -130,6 +136,7 @@ export default {
             .then(() => {
               this.buttonLoad = false;
               this.$emit("cancel");
+              this.$refs.form.reset()
               this.$emit("refresh");
             });
         }
@@ -163,6 +170,7 @@ export default {
     },
     cancel() {
       this.$emit("cancel");
+
     },
   },
 };

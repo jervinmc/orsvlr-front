@@ -18,7 +18,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-    <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-events'  && isAdmin!='admin-book'   " >
+    <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-events'  && isAdmin!='admin-book'  && isAdmin!='admin-settings'   " >
       <div class="text-h6">Villa Leonora Resort</div>
       <v-spacer></v-spacer>
       <v-toolbar-title
@@ -122,34 +122,34 @@ export default {
       fixed: false,
       items: [
         {
-          icon: "mdi-apps",
+          icon: "mdi-book",
           title: "Book",
           to: "/admin/book",
         },
         {
-          icon: "mdi-calendar-multiple",
+          icon: "mdi-pool",
           title: "Pools",
           to: "/admin/pools",
         },
         {
-          icon: "mdi-bullhorn",
+          icon: "mdi-door",
           title: "Rooms",
           to: "/admin/rooms",
         },
         {
-          icon: "mdi-bullhorn",
+          icon: "mdi-balloon",
           title: "Events",
           to: "/admin/events",
         },
         {
-          icon: "mdi-account-group",
+          icon: "mdi-image",
           title: "Gallery",
           to: "/admin/gallery",
         },
         {
-          icon: "mdi-logout",
-          title: "Logout",
-          to: "/admin/gallery",
+          icon: "mdi-cog",
+          title: "Settings",
+          to: "/admin/settings",
         },
       ],
       miniVariant: false,

@@ -1,9 +1,9 @@
 <template>
   <v-card elevation="5">
-    <events-add :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="loadData" :items="selectedItem" :isAdd="isAdd" />
+      <modadd :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="mopGetall"  :items="selectedItem" :isAdd="isAdd"/>
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
-        <b>Events Management</b>
+        <b>Mode of Payment</b>
       </v-col>
       <v-spacer></v-spacer>
       <v-col align-self="center" align="end" class="pr-10">
@@ -14,24 +14,19 @@
           color="black"
           depressed
           dark
-          width="170"
+          width="190"
           @click="addItem"
         >
-          <span class="text-none">Add Event</span>
+          <span class="text-none">Add Mode of Payment</span>
         </v-btn>
       </v-col>
     </v-row>
     <v-data-table
       class="pa-5"
       :headers="headers"
-      :items="events"
+      :items="mop"
       :loading="isLoading"
     >
-     <template #[`item.price`]="{ item }">
-          <div>
-            {{formatPrice(item.price)}}
-          </div>
-      </template>
       <template v-slot:loading>
         <v-skeleton-loader
           v-for="n in 5"
@@ -67,40 +62,32 @@
 </template>
 
 <script>
-import EventsAdd from './EventsAdd.vue';
+import Modadd from './Modadd.vue';
 
 
 export default {
-    components:{
-        EventsAdd
-    },
+  components: { Modadd },
+
   created() {
     this.loadData();
   },
   data() {
     return {
-        events:[],
       selectedItem:{},
       isLoading: false,
-      users: [],
+      mop: [],
       dialogAdd:false,
-      isAdd:true,
       headers: [
         { text: "ID", value: "id" },
-        { text: "Package", value: "package" },
-        { text: "Price", value: "price" },
-        { text: "Actions", value: "opt" },
+        { text: "Mode of Payment", value: "modeOfPayment" },
+        { text: "Account Name", value: "accountName" },
+        { text: "Account Number", value: "accountNumber"},
+        { text: "Actions", value: "opt"},
         ,
       ],
     };
   },
   methods: {
-    
-
-     formatPrice(value) {
-      let val = (value / 1).toFixed(2).replace(",", ".");
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    },
     editItem(val){
       this.selectedItem=val
       this.dialogAdd=true
@@ -129,19 +116,19 @@ export default {
         });
     },
     loadData() {
-      this.eventsGetall();
+      this.mopGetall();
     },
-    async eventsGetall() {
+    async mopGetall() {
       this.isLoading = true;
       const res = await this.$axios
-        .get(`/events/`, {
+        .get(`/payment/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {
           console.log(res.data);
-          this.events = res.data;
+          this.mop = res.data;
           this.isLoading = false;
         });
     },

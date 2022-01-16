@@ -1,5 +1,15 @@
 <template>
   <div align="center">
+    <dialog-greetings :isOpen="dialogGreetings"
+      @cancel="dialogGreetings = false"
+      :isAdd="isAdd" />
+    <open-package
+      :isOpen="dialogAdd"
+      @cancel="dialogAdd = false"
+      @refresh="loadData"
+      :items="selectedItem"
+      :isAdd="isAdd"
+    />
     <v-stepper v-model="e1" width="700">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
@@ -23,27 +33,69 @@
             <div class="pa-5" align="start">
               <v-row>
                 <v-col cols="12">
-                  <div>Name</div>
+                  <div>First Name <span class="red--text">*</span></div>
                   <div>
                     <v-text-field
                       outlined
-                      v-model="book.customer_name"
+                      :error-messages="
+                        isErrorFirstName ? 'this field is required' : false
+                      "
+                      v-model="book.firstname"
                     ></v-text-field>
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Contact Number</div>
+                  <div>Middle Name</div>
                   <div>
                     <v-text-field
                       outlined
+                      :error-messages="
+                        isErrorCustomerName ? 'this field is required' : false
+                      "
+                      v-model="book.middle_name"
+                    ></v-text-field>
+                  </div>
+                </v-col>
+                <v-col cols="12">
+                  <div>Last Name<span class="red--text">*</span></div>
+                  <div>
+                    <v-text-field
+                      outlined
+                      :error-messages="
+                        isErrorLastName ? 'this field is required' : false
+                      "
+                      v-model="book.lastname"
+                    ></v-text-field>
+                  </div>
+                </v-col>
+                <v-col cols="12">
+                  <div>Contact Number<span class="red--text">*</span></div>
+                  <div>
+                    <v-text-field
+                      :counter="12"
+                      outlined
+                      @keypress="typeNumber"
                       v-model="book.contact_number"
+                      :error-messages="
+                        isExceedText
+                          ? 'Maximum number of 12'
+                          : isErrorContactNumber
+                          ? 'this field is required'
+                          : false
+                      "
                     ></v-text-field>
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Email</div>
+                  <div>Email<span class="red--text">*</span></div>
                   <div>
-                    <v-text-field outlined v-model="book.email"></v-text-field>
+                    <v-text-field
+                      outlined
+                      v-model="book.email"
+                      :error-messages="
+                        isErrorEmail ? 'this field is required' : false
+                      "
+                    ></v-text-field>
                   </div>
                 </v-col>
               </v-row>
@@ -51,7 +103,7 @@
           </v-card>
           <div class="pt-5">
             <v-btn text> Cancel </v-btn>
-            <v-btn color="primary" @click="e1 = 2"> Continue </v-btn>
+            <v-btn color="primary" @click="validatePage1"> Continue </v-btn>
           </div>
         </v-stepper-content>
         <v-stepper-content step="2">
@@ -81,23 +133,8 @@
                       ></v-select>
                     </div>
                   </v-col>
-                  <v-col cols="12" class="px-0">
-                    <div>Package</div>
-                    <div>
-                      <v-select
-                        @change="packageSetter"
-                        :items="package_list"
-                        v-model="book.package"
-                        outlined
-                        label="Standard"
-                      ></v-select>
-                    </div>
-                    <div class="red--text">
-                          {{book.descriptions}}
-                    </div>
-                  </v-col>
-                  <v-col class="pa-0">
-                    <div>Check in Date From & To</div>
+                    <v-col class="pa-0">
+                    <div>Check in Date</div>
                     <div>
                       <v-menu
                         class="pa-0"
@@ -123,22 +160,43 @@
                         <v-date-picker
                           @change="changeDate"
                           v-model="date"
+                          :allowed-dates="disablePastDates"
                           no-title
-                          range
+                      
                         ></v-date-picker>
                       </v-menu>
                     </div>
                   </v-col>
-                  <!-- <v-col cols="12" v-if="pool_type=='Private Pool 1' || pool_type=='Private Pool 2'" class="px-0">
-                  <div>Time Range</div>
-                  <div>
-                    <v-select :items="time_range_list" v-model="time_range" outlined label="Standard"></v-select>
-                  </div>
-                </v-col> -->
-                 <v-col
-                    cols="12"
-                    class="px-0"
-                  >
+                  <v-col cols="12" class="px-0">
+                    <div>Package</div>
+                    <div>
+                      <v-select
+                        @change="packageSetter"
+                        :items="package_list"
+                        v-model="book.package"
+                        outlined
+                        label="Standard"
+                      ></v-select>
+                    </div>
+                    <!-- <div class="red--text">
+                      {{ book.descriptions }}
+                    </div> -->
+                  </v-col>
+                  <v-col align-self="center" align="center" class="pr-10">
+                    <v-btn
+                      class="rnd-btn"
+                      rounded
+                      large
+                      color="black"
+                      depressed
+                      dark
+                      width="170"
+                      @click="editItem"
+                    >
+                      <span class="text-none">View</span>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="12" class="px-0">
                     <div>Price</div>
                     <div>
                       <v-text-field
@@ -148,70 +206,15 @@
                       ></v-text-field>
                     </div>
                   </v-col>
-                  <v-col
-                    cols="12"
-                    class="px-0"
-                  >
-                    <div>Total Price</div>
-                    <div>
-                      <v-text-field
-                        outlined
-                        v-model="book.total_price"
-                        readonly
-                      ></v-text-field>
-                    </div>
-                    <div class="red--text">
-                          To pay : {{this.book.total_price*0.5}}
-                    </div>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    class="px-0"
-                  >
-                    <div>Image</div>
-                    <div>
-                        <v-img height="150" width="150" :src="image">
-
-                        </v-img>
-                    </div>
-                  </v-col>
-                   <v-col cols="12" class="px-0">
-                    <div>Mode of Payment</div>
-                    <div>
-                      <v-select
-                        @change="packageSetter"
-                        :items="['Gcash','BDO']"
-                        v-model="book.mode_of_payment"
-                        outlined
-                        label="Standard"
-                      ></v-select>
-                    </div>
-                  </v-col>
-                  <div v-if="book.mode_of_payment=='Gcash'" align="center">
-                     <div class="text-h6">
-                          Gcash Name : Joana S.
-                     </div>
-                     <div class="text-h6">
-                         No. 0961253232355
-                     </div>
-                     <div class="text-h6">
-                         downpayment should be settle within 5hrs inorder to confirm the registrationof reservation will be deny<br/>
-                         Terms & Condition
-                     </div>
+                  <div class="red--text">Reminder</div>
+                  <div>
+                    To reserve the booking you need to pay 50%<br />
+                    of the said total prices
                   </div>
-                  <div v-else-if="book.mode_of_payment=='BDO'" align="center">
-                        <div class="text-h6">
-                          BDO Name : Joana Sales
-                     </div>
-                     <div class="text-h6">
-                         No. 205 5445 5456 548
-                     </div>
-                     <div class="text-h6">
-                         downpayment should be settle within 5hrs inorder to confirm the registrationof reservation will be deny<br/>
-                         Terms & Condition
-                     </div>
+                  <v-divider></v-divider>
+                  <div class="text-h5">
+                    To be pay : {{formatPrice(priceToCompute*0.50==NaN ? 0 : priceToCompute*0.50)}}
                   </div>
-                 
                 </div>
                 <div v-if="service_type == 'Room'" style="width: 100%">
                   <v-col cols="12" class="px-0">
@@ -232,177 +235,254 @@
           <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
         </v-stepper-content>
         <v-stepper-content step="3">
-        <v-card width="900" height="300" align="start">
-            <div class="text-h5">
-                Name: {{book.customer_name}}
+          <v-card width="900" align="start">
+            <div class="text-h5">First Name: {{ book.firstname }}</div>
+            <div class="text-h5">Last Name: {{ book.lastname }}</div>
+            <div class="text-h5">Contact Number: {{ book.contact_number }}</div>
+                  <div class="text-h5">Email: {{ book.email }}</div>
+            <v-row>
+              <v-col cols="auto">
+                <div>
+                  Reservation Information:
+                </div>
+              </v-col>
+              <v-col align="start">
+                <div>
+                  {{book.pool_type}}
+                </div>
+                <div>
+                  {{book.package}}
+                </div>
+                <div>
+                  {{date}}
+                </div>
+                <div class="text-h6">
+                  {{book.total_price}}
+                </div>
+              </v-col>
+            </v-row>
+            <div align="center" class="pt-10">
+              To Pay: Php {{formatPrice(priceToCompute*0.50)}}
             </div>
-            <div class="text-h5">
-                Email: {{book.email}}
+            <v-divider></v-divider>
+            <div class="red--text" align="center">
+              Reminder
+            </div>
+            <div align="center" class="mb-5">
+              To reserve the booking you need to pay 50% of the said total price.
             </div>
             <div align="center" class="text-h5">
-                CODE : {{this.book.code}}
+              CODE : {{ this.book.code }}
             </div>
-            <div class="red--text">
-              
-            </div>
-        </v-card>
+            <div class="red--text"></div>
+            <v-col cols="12" class="px-0">
+              <div>Mode of Payment</div>
+              <div>
+                <v-select
+                  :error-messages="isErrorMOP ? 'This field is required.' : false"
+                  @change="mopSetter"
+                  :items="mopList"
+                  v-model="book.mode_of_payment"
+                  outlined
+                  label="Standard"
+                  hide-details=""
+                ></v-select>
+              </div>
+            </v-col>
+              <div class="text-h6" align="center">{{mopAccountName}}</div>
+              <div class="text-h6" align="center">{{mopAccountNumber}}</div>
+              <div class="text-h6 pt-5">
+                downpayment should be settle within 5hrs inorder to confirm the
+                registrationof reservation will be deny<br />
+                Terms & Condition
+              </div>
+          </v-card>
           <v-btn text @click="e1 = 2"> Cancel </v-btn>
-          <v-btn color="primary" @click="confirm"> Confirm </v-btn>
+          <v-btn color="primary" :loading="buttonLoad" @click="confirm"> Confirm </v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
-    <!-- <v-card width="900">
-      <div
-        style="background-color: #6609af; color: white"
-        align="start"
-        class="pa-5"
-      >
-        Booking Form
-      </div>
-      <div class="pa-5" align="start">
-        <v-row>
-          <v-col>
-            <div>Check in Date From & To</div>
-            <div>
-              <v-menu
-                ref="eventDate"
-                v-model="eventDate"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                max-width="290px"
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="date"
-                    outlined
-                    label="Date"
-                    persistent-hint
-                    v-bind="attrs"
-                    @blur="date = date"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker v-model="date" no-title range></v-date-picker>
-              </v-menu>
-            </div>
-          </v-col>
-          <v-col cols="12">
-            <div>Adults</div>
-            <div>
-              <v-text-field outlined v-model="book.adults"></v-text-field>
-            </div>
-          </v-col>
-          <v-col cols="12">
-            <div>Children</div>
-            <div>
-              <v-text-field outlined v-model="book.children"></v-text-field>
-            </div>
-          </v-col>
-          <v-divider></v-divider>
-          <v-col cols="12">
-            <div>Rooms</div>
-            <div>
-              <v-text-field outlined v-model="book.rooms"></v-text-field>
-            </div>
-          </v-col>
-        </v-row>
-        <div align="center">
-          <v-btn
-            depressed
-            color="#6609af"
-            dark
-            @click="login"
-            :loading="isLoaded"
-          >
-            Book
-          </v-btn>
-        </div>
-      </div>
-    </v-card> -->
   </div>
 </template>
 
-<script>
-import moment from "moment";
+<script >
+import { numberOnly } from "~/utils/helpers";
+import OpenPackage from "./OpenPackage.vue";
+import DialogGreetings from './DialogGreetings.vue';
+import moment from 'moment';
 export default {
+  components: { OpenPackage,DialogGreetings },
   created() {
+    this.timestamp()
     this.loadData();
   },
   data() {
     return {
+      isErrorMOP:false,
+      selectedItem: [],
+      dialogAdd: false,
+      isErrorLastName: false,
+      isErrorFirstName: false,
+      isExceedText: false,
+      isErrorCustomerName: false,
+      isErrorContactNumber: false,
+      isErrorEmail: false,
       pool_type: "",
-      eventDate:false,
-      image:'',
+      eventDate: false,
+      image: "",
       pool_list: ["Private Pool 1", "Private Pool 2", "Public Pool"],
       service_list: ["Pool", "Room", "Events"],
       book: [],
       img_holder: "image_placeholder.png",
       image: "",
+      mopAccountName:'',
+      mopAccountNumber:'',
       url: "",
       eventDate: null,
       date: "",
+      e1:1,
+      mop:[],
       service_type: "",
       users: [],
       e1: 1,
       isLoaded: false,
       time_range: "",
+      dialogGreetings:false,
+      mopList:[],
+      packageLister:[],
       rooms: [],
       pools: [],
-      package_list:[],
+      package_list: [],
       events: [],
+      buttonLoad:false,
+      confirmedDates:[],
+      items:[],
       time_range_list: [],
+      mop:[],
     };
   },
 
   methods: {
-     async confirm(){
-          this.buttonLoad = true;
+
+    timestamp() {
+    const today = new Date();
+    const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const timestamp = date + ' ' + time;
+  
+    
+    return timestamp;
+  },
+   formatDate(val){
+      return moment(String(val)).format('YYYY-MM-DD hh:mm')
+    },
+    editItem() {
+      this.dialogAdd = true;
+    },
+    validatePage1() {
+      if (this.book.email == null) {
+        this.isErrorEmail = true;
+        return;
+      } else {
+        this.isErrorEmail = false;
+      }
+      if (this.book.contact_number == null) {
+        this.isErrorContactNumber = true;
+        return;
+      } else if (this.book.contact_number.length > 12) {
+        this.isExceedText = true;
+        return;
+      } else {
+        this.isErrorContactNumber = false;
+      }
+      if (this.book.firstname == null) {
+        this.isErrorFirstName = true;
+        return;
+      } else {
+        this.isErrorFirstName = false;
+      }
+      if (this.book.lastname == null) {
+        this.isErrorLastName = true;
+        return;
+      } else {
+        this.isErrorLastName = false;
+      }
+      this.e1 = 2;
+    },
+    disablePastDates(val) {
+      console.log(new Date().toISOString().substr(0, 10))
+       return val >= new Date().toISOString().substr(0, 10) && !this.confirmedDates.some(item=>{return item==val})
+    },
+
+    async confirm() {
+ 
+      if(this.book.mode_of_payment=='' || this.book.mode_of_payment==null){
+        this.isErrorMOP=true
+        return
+      }
+           this.buttonLoad = true;
       try {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
-        form_data.append("price", this.book.total_price);
-        form_data.append("date_start", this.date[0]);
-        form_data.append("date_end", this.date[1]);
+        form_data.append("price", this.priceToCompute);
+        form_data.append("to_pay", this.priceToCompute*0.50);
+        form_data.append("date_start", this.date);
+        // form_data.append("date_end", this.date);
         form_data.append("email", this.book.email);
-        form_data.append("customer_name", this.book.customer_name);
+        form_data.append("firstname", this.book.firstname)
+        form_data.append("lastname", this.book.lastname);
+        form_data.append("middlename", this.book.middlename);
         form_data.append("mode_of_payment", this.book.mode_of_payment);
         form_data.append("code", this.book.code);
-        form_data.append("status", 'pending');
+        form_data.append("status", "To Pay");
+        form_data.append("service_type", this.service_type);
+        form_data.append("subtype",this.book.pool_type);
+        form_data.append("transaction_date",this.formatDate(this.timestamp()));
         form_data.append("contact_number", this.book.contact_number);
-          const response = await this.$axios
-            .post("/book/", form_data, {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            })
-            .then(() => {
-        
-            });
-        
+        const response = await this.$axios
+          .post("/book/", form_data, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then(() => {
+            this.buttonLoad=false
+            this.dialogGreetings=true
+          });
       } catch (error) {
-          alert(error)
-        // alert(error);
+       
+        
         this.buttonLoad = false;
       }
-      },
-      packageSetter(){
-          this.pools.map((val)=>{   
-            if(this.book.pool_type==val.pool_type && this.book.package==val.package){
-                this.book.price=val.price
-                this.image = val.image
-                this.book.descriptions = val.descriptions
-            }
-        })
-      },
-    packageMapper(){
-        this.package_list=[]
-        this.pools.map((val)=>{   
-            if(this.book.pool_type==val.pool_type){
-                this.package_list.push(val.package)
-            }
-        })
+    },
+    packageSetter() {
+      
+      this.pools.map((val) => {
+        if (
+          this.book.pool_type == val.pool_type &&
+          this.book.package == val.package
+        ) {
+          this.book.price = this.formatPrice(val.price);
+          this.priceToCompute=val.price
+          this.image = val.image;
+          this.book.descriptions = val.descriptions;
+          this.selectedItem = val;
+        }
+      });
+      // this.book.map(item=>{
+      //   if(item.status=='confirmed' && this.book.package==item.package){
+      //     this.confirmedDates.push(item.start_date)
+      //   }
+      // })
+    },
+    packageMapper() {
+      this.package_list = [];
+      this.pools.map((val) => {
+        if (this.book.pool_type == val.pool_type) {
+          this.package_list.push(val.package);
+          this.packageLister.push(val.package)
+        }
+      });
     },
     parseDate(str) {
       var mdy = str.split("/");
@@ -415,18 +495,54 @@ export default {
       return Math.round((second - first) / (1000 * 60 * 60 * 24));
     },
     changeDate() {
-      var start = moment(this.date[0]);
-      var end = moment(this.date[1]);
-      var val = end.diff(start, "days");
-     this.book.total_price = val*this.book.price
-    
+    this.packageMapper()
+    this.confirmedDates=[]
+      this.items.map(item=>{
+        if(this.date==item.date_start && item.status=='confirmed'){
+          for(let x in this.package_list){
+            if(item.package==this.package_list[x]){
+                this.package_list.splice(x,1)
+            }
+          }
+        }
+      })
+      
+      // var start = moment(this.date[0]);
+      // var end = moment(this.date[1]);
+      // var val = end.diff(start, "days");
+      this.book.total_price = this.book.price;
     },
     loadData() {
-     const string_length = 10
-      this.book.code =  [...Array(string_length)].map(i=>(~~(Math.random()*36)).toString(36)).join('')
+      const string_length = 10;
+      this.book.code = [...Array(string_length)]
+        .map((i) => (~~(Math.random() * 36)).toString(36))
+        .join("");
       this.poolsGetall();
       this.roomsGetall();
       this.eventsGetall();
+      this.bookGetall();
+      this.mopGetall();
+    },
+    async bookGetall() {
+      const res = await this.$axios
+        .get(`/book/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.items = res.data;
+          this.isLoading = false;
+        });
+    },
+    mopSetter(){
+      this.mop.map(item=>{
+        if(item.modeOfPayment==this.book.mode_of_payment){
+          this.mopAccountNumber=item.accountNumber
+          this.mopAccountName=item.accountName
+        }
+      })
     },
     async eventsGetall() {
       this.isLoading = true;
@@ -440,6 +556,21 @@ export default {
           console.log(res.data);
           this.events = res.data;
           this.isLoading = false;
+        });
+    },
+    async mopGetall() {
+      const res = await this.$axios
+        .get(`/payment/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          this.mop = res.data;
+          this.isLoading = false;
+          this.mop.map(item=>{   
+            this.mopList.push(item.modeOfPayment)
+          })
         });
     },
     async poolsGetall() {
@@ -551,6 +682,14 @@ export default {
       } else {
         this.url, (this.img_holder = URL.createObjectURL(e));
       }
+    },
+    typeNumber(e) {
+      return numberOnly(e);
+    },
+
+    formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
   },
 };

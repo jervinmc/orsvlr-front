@@ -1,66 +1,26 @@
 <template>
-<v-form ref="form">
+<v-form ref="form" submit.prevent="addMop">
   <v-dialog v-model="isOpen" width="1000" persistent>
     <v-card class="pa-10">
-      <div align="center" class="text-h6">Add Room</div>
+      <div align="center" class="text-h6">Add Mode of Payment</div>
       <div class="text-h6">Rooms</div>
       <v-col cols="12" class="px-0">
-        <div>Room Type</div>
+        <div>Mode of Payment</div>
         <div>
-          <v-select
-            :items="room_list"
-            v-model="rooms.service_type"
-            outlined
-          ></v-select>
-        </div>
-      </v-col>
-      <!-- <v-col cols="12" class="px-0">
-        <div>Time Range</div>
-        <div>
-          <v-text-field outlined v-model="rooms.time_range"></v-text-field>
-        </div>
-      </v-col> -->
-      <v-col cols="12" class="px-0">
-        <div>Price</div>
-        <div>
-          <v-text-field outlined v-model="rooms.price"></v-text-field>
+          <v-text-field outlined v-model="mop.payment"></v-text-field>
         </div>
       </v-col>
       <v-col cols="12" class="px-0">
-        <div>Package</div>
+        <div>Name</div>
         <div>
-          <v-text-field outlined v-model="rooms.package"></v-text-field>
+          <v-text-field outlined v-model="mop.name"></v-text-field>
         </div>
       </v-col>
       <v-col cols="12" class="px-0">
-        <div>descriptions</div>
+        <div>Account Number</div>
         <div>
-          <v-textarea outlined v-model="rooms.descriptions"></v-textarea>
+          <v-text-field outlined v-model="mop.accountNumber"></v-text-field>
         </div>
-      </v-col>
-       <v-col>
-        <span class="pt-2 pr-10 pb-10"><b>Upload Image <v-icon @click="$refs.file.click()">mdi-plus</v-icon></b></span>
-
-        <div class="hover_pointer pt-10">   
-          <img
-            @click="$refs.file.click()"
-            :src="img_holder"
-            alt="item_.js"
-            height="150"
-            width="150"
-            class="mb-0"
-          />
-        </div>
-      </v-col>
-      <v-col class="d-none">
-        <input
-          style="display: none"
-          type="file"
-          id="fileInput"
-          ref="file"
-          accept="image/png, image/jpeg"
-          @change="onFileUpload"
-        />
       </v-col>
       <v-card-actions>
         <v-row align="center">
@@ -71,7 +31,7 @@
             <v-btn
               color="success"
               text
-              @click="addRooms"
+              @click="addMop"
               :loading="buttonLoad"
             >
               Save
@@ -89,50 +49,49 @@ export default {
   props: ["isOpen", "items", "isAdd"],
   watch: {
     items() {
-        this.rooms=this.items
-        this.img_holder=this.items.image
+        // // this.mop=this.items
+        // alert(this.items.modeOfPayment)
+        this.mop.accountNumber=this.items.accountNumber
+        this.mop.payment=this.items.modeOfPayment
+        this.mop.name=this.items.accountName
+        this.mop.id=this.items.id
     },
   },
   data() {
     return {
       room_list:['Standard','Deluxe','Suite'],
-      rooms: [],
+      mop: [],
       buttonLoad: false,
       img_holder: "image_placeholder.png",
       image:''
     };
   },
   methods: {
-        async addRooms() {
+        async addMop() {
       this.buttonLoad = true;
       try {
         let form_data = new FormData();
-        if (this.image != null && this.image != "") {
-          form_data.append("image", this.image);
-        }
-        form_data.append("service_type", this.rooms.service_type);
-        form_data.append("price", this.rooms.price);
-        form_data.append("package", this.rooms.package);
-        form_data.append("descriptions", this.rooms.descriptions);
+        form_data.append("modeOfPayment", this.mop.payment);
+        form_data.append("accountName", this.mop.name);
+        form_data.append("accountNumber", this.mop.accountNumber);
         if (this.isAdd) {
           const response = await this.$axios
-            .post("/rooms/", form_data, {
+            .post("/payment/", form_data, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             })
             .then(() => {
-           
-                  this.$refs.form.reset()
-             
+          
             });
             this.buttonLoad = false;
+            this.$refs.form.reset()
              this.$emit("cancel");
               this.$emit("refresh");
             
         } else {
           const response = await this.$axios
-            .patch(`/rooms/${this.rooms.id}/`, form_data, {
+            .patch(`/payment/${this.mop.id}/`, form_data, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
@@ -140,7 +99,7 @@ export default {
             .then(() => {
               this.buttonLoad = false;
               this.$emit("cancel");
-                this.$refs.form.reset()
+              this.$refs.form.reset()
               this.$emit("refresh");
             });
         }
@@ -172,8 +131,9 @@ export default {
       }
     },
     cancel() {
+      this.$refs.form.reset()
       this.$emit("cancel");
-    },  
+    },
   },
 };
 </script>
