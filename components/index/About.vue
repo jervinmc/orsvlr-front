@@ -30,7 +30,7 @@
                 <v-row>
                     <v-col>
                         <div>
-                            20% DOWN PAYMENT
+                            50% DOWN PAYMENT
                         </div>
                     </v-col>
                     <v-col>

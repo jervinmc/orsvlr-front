@@ -9,7 +9,7 @@
           <v-col>
             <div style="color: #6609af"><b>About the Resort</b></div>
             <div>
-              The Villa Leonora Resorts is a family business. The resorst offers
+              The Villa Leonora Resorts is a family business. The resorts offers
               various of services. From public pools, venue renting, private
               pool and event packages.
             </div>

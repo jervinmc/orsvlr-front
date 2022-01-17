@@ -120,6 +120,7 @@
                       :items="service_list"
                       @change="packageMapper"
                       v-model="service_type"
+                      :error-messages="isErrorServiceType ? 'This field is required.' :  false"
                       outlined
                     ></v-select>
                   </div>
@@ -412,7 +413,7 @@
             </div>
           </v-card>
           <v-btn text @click="e1 = 1"> Cancel </v-btn>
-          <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
+          <v-btn color="primary" @click="validatePage2"> Continue </v-btn>
         </v-stepper-content>
         <v-stepper-content step="3">
           <v-card width="900" align="start">
@@ -525,6 +526,7 @@ export default {
       image: "",
       mopAccountName: "",
       mopAccountNumber: "",
+      isErrorServiceType:false,
       url: "",
       eventDate: null,
       date: "",
@@ -573,6 +575,13 @@ export default {
   },
 
   methods: {
+    validatePage2(){
+      if(this.service_type == '' || this.service_type == null || this.book.price == null) {
+
+        return
+      }
+      this.e1 = 3
+    },
      dateRangeOverlaps(a_start, a_end, b_start, b_end) {
     if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
     if (a_start <= b_end   && b_end   <= a_end) return true; // b ends in a
@@ -821,7 +830,7 @@ export default {
       });
     },
     packageMapper() {
-    
+      this.isErrorServiceType = false
       this.package_list = [];
       this.pools.map((val) => {
         if (this.book.pool_type == val.pool_type) {

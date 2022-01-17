@@ -13,10 +13,10 @@
               </v-col>
               <v-col align="start">
                 <div>
-                  {{items.pool_type}}
+                  {{items.pool_type == 'undefined' ? '' : items.pool_type}}
                 </div>
                 <div>
-                  {{items.package}}
+                  {{items.package=='undefined' ? '' : items.package}}
                 </div>
                 <div>
                   {{items.date}}

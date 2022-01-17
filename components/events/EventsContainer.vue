@@ -22,9 +22,9 @@
           {{i.descriptions}}
         </div>
         <div>{{formatPrice(i.price)}}/ per night</div>
-        <div class="pt-5">
+        <!-- <div class="pt-5">
           <v-btn depressed color="#6609af" dark @click="route"> Book now ! </v-btn>
-        </div>
+        </div> -->
       </v-col>
     </v-row>
   </div>

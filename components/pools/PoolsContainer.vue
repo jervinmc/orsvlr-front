@@ -44,7 +44,7 @@
         <div>
         {{i.descriptions}}
         </div>
-        <div>Php {{i.price}}</div>
+        <div>Php {{formatPrice(i.price)}}</div>
         <div class="pt-5">
           <v-btn depressed color="#6609af" dark @click="route"> Book now ! </v-btn>
         </div>
@@ -65,6 +65,10 @@ export default {
           this.loadData()
       },
   methods: {
+    formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
     route(){
         this.$router.push('/book')
     },

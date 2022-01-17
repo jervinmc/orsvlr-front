@@ -37,10 +37,10 @@
           </v-col>
           <v-col>
             <div>
-              {{ pool_type }}
+              {{ pool_type == 'undefined' ? '' : pool_type }}
             </div>
             <div>
-              {{ reservation_package }}
+              {{  reservation_package == 'undefined' ? '' : reservation_package }}
             </div>
             <div>
               {{ date_start }}
