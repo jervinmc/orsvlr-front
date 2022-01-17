@@ -93,6 +93,7 @@
                   <div>
                     <v-text-field
                       outlined
+                      :rules="emailRules"
                       v-model="book.email"
                       :error-messages="
                         isErrorEmail ? 'this field is required' : false
@@ -117,6 +118,7 @@
                   <div>
                     <v-select
                       :items="service_list"
+                      @change="packageMapper"
                       v-model="service_type"
                       outlined
                     ></v-select>
@@ -127,7 +129,7 @@
                     <div>Pool Type</div>
                     <div>
                       <v-select
-                        @change="packageMapper"
+                     
                         :items="pool_list"
                         v-model="book.pool_type"
                         outlined
@@ -168,7 +170,7 @@
                           <v-date-picker
                             @change="changeDate"
                             v-model="date"
-                            :allowed-dates="disablePastDates"
+                            :min="min_date"
                             no-title
                           ></v-date-picker>
                         </v-menu>
@@ -220,7 +222,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div class="text-h5">
-                      To be pay :
+                      To be paid : Php
                       {{
                         formatPrice(
                           priceToCompute * 0.5 == NaN ? 0 : priceToCompute * 0.5
@@ -250,6 +252,7 @@
                           </div>
                         </v-col>
                         <v-col>
+                          Php
                           {{ x.price }}
                         </v-col>
                       </v-row>
@@ -258,45 +261,49 @@
                       <v-row>
                         <v-col>
                           <v-radio
-                        label="Day-(Kids-50,Adults-100)"
-                        value="day"
-                      ></v-radio>
+                            label="Day-(Kids-50,Adults-100)"
+                            value="day"
+                          ></v-radio>
                         </v-col>
                         <v-col>
-                            <v-radio
-                        label="Night-(Kids-100,Adults-150)"
-                        value="night"
-                      ></v-radio>
+                          <v-radio
+                            label="Night-(Kids-100,Adults-150)"
+                            value="night"
+                          ></v-radio>
                         </v-col>
                         <v-col>
-                           <v-radio
-                        label="Overnight-(Kids-150,Adults-200)"
-                        value="overnight"
-                      ></v-radio>
+                          <v-radio
+                            label="Overnight-(Kids-150,Adults-200)"
+                            value="overnight"
+                          ></v-radio>
                         </v-col>
                       </v-row>
                     </v-radio-group>
                     <div>Adult</div>
                     <div>
                       <v-text-field
-                      placeholder="11 - 59 years old"
+                        placeholder="11 - 59 years old"
                         outlined
                         v-model="book.adults"
                       ></v-text-field>
                     </div>
                     <div>Kids</div>
                     <div>
-                      <v-text-field outlined v-model="book.kids" placeholder="4 - 10 years old"></v-text-field>
+                      <v-text-field
+                        outlined
+                        v-model="book.kids"
+                        placeholder="4 - 10 years old"
+                      ></v-text-field>
                     </div>
-                   <div align="center">
+                    <div align="center">
                       <v-date-picker
-                            @change="changeDate"
-                            v-model="date"
-                            :allowed-dates="disablePastDates"
-                            no-title
-                          ></v-date-picker>
-                   </div>
-                   <v-col cols="12" class="px-0">
+                        @change="changeDate"
+                        v-model="date"
+                        :min="min_date"
+                        no-title
+                      ></v-date-picker>
+                    </div>
+                    <v-col cols="12" class="px-0">
                       <div>Total Price</div>
                       <div>
                         <v-text-field
@@ -314,7 +321,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div class="text-h5">
-                      To be pay :
+                      To be paid : Php
                       {{
                         formatPrice(
                           book.price * 0.5 == NaN ? 0 : book.price * 0.5
@@ -331,9 +338,75 @@
                         :items="room_list"
                         v-model="book.room_type"
                         outlined
+                        @change="packageSetter"
                       ></v-select>
                     </div>
                   </v-col>
+                  <div align="center">
+                    <v-date-picker
+                      @change="checkPackageRoom"
+                      v-model="date_range"
+                      :min="min_date"
+                      :max="max_date"
+                      range
+                      no-title
+                    ></v-date-picker>
+                    <v-btn @click="resetDate">Reset Date</v-btn>
+                  </div>
+                   <v-col cols="12" class="px-0">
+                      <div>Package</div>
+                      <div>
+                        <v-select
+                          @change="packageSubtypeSetter"
+                          :items="package_list"
+                          v-model="book.package"
+                          outlined
+                          label="Standard"
+                        ></v-select>
+                      </div>
+                      <!-- <div class="red--text">
+                      {{ book.descriptions }}
+                    </div> -->
+                    </v-col>
+                     <v-col align-self="center" align="center" class="pr-10">
+                      <v-btn
+                        class="rnd-btn"
+                        rounded
+                        large
+                        color="black"
+                        depressed
+                        dark
+                        width="170"
+                        @click="editItem"
+                      >
+                        <span class="text-none">View</span>
+                      </v-btn>
+                    </v-col>
+                    <v-col cols="12" class="px-0">
+                      <div>Total Price</div>
+                      <div>
+                        <v-text-field
+                          outlined
+                          v-model="book.price"
+                          readonly
+                        ></v-text-field>
+                      </div>
+                    </v-col>
+                     <div class="red--text">Reminder</div>
+                    <div>
+                      To reserve the booking you need to pay 50%<br />
+                      of the said total prices
+                    </div>
+                    <v-divider></v-divider>
+                    <div class="text-h5">
+                      To be paid : Php
+                      {{
+                        formatPrice(
+                          priceToCompute * 0.5
+                        )
+                      }}
+                      
+                    </div>
                 </div>
               </v-row>
             </div>
@@ -398,7 +471,7 @@
             <div class="text-h6" align="center">{{ mopAccountName }}</div>
             <div class="text-h6" align="center">{{ mopAccountNumber }}</div>
             <div class="text-h6 pt-5">
-              downpayment should be settle within 5hrs inorder to confirm the
+              downpayment should be settle within 1hr inorder to confirm the
               registrationof reservation will be deny<br />
               Terms & Condition
             </div>
@@ -414,6 +487,7 @@
 </template>
 
 <script >
+import validations from "@/utils/validations";
 import { numberOnly } from "~/utils/helpers";
 import OpenPackage from "./OpenPackage.vue";
 import DialogGreetings from "./DialogGreetings.vue";
@@ -421,12 +495,16 @@ import moment from "moment";
 export default {
   components: { OpenPackage, DialogGreetings },
   created() {
+    this.disableMinDate();
     this.timestamp();
     this.loadData();
   },
   data() {
     return {
+      ...validations,
+      room_list: ["Standard", "Deluxe", "Suite"],
       selected_amenities: [],
+      date_range:[],
       amenities: [],
       isErrorMOP: false,
       selectedItem: [],
@@ -469,10 +547,120 @@ export default {
       items: [],
       time_range_list: [],
       mop: [],
+      min_date: "",
+      max_date: "",
+      currentMinDate:''
     };
+  },
+  watch:{
+    date_range(){
+         if (this.service_type == "Room" ) {
+        this.min_date = this.date_range[0]
+        var currentDate = moment(this.min_date);
+        var futureMonth = moment(currentDate).add(1, "M");
+        var futureMonthEnd = moment(futureMonth).endOf("month");
+        if (
+          currentDate.date() != futureMonth.date() &&
+          futureMonth.isSame(futureMonthEnd.format("YYYY-MM-DD"))
+        ) {
+          futureMonth = futureMonth.add(1, "d");
+        }
+        this.max_date = this.formatDateFuture(futureMonth);
+       
+        return;
+      }
+    }
   },
 
   methods: {
+     dateRangeOverlaps(a_start, a_end, b_start, b_end) {
+    if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
+    if (a_start <= b_end   && b_end   <= a_end) return true; // b ends in a
+    if (b_start <=  a_start && a_end   <=  b_end) return true; // a in b
+    return false;
+},
+ multipleDateRangeOverlaps(timeEntries) {
+    let i = 0, j = 0;
+    let timeIntervals = timeEntries.filter(entry => entry.from != null && entry.to != null && entry.from.length === 8 && entry.to.length === 8);
+
+    if (timeIntervals != null && timeIntervals.length > 1)
+    for (i = 0; i < timeIntervals.length - 1; i += 1) {
+        for (j = i + 1; j < timeIntervals.length; j += 1) {
+                if (
+                dateRangeOverlaps(
+            timeIntervals[i].from.getTime(), timeIntervals[i].to.getTime(),
+            timeIntervals[j].from.getTime(), timeIntervals[j].to.getTime()
+                    )
+                ) return true;
+            }
+        }
+   return false;
+},
+    checkPackageRoom(){
+      this.packageSetter()
+      if(this.service_type=='Room'){
+        var threshold_item = []
+          var dates = this.items.map(item=>{
+            if((item.subtype==this.book.room_type && item.status=='To Pay') || item.subtype==this.book.room_type && item.status=='confirmed'){
+              
+              if(this.dateRangeOverlaps(this.date_range[0],this.date_range[1],this.formatDateFuture(new Date(item.date_start)),this.formatDateFuture(new Date(item.date_end)))){
+              
+                 for (let x in this.package_list) {
+                  if (item.package == this.package_list[x]) {
+                    this.package_list.splice(x, 1);
+                  }
+          }
+              }
+              else{
+
+              }
+              
+              
+                //  return new Date(item.date_start);
+            }
+           
+          })
+          //  dates = threshold_item.map(item=>{
+          //   if(item.subtype==this.book.room_type){
+          //        if(this.date_range[0] > new Date(item.date_start) && this.date_range[1] < new Date(item.end)  )
+          //        return new Date(item.date_start);
+          //   }
+           
+          // })
+          
+      //     var latest = new Date(Math.max.apply(null,dates));   
+      //     var earliest = new Date(Math.min.apply(null,dates));
+      //     this.package_list=[]
+      //     this.rooms.map((val) => {
+      //       if(val.service_type==this.book.room_type)
+      //       {
+      //          this.package_list.push(val.package)
+      //       }
+           
+      // });
+      }
+    },
+    clickDate(){
+        if (this.service_type == "Room" && this.date_range==[]) {
+        this.min_date = this.date_range[0]
+        var currentDate = moment(this.min_date);
+        var futureMonth = moment(currentDate).add(1, "M");
+        var futureMonthEnd = moment(futureMonth).endOf("month");
+        if (
+          currentDate.date() != futureMonth.date() &&
+          futureMonth.isSame(futureMonthEnd.format("YYYY-MM-DD"))
+        ) {
+          futureMonth = futureMonth.add(1, "d");
+        }
+        this.max_date = this.formatDateFuture(futureMonth);
+       
+        return;
+      }
+    },
+    resetDate(){   
+      this.min_date=this.currentMinDate
+      this.max_date=''
+    },
     timestamp() {
       var today = new Date();
       var date =
@@ -484,14 +672,26 @@ export default {
       var time = today.getHours() + ":" + today.getMinutes();
       var dateTime = date + " " + time;
 
-      // const today = new Date();
-      // const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
-      // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-      // const timestamp = date + ' ' + time;
       return dateTime;
+    },
+    disableMinDate() {
+      var today = new Date();
+      var day = today.getDate() + 1;
+      var date =
+        today.getFullYear() + "-0" + (today.getMonth() + 1) + "-" + day;
+
+      this.min_date = date;
+      this.currentMinDate = date
     },
     formatDate(val) {
       return moment(String(val)).format("YYYY-MM-DD hh:mm");
+    },
+    formatDateFuture(val) {
+      return moment(String(val)).format("YYYY-MM-DD");
+    },
+    formatDate1(date) {
+      var [date, month, year] = date.toLocaleDateString().split("/");
+      return `${year}-${month}-${date}`;
     },
     editItem() {
       this.dialogAdd = true;
@@ -506,7 +706,7 @@ export default {
       if (this.book.contact_number == null) {
         this.isErrorContactNumber = true;
         return;
-      } else if (this.book.contact_number.length >= 11) {
+      } else if (this.book.contact_number.length != 11) {
         this.isExceedText = true;
         return;
       } else {
@@ -550,8 +750,8 @@ export default {
         form_data.append("package", this.book.package);
         form_data.append("price", this.priceToCompute);
         form_data.append("to_pay", this.priceToCompute * 0.5);
-        form_data.append("date_start", this.date);
-        // form_data.append("date_end", this.date);
+        form_data.append("date_start", this.service_type =='Room' ? this.date_range[0] : this.date);
+        form_data.append("date_end", this.service_type =='Room' ? this.date_range[1] : this.date);
         form_data.append("email", this.book.email);
         form_data.append("firstname", this.book.firstname);
         form_data.append("lastname", this.book.lastname);
@@ -560,7 +760,7 @@ export default {
         form_data.append("code", this.book.code);
         form_data.append("status", "To Pay");
         form_data.append("service_type", this.service_type);
-        form_data.append("subtype", this.book.pool_type);
+        form_data.append("subtype", this.service_type =='Room' ? this.book.room_type  : this.book.pool_type);
         form_data.append("transaction_date", this.timestamp());
         form_data.append("contact_number", this.book.contact_number);
         const response = await this.$axios
@@ -577,7 +777,36 @@ export default {
         this.buttonLoad = false;
       }
     },
+    packageSubtypeSetter(){
+       if(this.service_type=='Room'){
+          // this.package_list=[]
+          this.rooms.map((val) => {
+            if(this.book.package == val.package)
+            {
+              this.selectedItem = val;
+               this.book.price = val.price
+               var start = moment(this.date_range[0]);
+              var end = moment(this.date_range[1]);
+              var vals = this.datediff(start, end);
+              this.book.price = (val.price)*vals
+               this.priceToCompute = (val.price)*vals
+            }
+      });
+      return
+      }
+    },
     packageSetter() {
+        if(this.service_type=='Room'){
+          this.package_list=[]
+          this.rooms.map((val) => {
+            if(val.service_type==this.book.room_type)
+            {
+               this.package_list.push(val.package)
+            }
+           
+      });
+      return
+      }
       this.pools.map((val) => {
         if (
           this.book.pool_type == val.pool_type &&
@@ -590,13 +819,9 @@ export default {
           this.selectedItem = val;
         }
       });
-      // this.book.map(item=>{
-      //   if(item.status=='confirmed' && this.book.package==item.package){
-      //     this.confirmedDates.push(item.start_date)
-      //   }
-      // })
     },
     packageMapper() {
+    
       this.package_list = [];
       this.pools.map((val) => {
         if (this.book.pool_type == val.pool_type) {
@@ -616,24 +841,27 @@ export default {
       return Math.round((second - first) / (1000 * 60 * 60 * 24));
     },
     changeDate() {
-      if(this.book.pool_type=='Public Pool'){
+      if (this.book.pool_type == "Public Pool") {
         var total_amenities = 0;
         var rate = 0;
         var total_price_person = 0;
         var total = 0;
-        for(let key in this.amenities){
-          if(this.selected_amenities[key]){
-            total_amenities = parseInt(total_amenities) + parseInt(this.amenities[key].price)
+        for (let key in this.amenities) {
+          if (this.selected_amenities[key]) {
+            total_amenities =
+              parseInt(total_amenities) + parseInt(this.amenities[key].price);
           }
         }
-        if(this.book.dateoption=='day')  rate = 50
-        else if(this.book.dateoption=='night')  rate = 100
-        else if(this.book.dateoption=='overnight')  rate = 150
-        total_price_person = (this.book.adults * (50+rate) ) + (this.book.kids * (0+rate))
+        if (this.book.dateoption == "day") rate = 50;
+        else if (this.book.dateoption == "night") rate = 100;
+        else if (this.book.dateoption == "overnight") rate = 150;
+        total_price_person =
+          this.book.adults * (50 + rate) + this.book.kids * (0 + rate);
+          
         this.book.price = total_price_person + total_amenities;
-        this.priceToCompute = this.book.price
+        this.priceToCompute = this.book.price;
         // alert(this.book.price)
-        return
+        return;
       }
       this.packageMapper();
       this.confirmedDates = [];
@@ -652,9 +880,7 @@ export default {
         }
       });
 
-      // var start = moment(this.date[0]);
-      // var end = moment(this.date[1]);
-      // var val = end.diff(start, "days");
+      
       this.book.total_price = this.book.price;
     },
     loadData() {
@@ -772,6 +998,9 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.rooms = res.data;
+          // this.rooms.map(item=>{
+          //   this.room_list.push(this.rooms)
+          // })
           this.isLoading = false;
         });
     },

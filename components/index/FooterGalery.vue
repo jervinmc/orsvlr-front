@@ -11,7 +11,7 @@
             ></v-progress-linear>
           </template>
 
-          <v-img height="200" src="./main_image.jpeg"></v-img>
+          <v-img height="200" src="./venue_image.png"></v-img>
 
           <v-card-title>Venue Renting</v-card-title>
 
@@ -51,7 +51,7 @@
             ></v-progress-linear>
           </template>
 
-          <v-img height="200" src="./main_image.jpeg"></v-img>
+          <v-img height="200" src="./event_image.jpeg"></v-img>
 
           <v-card-title>Event Packages</v-card-title>
 
@@ -92,7 +92,7 @@
             ></v-progress-linear>
           </template>
 
-          <v-img height="200" src="./main_image.jpeg"></v-img>
+          <v-img height="200" src="./pool_image.jpeg"></v-img>
 
           <v-card-title>Pools</v-card-title>
 

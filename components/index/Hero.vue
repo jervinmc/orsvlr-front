@@ -3,7 +3,7 @@
     <v-img align="start" >
       <v-row>
           <v-col cols="6" align="center">
-            <v-img src="/main_image.jpeg" height="400" width="400">
+            <v-img src="/main_image2.jpeg" height="400" width="400">
             </v-img>
         </v-col>
         <v-col cols="6" class="pa-16">
