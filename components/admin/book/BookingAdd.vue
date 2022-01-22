@@ -575,16 +575,16 @@ export default {
       events: [],
       buttonLoad: false,
       confirmedDates: [],
-      items: [],
       time_range_list: [],
       mop: [],
       min_date: "",
       max_date: "",
       currentMinDate:'',
-      items:[],
+      book_list:[],
     };
   },
   created(){
+    this.bookGetall();
         this.disableMinDate();
         this.timestamp();
       this.loadData()
@@ -624,7 +624,7 @@ export default {
       this.packageSetter()
       if(this.service_type=='Room'){
         var threshold_item = []
-          var dates = this.items.map(item=>{
+          var dates = this.book_list.map(item=>{
             if((item.subtype==this.book.room_type && item.status=='To Pay') || item.subtype==this.book.room_type && item.status=='confirmed'){
               
               if(this.dateRangeOverlaps(this.date_range[0],this.date_range[1],this.formatDateFuture(new Date(item.date_start)),this.formatDateFuture(new Date(item.date_end)))){
@@ -889,8 +889,7 @@ export default {
       }
       this.packageMapper();
       this.confirmedDates = [];
-      console.warn(this.items);
-      this.items.map((item) => {
+      this.book_list.map((item) => {
         if (
           (this.date == item.date_start && item.status == "confirmed") ||
           (this.date == item.date_start && item.status == "To Pay") ||
@@ -916,7 +915,6 @@ export default {
       this.roomsGetall();
       this.amenitiesGetall();
       this.eventsGetall();
-      this.bookGetall();
       this.mopGetall();
     },
     async amenitiesGetall() {
@@ -934,6 +932,7 @@ export default {
         });
     },
     async bookGetall() {
+      
       const res = await this.$axios
         .get(`/book/`, {
           headers: {
@@ -941,8 +940,10 @@ export default {
           },
         })
         .then((res) => {
+          console.log('testtest')
           console.log(res.data);
-          this.items = res.data;
+          this.book_list = res.data;
+          
           this.isLoading = false;
         });
     },
