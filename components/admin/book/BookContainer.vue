@@ -1,5 +1,9 @@
 <template>
   <v-card elevation="5" >
+    <booking-add :isOpen="dialogAdd"
+      @cancel="loadData"
+      @refresh="loadData"
+      :items="selectedItem" />
     <dialog-delete :isOpen="dialogReject"
       @cancel="dialogReject = false"
       @refresh="loadData"
@@ -20,6 +24,20 @@
         <b>Booking Management</b>
       </v-col>
       <v-spacer></v-spacer>
+      <v-col align-self="center" align="end" class="pr-10">
+        <v-btn
+          class="rnd-btn"
+          rounded
+          large
+          color="black"
+          depressed
+          dark
+          width="170"
+          @click="dialogAdd=true"
+        >
+          <span class="text-none">Add Booking</span>
+        </v-btn>
+      </v-col>
     </v-row>
     <v-container fluid>
           <v-row class="pl-3" align="start" elevation="10">
@@ -233,11 +251,13 @@ import DialogActions from "./DialogActions.vue";
 import DialogDelete from './DialogDelete.vue';
 import ViewCustomerDetails from "./ViewCustomerDetails.vue";
 import moment from 'moment';
+import BookingAdd from './BookingAdd.vue';
 export default {
   components: {
     ViewCustomerDetails,
     DialogActions,
     DialogDelete,
+    BookingAdd,
   },
   computed:{
     bookToPay(){
@@ -343,6 +363,7 @@ export default {
       var today = new Date();
       var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
       var time = today.getHours() + ":" + today.getMinutes()
+      
       var dateTime = date+' '+time;
      var  diff= Math.abs(new Date(moment(String(val)).format('YYYY/MM/DD HH:mm')) - new Date(moment(String(dateTime)).format('YYYY/MM/DD HH:mm')));
       if(60-(Math.floor((diff/1000)/60))<0){
@@ -418,6 +439,7 @@ export default {
         });
     },
     loadData() {
+      this.dialogAdd=false
       this.eventsGetall();
       this.dialogReject=false
       this.dialogConfirm=false
