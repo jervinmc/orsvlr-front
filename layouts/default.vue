@@ -18,7 +18,8 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-    <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-events' && isAdmin!='admin-amenities'  && isAdmin!='admin-book'  && isAdmin!='admin-settings'   " >
+    <div v-if="$route.name=='admin'"></div>
+    <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-else-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-promo' && isAdmin!='admin-sales' && isAdmin!='admin-events' && isAdmin!='admin-amenities'  && isAdmin!='admin-book'  && isAdmin!='admin-settings'   " >
       <div class="text-h6">Villa Leonora Resort</div>
       <v-spacer></v-spacer>
       <v-toolbar-title
@@ -76,7 +77,7 @@
     <v-app-bar-nav-icon @click="drawer=true"></v-app-bar-nav-icon>
     </v-app-bar>
     <v-main>
-      <v-container fluid class="pt-5">
+      <v-container fluid class="pa-0">
         <Nuxt />
       </v-container>
     </v-main>
@@ -125,6 +126,16 @@ export default {
           icon: "mdi-book",
           title: "Book",
           to: "/admin/book",
+        },
+        {
+          icon: "mdi-book",
+          title: "Sales",
+          to: "/admin/sales",
+        },
+        {
+          icon: "mdi-book",
+          title: "Promo Code",
+          to: "/admin/promo",
         },
         {
           icon: "mdi-pool",

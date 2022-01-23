@@ -108,7 +108,7 @@
             </div>
           </v-card>
           <div class="pt-5">
-            <v-btn text> Cancel </v-btn>
+            <v-btn text @click="cancel"> Cancel </v-btn>
             <v-btn color="primary" @click="validatePage1"> Continue </v-btn>
           </div>
         </v-stepper-content>

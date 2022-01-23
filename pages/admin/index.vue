@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-img src="./main_imagae.jpeg" light>
+  <div class="pa-0">
+    <v-img src="/main_image2.jpeg" light>
       <v-sheet
         color="transparent"
         height="85vh"

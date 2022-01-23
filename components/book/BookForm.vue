@@ -216,6 +216,8 @@
                         ></v-text-field>
                       </div>
                     </v-col>
+                    <div>Promo Code</div>
+                    <v-text-field outlined v-model="book.promo"></v-text-field>
                     <div class="red--text">Reminder</div>
                     <div>
                       To reserve the booking you need to pay 50%<br />
@@ -438,16 +440,31 @@
                 <div class="text-h6">
                   {{ book.total_price }}
                 </div>
+                 <div class="text-h6">
+                 Promo Code : {{book.promo}} ({{ percentage }}%)
+                </div>
               </v-col>
             </v-row>
-            <div align="center" class="pt-10">
-              To Pay: Php {{ formatPrice(priceToCompute * 0.5) }}
+            <div  class="pt-10" align="center">
+              Total Price : {{formatPrice((((priceToCompute ))))}}
+            </div>
+            <div class="red--text" align="center" >
+            Total Discount :  -  Php {{ formatPrice(((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code)
+            </div>
+            <!-- <div align="center">
+              Total Amount of 50% Downpayment: Php {{ formatPrice((priceToCompute-(priceToCompute - (priceToCompute*parseInt(percentage)/100)*.50))) }}
+            </div> -->
+            <v-divider></v-divider>
+             <div class="green--text text-h5" align="center" >
+            <b> Downpayment required: Php {{formatPrice((priceToCompute * 0.5)-((priceToCompute * 0.5)*(parseInt(percentage)/100))) }}</b>
+            </div>
+            <div>
+                <!-- Php {{ (formatPrice(priceToCompute * 0.5))*(parseInt(percentage)/100) }} -->
             </div>
             <v-divider></v-divider>
             <div class="red--text" align="center">Reminder</div>
             <div align="center" class="mb-5">
-              To reserve the booking you need to pay 50% of the said total
-              price.
+                To reserve the booking you need to pay the downpayment required.
             </div>
             <div align="center" class="text-h5">
               CODE : {{ this.book.code }}
@@ -502,6 +519,8 @@ export default {
   },
   data() {
     return {
+      percentage:0,
+      promo:[],
       ...validations,
       room_list: ["Standard", "Deluxe", "Suite"],
       selected_amenities: [],
@@ -575,7 +594,26 @@ export default {
   },
 
   methods: {
+    async promoGetall() {
+      this.isLoading = true;
+      const res = await this.$axios
+        .get(`/promo/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.promo = res.data;
+          this.isLoading = false;
+        });
+    },
     validatePage2(){
+      this.promo.map(val=>{
+        if(val.promoCode==this.book.promo){
+          this.percentage = val.percentage
+        }
+      })
       if(this.service_type == '' || this.service_type == null || this.book.price == null) {
 
         return
@@ -901,6 +939,7 @@ export default {
       this.roomsGetall();
       this.amenitiesGetall();
       this.eventsGetall();
+      this.promoGetall();
       this.bookGetall();
       this.mopGetall();
     },

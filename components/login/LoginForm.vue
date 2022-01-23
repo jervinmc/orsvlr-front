@@ -96,8 +96,23 @@ export default {
         if(this.users.username=='admin'){
             if(this.users.password=='adminadmin'){
                 localStorage.setItem('isAdmin','yes')
+                localStorage.setItem('account_type','admin')
                 window.location.href="/admin/book"
             }
+        }
+        else if(this.users.username=='staff'){
+          if(this.users.password=='staff'){
+            localStorage.setItem('isAdmin','yes')
+            localStorage.setItem('account_type','admin')
+            window.location.href="/admin/book"
+          }
+        }
+         else if(this.users.username=='superadmin'){
+           if(this.users.password=='superadmin'){
+            localStorage.setItem('isAdmin','yes')
+            localStorage.setItem('account_type','admin')
+            window.location.href="/admin/book"
+           }
         }
       try {
         
