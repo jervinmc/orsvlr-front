@@ -385,6 +385,8 @@
                         <span class="text-none">View</span>
                       </v-btn>
                     </v-col>
+                    <div>Promo Code</div>
+                    <v-text-field outlined v-model="book.promo"></v-text-field>
                     <v-col cols="12" class="px-0">
                       <div>Total Price</div>
                       <div>
@@ -456,7 +458,7 @@
             </div> -->
             <v-divider></v-divider>
              <div class="green--text text-h5" align="center" >
-            <b> Downpayment required: Php {{formatPrice((priceToCompute * 0.5)-((priceToCompute * 0.5)*(parseInt(percentage)/100))) }}</b>
+            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/2) }}</b>
             </div>
             <div>
                 <!-- Php {{ (formatPrice(priceToCompute * 0.5))*(parseInt(percentage)/100) }} -->
@@ -795,8 +797,8 @@ export default {
       try {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
-        form_data.append("price", this.priceToCompute);
-        form_data.append("to_pay", this.priceToCompute * 0.5);
+        form_data.append("price", (this.priceToCompute - (this.priceToCompute * (this.percentage/100))));
+        form_data.append("to_pay", (this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/2;
         form_data.append("date_start", this.service_type =='Room' ? this.date_range[0] : this.date);
         form_data.append("date_end", this.service_type =='Room' ? this.date_range[1] : this.date);
         form_data.append("email", this.book.email);

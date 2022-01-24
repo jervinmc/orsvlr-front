@@ -19,12 +19,15 @@
       @cancel="dialogView = false"
       :items="selectedItem"
     />
+    <event-add :isOpen="dialogEvent"
+      @cancel="dialogEvent = false"
+      :items="selectedItem" />
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
         <b>Booking Management</b>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col align-self="center" align="end" class="pr-10">
+      <v-col align-self="center" align="end" class="">
         <v-btn
           class="rnd-btn"
           rounded
@@ -36,6 +39,20 @@
           @click="dialogAdd=true"
         >
           <span class="text-none">Add Booking</span>
+        </v-btn>
+      </v-col>
+        <v-col align-self="center" cols="auto" align="end" class="pr-10">
+        <v-btn
+          class="rnd-btn"
+          rounded
+          large
+          color="black"
+          depressed
+          dark
+          width="170"
+          @click="dialogEvent=true"
+        >
+          <span class="text-none">Add Event</span>
         </v-btn>
       </v-col>
     </v-row>
@@ -252,12 +269,14 @@ import DialogDelete from './DialogDelete.vue';
 import ViewCustomerDetails from "./ViewCustomerDetails.vue";
 import moment from 'moment';
 import BookingAdd from './BookingAdd.vue';
+import EventAdd from './EventAdd.vue';
 export default {
   components: {
     ViewCustomerDetails,
     DialogActions,
     DialogDelete,
     BookingAdd,
+    EventAdd,
   },
   computed:{
     bookToPay(){
@@ -302,6 +321,7 @@ export default {
   },
   data() {
     return {
+      dialogEvent:false,
       active_page:0,
       dialogConfirm: false,
       dialogView: false,
