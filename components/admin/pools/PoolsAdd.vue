@@ -84,7 +84,6 @@ export default {
   watch: {
     
     items() {
-        alert()
         this.pools=this.items
         this.img_holder=this.items.image
     },

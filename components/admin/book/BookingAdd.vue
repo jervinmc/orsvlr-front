@@ -38,7 +38,7 @@
             <div class="pa-5" align="start">
               <v-row>
                 <v-col cols="12">
-                  <div>First Name <span class="red--text">*</span></div>
+                  <div>First Name<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                   <div>
                     <v-text-field
                       outlined
@@ -62,7 +62,7 @@
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Last Name<span class="red--text">*</span></div>
+                  <div>Last Name<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                   <div>
                     <v-text-field
                       outlined
@@ -74,7 +74,7 @@
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Contact Number<span class="red--text">*</span></div>
+                  <div>Contact Number<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                   <div>
                     <v-text-field
                       :counter="11"
@@ -92,7 +92,7 @@
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Email<span class="red--text">*</span></div>
+                  <div>Email<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                   <div>
                     <v-text-field
                       outlined
@@ -117,7 +117,7 @@
             <div class="pa-5" align="start">
               <v-row>
                 <v-col cols="12" class="px-0">
-                  <div>Service Type</div>
+                  <div>Service Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                   <div>
                     <v-select
                       :items="service_list"
@@ -130,7 +130,7 @@
                 </v-col>
                 <div v-if="service_type == 'Pool'" style="width: 100%">
                   <v-col cols="12" class="px-0">
-                    <div>Pool Type</div>
+                    <div>Pool Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                     <div>
                       <v-select
                      
@@ -148,7 +148,7 @@
                     "
                   >
                     <v-col class="pa-0">
-                      <div>Check in Date</div>
+                      <div>Check in Date<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                       <div>
                         <v-menu
                           class="pa-0"
@@ -181,7 +181,7 @@
                       </div>
                     </v-col>
                     <v-col cols="12" class="px-0">
-                      <div>Package</div>
+                      <div>Package<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                       <div>
                         <v-select
                           @change="packageSetter"
@@ -340,7 +340,7 @@
                 </div>
                 <div v-if="service_type == 'Room'" style="width: 100%">
                   <v-col cols="12" class="px-0">
-                    <div>Room Type</div>
+                    <div>Room Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                     <div>
                       <v-select
                         :items="room_list"
@@ -362,7 +362,7 @@
                     <v-btn @click="resetDate">Reset Date</v-btn>
                   </div>
                    <v-col cols="12" class="px-0">
-                      <div>Package</div>
+                      <div>Package<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                       <div>
                         <v-select
                           @change="packageSubtypeSetter"
@@ -455,14 +455,20 @@
             <div  class="pt-10" align="center">
               Total Price : {{formatPrice((((priceToCompute ))))}}
             </div>
-            <div class="red--text" align="center" >
+            <div class="red--text" align="center" v-if="this.book.pool_type=='Public Pool'">
+            Total Discount :  -  Php {{ formatPrice(((this.total_price_person-((this.total_price_person - (this.total_price_person*parseInt(percentage)/100)))))) }}(Promo Code)
+            </div>
+            <div class="red--text" align="center" v-else>
             Total Discount :  -  Php {{ formatPrice(((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code)
             </div>
             <!-- <div align="center">
               Total Amount of 50% Downpayment: Php {{ formatPrice((priceToCompute-(priceToCompute - (priceToCompute*parseInt(percentage)/100)*.50))) }}
             </div> -->
             <v-divider></v-divider>
-             <div class="green--text text-h5" align="center" >
+              <div class="green--text text-h5" align="center" v-if="this.book.pool_type=='Public Pool'">
+            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.total_price_person * (this.percentage/100)))/2) }}</b>
+            </div>
+            <div class="green--text text-h5" align="center" v-else>
             <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/2) }}</b>
             </div>
             <div>
@@ -478,7 +484,7 @@
             </div>
             <div class="red--text"></div>
             <v-col cols="12" class="px-0">
-              <div>Mode of Payment</div>
+              <div>Mode of Payment<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
               <div>
                 <v-select
                   :error-messages="
@@ -495,9 +501,8 @@
             </v-col>
             <div class="text-h6" align="center">{{ mopAccountName }}</div>
             <div class="text-h6" align="center">{{ mopAccountNumber }}</div>
-            <div class="text-h6 pt-5">
-              downpayment should be settle within 1hr inorder to confirm the
-              registrationof reservation will be deny<br />
+           <div class=" pt-5" align="center" style="font-size:15px">
+              Downpayment should be settle within 1hr to confirm the registration<br /><br/>
               Terms & Condition
             </div>
           </v-card>
@@ -572,7 +577,7 @@ export default {
       eventDate: false,
       image: "",
       pool_list: ["Private Pool 1", "Private Pool 2", "Public Pool"],
-      service_list: ["Pool", "Room","Event"],
+      service_list: ["Pool", "Room"],
       book: [],
       img_holder: "image_placeholder.png",
       image: "",
@@ -815,8 +820,8 @@ export default {
       try {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
-     form_data.append("price", (this.priceToCompute - (this.priceToCompute * (this.percentage/100))));
-        form_data.append("to_pay", (this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/2;
+     form_data.append("price", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100))) : (this.priceToCompute - (this.priceToCompute * (this.percentage/100))));
+        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100)))/2 : ((this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/2);
         form_data.append("date_start", this.service_type =='Room' ? this.date_range[0] : this.date);
         form_data.append("date_end", this.service_type =='Room' ? this.date_range[1] : this.date);
         form_data.append("email", this.book.email);
@@ -911,7 +916,7 @@ export default {
       if (this.book.pool_type == "Public Pool") {
         var total_amenities = 0;
         var rate = 0;
-        this. total_price_person = 0;
+        this.total_price_person = 0;
         var total = 0;
         for (let key in this.amenities) {
           if (this.selected_amenities[key]) {

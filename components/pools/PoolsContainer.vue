@@ -17,34 +17,10 @@
       </v-col>
       <v-col>
         <div class="text-h6">{{i.package}}</div>
-        <!-- <v-row>
-          <v-col cols="auto">
-            <v-icon> mdi-arrow-right </v-icon>
-          </v-col>
-          <v-col>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="auto">
-            <v-icon> mdi-arrow-right </v-icon>
-          </v-col>
-          <v-col>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          </v-col>
-        </v-row>
-        <v-row class="mb-10">
-          <v-col cols="auto">
-            <v-icon> mdi-arrow-right </v-icon>
-          </v-col>
-          <v-col>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          </v-col>
-        </v-row> -->
         <div>
         {{i.descriptions}}
         </div>
-        <div>Php {{formatPrice(i.price)}}</div>
+        <div class="text-h6"><b>Php {{formatPrice(i.price)}}</b></div>
         <div class="pt-5">
           <v-btn depressed color="#6609af" dark @click="route"> Book now ! </v-btn>
         </div>

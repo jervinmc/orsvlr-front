@@ -2,7 +2,7 @@
   <v-card elevation="5">
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
-        <b>Sales Management</b>
+        <b>Revenue Management</b>
       </v-col>
       <v-col align-self="center">
         <v-text-field

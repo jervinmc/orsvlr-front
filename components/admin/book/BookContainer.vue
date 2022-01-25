@@ -99,7 +99,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Req for Cancel</b
+                  >Cancel Request</b
                 >
               </v-row>
             </v-col>
@@ -169,8 +169,31 @@
        
     <div class="px-3 ">
       <v-card  class="card-settings pa-10 px-2" elevation="10" >
+        <div align="end">
+              <v-col align-self="center" align="end" cols="1">
+              <JsonCSV
+          class="btn btn-default"
+          :data="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : bookCompleted"
+          :name="new Date()"
+        >
+          <v-btn
+            class="rnd-btn"
+            rounded
+            large
+            color="black"
+            depressed
+            dark
+            width="170"
+          >
+            <span class="text-none">Download CSV</span>
+          </v-btn>
+        </JsonCSV>
+          </v-col>
+        </div>
       <v-row>
+      
           <v-spacer></v-spacer>
+          
           <v-col cols="6" align-self="center" class="pt-10 pa-10">
         <div>
           <v-text-field
@@ -264,6 +287,7 @@
 </template>
 
 <script>
+import JsonCSV from "vue-json-csv";
 import DialogActions from "./DialogActions.vue";
 import DialogDelete from './DialogDelete.vue';
 import ViewCustomerDetails from "./ViewCustomerDetails.vue";
@@ -277,6 +301,8 @@ export default {
     DialogDelete,
     BookingAdd,
     EventAdd,
+    JsonCSV,
+
   },
   computed:{
     bookToPay(){

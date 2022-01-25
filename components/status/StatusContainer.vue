@@ -63,8 +63,12 @@
           </div>
         </div>
 
-        <div v-if="status != 'cancelled'">
+        <div v-if="status != 'cancelled' && status != 'confirmed'">
           Cancel Unpaid Reservation :
+          <v-icon @click="cancel">mdi-close-circle</v-icon>
+        </div>
+        <div v-if="status == 'confirmed'">
+          Cancel Paid Reservation :
           <v-icon @click="cancel">mdi-close-circle</v-icon>
         </div>
       </v-col>
@@ -234,14 +238,14 @@ export default {
             console.log(res);
             this.name = res.data[0].firstname + " " + res.data[0].lastname;
             this.total_price = res.data[0].price;
-            this.remaining_balance = res.data[0].price -  res.data[0].to_pay;
+            this.remaining_balance =  res.data[0].to_pay;
             this.status = res.data[0].status;
             this.reservation_package = res.data[0].package;
             this.email = res.data[0].email;
             this.pool_type = res.data[0].subtype;
             this.reservation_type = res.data[0].service_type;
             this.contact_number = res.data[0].contact_number;
-            this.to_pay = res.data[0].to_pay;
+            this.to_pay = (res.data[0].to_pay)/2;
             this.date_start = res.data[0].date_start;
             this.id = res.data[0].id;
             this.remaining =
