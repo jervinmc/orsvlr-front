@@ -99,7 +99,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Cancel Request</b
+                  >Cancel Rqst</b
                 >
               </v-row>
             </v-col>
