@@ -29,10 +29,16 @@ export default {
   },
   data() {
     return {
+      account_type:'',
       room_list:['Standard','Deluxe','Suite'],
       book: [],
+      name:'',
       buttonLoad: false,
     };
+  },
+  created(){
+    this.name = localStorage.getItem('name')
+    this.account_type = localStorage.getItem('account_type')
   },
   methods: {
          async confirm() {
@@ -52,6 +58,7 @@ export default {
           }
         )
         .then((res) => {
+          this.$axios.post('/logs/',{name:this.name,action:`confirmed the reservation. ID : ${this.book.id}`})
         this.buttonLoad=false
         this.$emit('refresh')
         });

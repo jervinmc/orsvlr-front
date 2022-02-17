@@ -3,7 +3,7 @@
     <v-card class="pa-10">
     <div align="center" class="text-h6">Confirmation</div>
     <div align="center" class="pa-10">
-      Are you sure you want to {{book.status_action=='Completed' ? 'COMPLETE' : book.status_action=='Reject' ? 'REJECT' : 'CANCEL' }} this reservation?
+      Are you sure you want to {{book.status_action=='Completed' ? 'COMPLETE' : book.status_action=='Reject' ? 'REJECT' :book.status_action=='Pending' ? 'UNDO' :book.status_action=='Archive' ? 'ARCHIVE' : 'CANCEL' }} this reservation?
     </div>
       <v-card-actions>
         <v-row align="center">
@@ -11,7 +11,7 @@
                 <v-btn color="red" text @click="cancel"> Cancel </v-btn>
             </v-col>
             <v-col>
-                <v-btn :loading="buttonLoad" text @click="decline"> {{book.status_action=='Completed' ? 'COMPLETE' : book.status_action=='Reject' ? 'REJECT' : 'CANCEL' }}  </v-btn>
+                <v-btn :loading="buttonLoad" text @click="decline"> {{book.status_action=='Completed' ? 'COMPLETE' : book.status_action=='Reject' ? 'REJECT' : book.status_action=='Pending' ? 'UNDO' : book.status_action=='Archive' ? 'Archive'  : 'CANCEL' }}  </v-btn>
             </v-col>
         </v-row>
       </v-card-actions>
@@ -32,7 +32,11 @@ export default {
       room_list:['Standard','Deluxe','Suite'],
       book: [],
       buttonLoad: false,
+      name:'',
     };
+  },
+  created(){
+    this.name = localStorage.getItem('name')
   },
   methods: {
          async decline() {
@@ -41,7 +45,7 @@ export default {
         .post(
           `/confirmed/status/`,
           {
-            status: this.book.status_action == 'Cancel' ? 'cancelled' : this.book.status_action == 'Completed' ? 'completed' : 'rejected',
+            status: this.book.status_action == 'Cancel' ? 'cancelled' : this.book.status_action == 'Completed' ? 'completed' : this.book.status_action == 'Pending' ? 'pending' : this.book.status_action == 'Archive' ? 'archive' : 'rejected',
             email: this.book.email,
             id: this.book.id,
           },
@@ -52,6 +56,7 @@ export default {
           }
         )
         .then((res) => {
+          this.$axios.post('/logs/',{name:this.name,action:`${this.book.status_action} the reservation. ID : ${this.book.id}`})
         this.buttonLoad=false
         this.$emit('refresh')
         });

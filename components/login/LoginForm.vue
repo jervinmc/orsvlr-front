@@ -36,7 +36,7 @@
             background-color="transparent"
               rounded
               @keyup.enter="login"
-              v-model="users.username"
+              v-model="email"
               outlined
               dark
               dense
@@ -48,7 +48,7 @@
             background-color="transparent"
               @keyup.enter="login"
               type="password"
-              v-model="users.password"
+              v-model="password"
               outlined
               dense
               dark
@@ -62,11 +62,24 @@
                 dark
                 outlined
                 height="40"
-                :loading="isLoaded"
+                :loading="buttonLoad"
               >
                 Sign In
               </v-btn>
             </div>
+             <!-- <div class="pt-5">
+              <v-btn
+                @click="dialogSignup=true"
+                x-large
+                color="white"
+                width="200"
+                dark
+                outlined
+                height="40"
+              >
+                Sign Up
+              </v-btn>
+            </div> -->
           </v-col>
         </v-row>
       </div>
@@ -74,8 +87,9 @@
   </div>
 </template>
 <script>
+import Signup from './Signup.vue';
 export default {
-  components: {  },
+  components: {Signup  },
   data() {
     return {
       snackbar: false,
@@ -83,41 +97,24 @@ export default {
       password: null,
       isLoaded: false,
       dialogSignup:false,
-      users:[]
+      users:[],
+      buttonLoad:false,
     };
   },
   methods: {
     async login() {
-    //   this.isLoaded = true;
-    //   var credentials = {
-    //     email: this.email,
-    //     password: this.password,
-    //   };
-        if(this.users.username=='admin'){
-            if(this.users.password=='adminadmin'){
-                localStorage.setItem('isAdmin','yes')
-                localStorage.setItem('account_type','admin')
-                window.location.href="/admin/book"
-            }
-        }
-        else if(this.users.username=='staff'){
-          if(this.users.password=='staff'){
-            localStorage.setItem('isAdmin','yes')
-            localStorage.setItem('account_type','admin')
-            window.location.href="/admin/book"
-          }
-        }
-         else if(this.users.username=='superadmin'){
-           if(this.users.password=='superadmin'){
-            localStorage.setItem('isAdmin','yes')
-            localStorage.setItem('account_type','admin')
-            window.location.href="/admin/book"
-           }
-        }
+      this.buttonLoad=true
       try {
-        
+           await this.$axios.post('/login/',{email:this.email,password:this.password})
+        .then((res)=>{
+          console.log(res.data)
+          this.buttonLoad=false
+          localStorage.setItem('account_type',res.data[0].account_type)
+          localStorage.setItem('name',res.data[0].firstname+' '+res.data[0].lastname)
+          window.location.href="/admin/book"
+        })
       } catch (error) {
-      
+          this.buttonLoad=false
       }
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div>
-      <v-sheet color="transparent" height="85vh" class="d-flex justify-center align-center">
+      <v-sheet color="transparent" class="d-flex justify-center align-center">
         <hero/>
     </v-sheet>
     <div>

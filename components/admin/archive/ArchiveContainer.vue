@@ -1,6 +1,6 @@
 <template>
   <v-card elevation="5">
-     <v-dialog v-model="deleteConfirmation" width="500" persistent>
+      <v-dialog v-model="deleteConfirmation" width="500" persistent>
     <v-card class="pa-10">
     <div align="center" class="text-h6">Confirmation</div>
     <div align="center" class="pa-10">
@@ -18,38 +18,37 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-      <rooms-add :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="loadData" :items="selectedItem" :isAdd="isAdd" />
+    <v-dialog v-model="undoConfirmation" width="500" persistent>
+    <v-card class="pa-10">
+    <div align="center" class="text-h6">Confirmation</div>
+    <div align="center" class="pa-10">
+        Are you sure you want to UNDO this item.
+    </div>
+      <v-card-actions>
+        <v-row align="center">
+            <v-col align="end">
+                <v-btn color="red" text @click="undoConfirmation=false"> Cancel </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn color="success" text :loading="buttonLoad" @click="undoValue"> Confirm </v-btn>
+            </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+      <gallery-add :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="loadData" :items="selectedItem" :isAdd="isAdd"/>
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
-        <b>Room Management</b>
+        <b>Archive Management</b>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col align-self="center" align="end" class="pr-10" v-if="account_type!='Staff'">
-        <v-btn
-          class="rnd-btn"
-          rounded
-          large
-          color="black"
-          depressed
-          dark
-          width="170"
-          @click="addItem"
-        >
-          <span class="text-none">Add Rooms</span>
-        </v-btn>
-      </v-col>
     </v-row>
     <v-data-table
       class="pa-5"
       :headers="headers"
-      :items="rooms"
+      :items="bookArchive"
       :loading="isLoading"
     >
-     <template #[`item.price`]="{ item }">
-          <div>
-            {{formatPrice(item.price)}}
-          </div>
-      </template>
       <template v-slot:loading>
         <v-skeleton-loader
           v-for="n in 5"
@@ -67,9 +66,9 @@
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item @click.stop="editItem(item)">
+            <v-list-item @click.stop="undoItem(item)">
               <v-list-item-content>
-                <v-list-item-title>Edit</v-list-item-title>
+                <v-list-item-title>Undo</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click.stop="deleteItem(item)">
@@ -85,41 +84,73 @@
 </template>
 
 <script>
-import RoomsAdd from './RoomsAdd.vue';
-
 export default {
-  components: { RoomsAdd },
 
   created() {
     this.loadData();
   },
   data() {
     return {
-      account_type:false,
       selectedItem:{},
       isLoading: false,
+      pools: [],
+      dialogAdd:false,
+      isAdd:true,
+      gallery:[],
       deleteConfirmation:false,
       buttonLoad:false,
-      rooms: [],
-      dialogAdd:false,
       headers: [
         { text: "ID", value: "id" },
-        { text: "Service Type", value: "service_type" },
+        { text: "First Name", value: "firstname" },
+        { text: "Last Name", value: "lastname" },
+        { text: "Email", value: "email" },
+        { text: "Date Start", value: "date_start" },
+        { text: "Date End", value: "date_end" },
+        { text: "Code", value: "code" },
         { text: "Price", value: "price" },
-        { text: "Package", value: "package"},
-        { text: "Actions", value: "opt"},
+        { text: "Service Type", value: "service_type" },
+        { text: "Status", value: "status" },
+        { text: "Time Remaining", value: "remaining" },
+        { text: "Trasanction Date", value: "transaction_date" },
+        { text: "Actions", value: "opt" },
         ,
       ],
+      undoConfirmation:false,
     };
   },
+  computed:{
+    bookArchive(){
+      return this.gallery.filter(item=>{
+        return item.status=='archive'
+      });
+    },
+  },
   methods: {
-    deleteItem(val){
+     undoItem(val){
+      this.selectedItem = val
+      this.undoConfirmation = true
+    },  
+     async undoValue(){
+     this.buttonLoad=true
+      this.$axios.patch(`/book/${this.selectedItem.id}/`,{status:"completed"},{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.undoConfirmation=false
+          this.buttonLoad=false
+          alert('This item sent to booking management')
+          this.loadData()
+      })
+    },
+       deleteItem(val){
       this.selectedItem = val
       this.deleteConfirmation = true
-    },
+    },  
      async deleteValue(){
      this.buttonLoad=true
-      this.$axios.delete(`/rooms/${this.selectedItem.id}/`,{
+      this.$axios.delete(`/book/${this.selectedItem.id}/`,{
         headers:{
           Authorization:`Bearer ${localStorage.getItem('token')}`
         }
@@ -131,14 +162,10 @@ export default {
           this.loadData()
       })
     },
-     formatPrice(value) {
-      let val = (value / 1).toFixed(2).replace(",", ".");
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    },
+
     editItem(val){
       this.selectedItem=val
       this.dialogAdd=true
-      this.isAdd=false
     },
     addItem(){
       this.isAdd=true
@@ -163,20 +190,19 @@ export default {
         });
     },
     loadData() {
-       this.account_type=localStorage.getItem('account_type')
-      this.roomsGetall();
+      this.galleryGetall();
     },
-    async roomsGetall() {
+    async galleryGetall() {
       this.isLoading = true;
       const res = await this.$axios
-        .get(`/rooms/`, {
+        .get(`/book/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {
           console.log(res.data);
-          this.rooms = res.data;
+          this.gallery = res.data;
           this.isLoading = false;
         });
     },

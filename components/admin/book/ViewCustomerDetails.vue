@@ -55,6 +55,12 @@
 
               </v-img>
             </div>
+            <div v-if="items.status=='Request For Cancellation'">
+              Reason for Cancellation:
+            </div>
+            <div>
+              {{items.cancellation_description}}
+            </div>
             <v-btn color="transparent" @click="cancel">
               Go back
             </v-btn>

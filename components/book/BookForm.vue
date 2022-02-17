@@ -120,13 +120,14 @@
     <v-stepper v-model="e1" width="700">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
-          Contact Information
+              Reservation Form
+  
         </v-stepper-step>
 
         <v-divider></v-divider>
 
         <v-stepper-step :complete="e1 > 2" step="2">
-          Reservation Form
+                  Contact Information
         </v-stepper-step>
 
         <v-divider></v-divider>
@@ -135,7 +136,7 @@
       </v-stepper-header>
 
       <v-stepper-items>
-        <v-stepper-content step="1">
+        <v-stepper-content step="2">
           <v-card width="900">
             <div class="pa-5" align="start">
               <v-row>
@@ -214,7 +215,7 @@
             <v-btn color="primary" @click="validatePage1"> Continue </v-btn>
           </div>
         </v-stepper-content>
-        <v-stepper-content step="2">
+        <v-stepper-content step="1">
           <v-card width="900">
             <div class="pa-5" align="start">
               <v-row>
@@ -323,17 +324,14 @@
                     </v-col>
                     <div>Promo Code<span class="grey--text" style="font-size:12px">(optional)</span></div>
                     <v-text-field outlined v-model="book.promo"></v-text-field>
-                    <!-- <div class="red--text">Reminder</div>
-                    <div>
-                      To reserve the booking you need to pay 50%<br />
-                      of the said total prices
-                    </div> -->
+                    <div>Down Terms<span class="grey--text" style="font-size:12px"></span></div>
+                    <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select>
                     <v-divider></v-divider>
                     <div class="text-h5">
                       To be paid : Php
                       {{
                         formatPrice(
-                          priceToCompute * 0.5 == NaN ? 0 : priceToCompute * 0.5
+                          priceToCompute * 0.5 == NaN ? 0 :   priceToCompute * (book.down=='50%'? 0.5 : 1)
                         )
                       }}
                     </div>
@@ -568,10 +566,10 @@
             </div> -->
             <v-divider></v-divider>
              <div class="green--text text-h5" align="center" v-if="this.book.pool_type=='Public Pool'">
-            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.total_price_person * (this.percentage/100)))/2) }}</b>
+            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.total_price_person * (this.percentage/100)))/ (this.book.down=='50%' ? 2 : 1)) }}</b>
             </div>
             <div class="green--text text-h5" align="center" v-else>
-            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/2) }}</b>
+            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1)) }}</b>
             </div>
             <div>
                 <!-- Php {{ (formatPrice(priceToCompute * 0.5))*(parseInt(percentage)/100) }} -->
@@ -758,7 +756,7 @@ export default {
 
         return
       }
-      this.e1 = 3
+      this.e1 = 2
     },
      dateRangeOverlaps(a_start, a_end, b_start, b_end) {
     if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
@@ -864,9 +862,11 @@ export default {
     disableMinDate() {
       var today = new Date();
       var day = today.getDate() + 1;
+      if(day.toString().length==1){
+        day = 0+day.toString()
+      }
       var date =
-        today.getFullYear() + "-0" + (today.getMonth() + 1) + "-" + day;
-
+        today.getFullYear() + "-0" + (today.getMonth() + 1) + "-" +day;
       this.min_date = date;
       this.currentMinDate = date
     },
@@ -911,7 +911,7 @@ export default {
       } else {
         this.isErrorLastName = false;
       }
-      this.e1 = 2;
+      this.e1 = 3;
     },
     disablePastDates(val) {
       console.log(new Date().toISOString().substr(0, 10));
@@ -941,7 +941,7 @@ export default {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
         form_data.append("price", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100))) : (this.priceToCompute - (this.priceToCompute * (this.percentage/100))));
-        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100)))/2 : ((this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/2);
+        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1)  : ((this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/(this.book.down=='50%' ? 2 : 1) );
         form_data.append("date_start", this.service_type =='Room' ? this.date_range[0] : this.date);
         form_data.append("date_end", this.service_type =='Room' ? this.date_range[1] : this.date);
         form_data.append("email", this.book.email);

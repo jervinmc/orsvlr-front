@@ -5,6 +5,7 @@
     <div align="center" class="pa-10">
       Are you sure you want to Cancel this reservation?
     </div>
+    <v-textarea outlined v-model="cancellation_request" placeholder="Reason for cancellation"></v-textarea>
       <v-card-actions>
         <v-row align="center">
             <v-col align="end">
@@ -32,6 +33,7 @@ export default {
       room_list:['Standard','Deluxe','Suite'],
       book: [],
       buttonLoad: false,
+      cancellation_request:''
     };
   },
   methods: {
@@ -44,6 +46,7 @@ export default {
             status: this.items.status=='To Pay' ? 'cancelled' : 'Request For Cancellation',
             email: this.items.email,
             id: this.items.id,
+            cancellation_description:this.cancellation_request
           },
           {
             headers: {
@@ -53,7 +56,8 @@ export default {
         )
         .then((res) => {
         this.buttonLoad=false
-        this.$emit('refresh')
+        alert('Successfully Sent!')
+        this.$emit('cancel')
         });
     },
     async addEvents() {

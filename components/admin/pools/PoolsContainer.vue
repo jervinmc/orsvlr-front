@@ -1,12 +1,30 @@
 <template>
   <v-card elevation="5">
+     <v-dialog v-model="deleteConfirmation" width="500" persistent>
+    <v-card class="pa-10">
+    <div align="center" class="text-h6">Confirmation</div>
+    <div align="center" class="pa-10">
+        Are you sure you want to delete this item?
+    </div>
+      <v-card-actions>
+        <v-row align="center">
+            <v-col align="end">
+                <v-btn color="red" text @click="deleteConfirmation=false"> Cancel </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn color="success" text :loading="buttonLoad" @click="deleteValue"> Confirm </v-btn>
+            </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
     <pools-add :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="loadData" :items="selectedItem" :isAdd="isAdd" />
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
         <b>Pools Management</b>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col align-self="center" align="end" class="pr-10">
+      <v-col align-self="center" align="end" class="pr-10" v-if="account_type!='Staff'">
         <v-btn
           class="rnd-btn"
           rounded
@@ -54,7 +72,7 @@
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="status(item, 'Deactivate')">
+            <v-list-item @click.stop="deleteItem(item)">
               <v-list-item-content>
                 <v-list-item-title>Delete</v-list-item-title>
               </v-list-item-content>
@@ -79,11 +97,15 @@ export default {
   },
   data() {
     return {
+      deleteConfirmation:false,
       selectedItem:{},
       isLoading: false,
       pools: [],
       dialogAdd:false,
+      selectedItem:[],
+      buttonLoad:false,
       isAdd:true,
+      account_type:'',
       headers: [
         { text: "ID", value: "id" },
         { text: "Pool Type", value: "pool_type" },
@@ -95,6 +117,24 @@ export default {
     };
   },
   methods: {
+     async deleteValue(){
+     this.buttonLoad=true
+      this.$axios.delete(`/pools/${this.selectedItem.id}/`,{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.deleteConfirmation=false
+          this.buttonLoad=false
+          alert('Successfully Deleted!')
+          this.loadData()
+      })
+    },
+    deleteItem(val){
+      this.selectedItem = val
+      this.deleteConfirmation=true
+    },
     formatPrice(value) {
       let val = (value / 1).toFixed(2).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -127,6 +167,7 @@ export default {
         });
     },
     loadData() {
+      this.account_type=localStorage.getItem('account_type')
       this.poolsGetall();
     },
     async poolsGetall() {

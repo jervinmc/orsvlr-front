@@ -81,6 +81,12 @@
         ></v-skeleton-loader>
       </template>
     </v-data-table>
+    <div align="end" class="pa-5">
+      Total of transaction: {{items_all.length}}
+    </div>
+  <div align="end" class="pa-5">
+    Total Price : Php {{formatPrice(totalPriceTransaction)}}
+  </div>
   </v-card>
 </template>
 
@@ -123,6 +129,13 @@ export default {
     };
   },
   computed: {
+    totalPriceTransaction() {
+      var total = 0 
+      this.items_all.map(data=>{
+        total = total + parseInt(data.price)
+      })
+      return total
+    },
     bookCompleted() {
       return this.items_all.filter((item) => {
         return item.status == "completed"
@@ -131,6 +144,10 @@ export default {
   },
 
   methods: {
+    formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
       changeDate(){
           this.items_all = []
            for(let key in this.book){

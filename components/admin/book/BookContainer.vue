@@ -1,5 +1,227 @@
 <template>
   <v-card elevation="5" >
+    <v-dialog v-model="isCompletion">
+      <v-card  class="pa-5">
+        <div align="center">
+            Complete transaction for: (Reference Code): <span class="green--text">{{selectedItem.code}}</span>
+        </div>
+        <div>
+            <v-row>
+              <v-col>
+                <v-card elevation="5" class="pa-5">
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Reference Code:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Customer Name:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Contact:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Email:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Remaining Balance:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Reservation Information
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Acommudation Type:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Package Type
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Date of schedule
+                    </v-col>
+                  </v-row>
+              </v-card>
+              </v-col>
+              <v-col>
+                <v-card elevation="5">
+                  
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-row no-gutters>
+                  <v-col cols="auto">
+
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    Downpayment:
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    Remaining Balance
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    Discount
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col align="end">
+                <v-btn color="white" @click="isCompletion=false">
+              Cancel
+            </v-btn>
+              </v-col>
+              <v-col>
+                <v-btn color="primary" :loading="buttonLoad" @click="setComplete">
+              Confirm
+            </v-btn>
+              </v-col>
+            </v-row>
+        </div>
+      </v-card>
+    </v-dialog>
+     <v-dialog v-model="isCancellation">
+      <v-card  class="pa-5">
+        <div align="center">
+            Complete transaction for: (Reference Code): <span class="green--text">{{selectedItem.code}}</span>
+        </div>
+        <div>
+            <v-row>
+              <v-col>
+                <v-card elevation="5" class="pa-5">
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Reference Code:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Customer Name:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Contact:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Email:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Remaining Balance:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Reservation Information
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Acommudation Type:
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Package Type
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters>
+                    <v-col cols="auto">
+                      Date of schedule
+                    </v-col>
+                  </v-row>
+              </v-card>
+              </v-col>
+              <v-col>
+                <v-card elevation="5">
+                  
+                </v-card>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-row no-gutters>
+                  <v-col cols="auto">
+
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    Downpayment:
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    Remaining Balance
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    
+                  </v-col>
+                </v-row>
+                 <v-row no-gutters>
+                  <v-col cols="auto">
+                    Discount
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+            <v-row>
+              <div>
+                Reminder:
+                <div>
+                  FOR CANCELLATION OF RESERVATION YOU NEED VALID REASON IN ORDER TO FULLY REFUND, HENCE THE MANAGEMENT WILL DEDUCT THE PAYOR PAYMENT OF 35%
+                </div>
+              </div>
+              <div>
+                Reason for cancellation
+              </div>
+              d
+              <v-col align="end">
+                <v-btn color="white" @click="isCompletion=false">
+              Cancel
+            </v-btn>
+              </v-col>
+              <v-col>
+                <v-btn color="primary" :loading="buttonLoad" @click="setComplete">
+              Confirm
+            </v-btn>
+              </v-col>
+            </v-row>
+        </div>
+      </v-card>
+    </v-dialog>
     <booking-add :isOpen="dialogAdd"
       @cancel="loadData"
       @refresh="loadData"
@@ -267,7 +489,7 @@
                 <v-list-item-title>Reject</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="rejectItem(item,'Completed')" v-if="item.status=='confirmed'">
+            <v-list-item @click.stop="completion(item)" v-if="item.status=='confirmed'">
               <v-list-item-content>
                 <v-list-item-title>Check as Completed</v-list-item-title>
               </v-list-item-content>
@@ -275,6 +497,16 @@
             <v-list-item @click.stop="rejectItem(item,'Cancel')" v-if="item.status=='Request For Cancellation'">
               <v-list-item-content>
                 <v-list-item-title>Cancel</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click.stop="rejectItem(item,'Pending')" v-if="item.status=='cancelled'">
+              <v-list-item-content>
+                <v-list-item-title>Undo</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item @click.stop="rejectItem(item,'Archive')" v-if="item.status=='cancelled' || item.status=='completed' || item.status=='confirmed'">
+              <v-list-item-content>
+                <v-list-item-title>Archive</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -343,10 +575,14 @@ export default {
     
   },
   created() {
+     this.name = localStorage.getItem('name')
+    this.account_type = localStorage.getItem('account_type')
     this.loadData();
   },
   data() {
     return {
+      isCancellation:false,
+      isCompletion:false,
       dialogEvent:false,
       active_page:0,
       dialogConfirm: false,
@@ -355,6 +591,7 @@ export default {
       selectedItem: {},
       isLoading: false,
       users: [],
+      buttonLoad:false,
       dialogAdd: false,
       isAdd: true,
       search:'',
@@ -378,6 +615,33 @@ export default {
     };
   },
   methods: {
+   async setComplete(){
+        this.buttonLoad = true;
+      const res = await this.$axios
+        .post(
+          `/confirmed/status/`,
+          {
+            status: "completed",
+            email: this.selectedItem.email,
+            id: this.selectedItem.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((res) => {
+          this.$axios.post('/logs/',{name:this.name,action:`complete the reservation. ID : ${this.book.id}`})
+        this.buttonLoad=false
+        this.isCompletion=false
+        });
+    },
+    completion(val){
+      this.selectedItem = val
+    
+      this.isCompletion=true
+    },
       async confirm(val) {
       this.buttonLoad = true;
       const res = await this.$axios
