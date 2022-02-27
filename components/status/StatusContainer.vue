@@ -15,10 +15,28 @@
             v-model="code"
             @keyup.enter="searchCode"
           ></v-text-field>
-             <v-btn depressed color="#6609af" dark>Search Code </v-btn>
+          <v-btn depressed color="#6609af" dark @click="searchCode"
+            >Search Code
+          </v-btn>
         </v-col>
-        
       </v-row>
+        <div>
+          <div align="center">
+            <v-col>
+              <div>TIME REMAINING</div>
+              <div>{{ 0 > remaining ? 0 : remaining }} Minutes</div>
+              <div class="red--text">Reminder</div>
+              <div>
+                If Duration of time count to 00:00 <br />
+                the reservation would auto reject
+              </div>
+              <div>
+                <div>Reference Code : {{ code }}</div>
+              </div>
+            </v-col>
+            <div></div>
+          </div>
+        </div>
     </div>
     <v-row class="pa-5" v-if="status != ''">
       <v-col align="start">
@@ -27,20 +45,21 @@
         <div>Contact Number: {{ contact_number }}</div>
         <div>Email: {{ email }}</div>
         <div>Reservation Type : {{ reservation_type }}</div>
-        <div>Reference Code : {{ code }}</div>
         <div>Remaining Balance : {{ formatPrice(remaining_balance) }}</div>
-         <div>To Pay : {{ formatPrice(to_pay) }}</div>
-         <div>Total Price : {{ formatPrice(total_price) }}</div>
+        <div>To Pay : {{ formatPrice(to_pay) }}</div>
+        <div>Total Price : {{ formatPrice(total_price) }}</div>
         <v-row>
           <v-col cols="auto">
             <div>Reservation Information :</div>
           </v-col>
           <v-col>
             <div>
-              {{ pool_type == 'undefined' ? '' : pool_type }}
+              {{ pool_type == "undefined" ? "" : pool_type }}
             </div>
             <div>
-              {{  reservation_package == 'undefined' ? '' : reservation_package }}
+              {{
+                reservation_package == "undefined" ? "" : reservation_package
+              }}
             </div>
             <div>
               {{ date_start }}
@@ -89,7 +108,7 @@
         />
       </v-col>
 
-      <v-col>
+      <!-- <v-col>
         <div>TIME REMAINING</div>
         <div>{{ 0 > remaining ? 0 : remaining }} Minutes</div>
         <div class="red--text">Reminder</div>
@@ -97,7 +116,7 @@
           If Duration of time count to 00:00 <br />
           the reservation would auto reject
         </div>
-      </v-col>
+      </v-col> -->
     </v-row>
   </div>
 </template>
@@ -109,7 +128,7 @@ export default {
   components: { Confirmation },
   data() {
     return {
-      remaining_balance:0,
+      remaining_balance: 0,
       code: "",
       name: "",
       to_pay: "",
@@ -133,7 +152,7 @@ export default {
     //   this.getMinutes()
   },
   methods: {
-      formatPrice(value) {
+    formatPrice(value) {
       let val = (value / 1).toFixed(2).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
@@ -188,6 +207,7 @@ export default {
             },
           })
           .then(() => {
+            alert("Successfully Sent!");
             this.buttonLoad = false;
           });
       } catch (error) {
@@ -238,14 +258,14 @@ export default {
             console.log(res);
             this.name = res.data[0].firstname + " " + res.data[0].lastname;
             this.total_price = res.data[0].price;
-            this.remaining_balance =  res.data[0].to_pay;
+            this.remaining_balance = res.data[0].to_pay;
             this.status = res.data[0].status;
             this.reservation_package = res.data[0].package;
             this.email = res.data[0].email;
             this.pool_type = res.data[0].subtype;
             this.reservation_type = res.data[0].service_type;
             this.contact_number = res.data[0].contact_number;
-            this.to_pay = (res.data[0].to_pay)/2;
+            this.to_pay = res.data[0].to_pay / 2;
             this.date_start = res.data[0].date_start;
             this.id = res.data[0].id;
             this.remaining =

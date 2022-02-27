@@ -484,7 +484,7 @@
                 <v-list-item-title>Cofirm</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending' ">
+            <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending' || item.status=='To Pay' ">
               <v-list-item-content>
                 <v-list-item-title>Reject</v-list-item-title>
               </v-list-item-content>

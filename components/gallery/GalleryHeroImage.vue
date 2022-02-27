@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-img
-      src="./front_contact_page.png"
+      src="./front_gallery_page.png"
       align="center"
-
+  
       height="300"
       class="d-flex justify-center align-center"
     >

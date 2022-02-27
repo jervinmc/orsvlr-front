@@ -12,7 +12,7 @@
       <v-col cols="12" class="px-0">
         <div>Percentage</div>
         <div>
-          <v-text-field outlined v-model="promo.percentage"></v-text-field>
+          <v-text-field outlined v-model="promo.percentage" type="number"></v-text-field>
         </div>
       </v-col>
       <v-card-actions>
@@ -43,9 +43,8 @@ export default {
   watch: {
     
     items() {
-        alert()
-        this.pools=this.items
-        this.img_holder=this.items.image
+        this.promo=this.items
+        // this.img_holder=this.items.image
     },
   },
   data() {
@@ -58,6 +57,10 @@ export default {
   },
   methods: {
     async addPromo() {
+      if(this.promo.promoCode==null || this.promo.percentage==null ||  this.promo.promoCode=='' || this.promo.percentage==''){
+        alert("Plese fill up all field.")
+        return
+      }
       this.buttonLoad = true;
       try {
         let form_data = new FormData();
@@ -80,7 +83,7 @@ export default {
             });
         } else {
           const response = await this.$axios
-            .patch(`/pools/${this.pools.id}/`, form_data, {
+            .patch(`/promo/${this.promo.id}/`, form_data, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },

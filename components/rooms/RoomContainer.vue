@@ -1,7 +1,18 @@
 <template>
   <div>
-    <div class="text-h5 red--text mb-6">
-      <u> ROOMS</u>
+    <div align="center" class="py-10">
+      <div class="text-h4 pt-5" >
+        <b>Villa Leonara</b>
+      </div>
+      <div style="color:#FF0909">
+        Resort and Event Venue
+      </div>
+      <div style="font-size:30px">
+        MODERN ROOMS & SUITES
+      </div>
+      <div>
+        Explore our elegant guest rooms and suites below
+      </div>
     </div>
     <!--eslint-disable -->
      <v-skeleton-loader
@@ -11,19 +22,26 @@
           type="list-item-avatar-two-line"
           class="my-2"
         ></v-skeleton-loader>
-    <v-row v-for="i in rooms" :key="i">
+    <v-row v-for="i in rooms" :key="i" class="px-10">
       <v-col cols="6">
         <v-img :src="i.image" height="400"></v-img>
       </v-col>
-      <v-col>
-        <div class="text-h6">{{i.package}}</div>
+      <v-col align-self="center">
+        <v-card elevation="5" height="300" class="pa-5">
+          <div class="text-h5" align="center"><b>{{i.package}}</b></div>
+        <v-divider></v-divider>
         <div>
-          {{i.descriptions}}
+            {{i.descriptions}}
         </div>
-        <div>Php {{formatPrice(i.price)}}/ per night</div>
-        <div class="pt-5">
-          <v-btn depressed color="#6609af" dark @click="route"> Book now ! </v-btn>
+        <div>
+             <div>Php {{formatPrice(i.price)}}/ per night</div>
         </div>
+          <div class="pt-5" align="end">
+          <v-btn depressed color="#2E2E2E" dark @click="route(i.id)"> View Room</v-btn>
+        </div>
+        </v-card> 
+     
+      
       </v-col>
     </v-row>
   </div>
@@ -45,8 +63,8 @@ export default {
       let val = (value / 1).toFixed(2).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
-    route(){
-        this.$router.push('/book')
+    route(id){
+        this.$router.push('/room_details/'+id)
     },
     loadData() {
       this.roomsGetall();

@@ -1,5 +1,23 @@
 <template>
   <v-card elevation="5">
+     <v-dialog v-model="deleteConfirmation" width="500" persistent>
+    <v-card class="pa-10">
+    <div align="center" class="text-h6">Confirmation</div>
+    <div align="center" class="pa-10">
+        Are you sure you want to delete this item?
+    </div>
+      <v-card-actions>
+        <v-row align="center">
+            <v-col align="end">
+                <v-btn color="red" text @click="deleteConfirmation=false"> Cancel </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn color="success" text :loading="buttonLoad" @click="deleteValue"> Confirm </v-btn>
+            </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
     <promo-add  :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="loadData" :items="selectedItem" :isAdd="isAdd"/>
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
@@ -54,7 +72,7 @@
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="status(item, 'Deactivate')">
+            <v-list-item @click.stop="deleteItem(item)">
               <v-list-item-content>
                 <v-list-item-title>Delete</v-list-item-title>
               </v-list-item-content>
@@ -79,7 +97,9 @@ export default {
   },
   data() {
     return {
+      deleteConfirmation:false,
       selectedItem:{},
+      buttonLoad:false,
       isLoading: false,
       pools: [],
       dialogAdd:false,
@@ -88,11 +108,35 @@ export default {
         { text: "ID", value: "id" },
         { text: "Promo Code", value: "promoCode" },
         { text: "Percentage", value: "percentage" },
+        { text: "Actions", value: "opt" },
         ,
       ],
     };
   },
   methods: {
+     async deleteValue(){
+     this.buttonLoad=true
+      this.$axios.delete(`/promo/${this.selectedItem.id}/`,{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.deleteConfirmation=false
+          this.buttonLoad=false
+          alert('Successfully Deleted!')
+          this.loadData()
+      })
+    },
+    deleteItem(val){
+      this.selectedItem = val
+      this.deleteConfirmation=true
+    },
+    editItem(val){
+      this.selectedItem=val
+      this.dialogAdd=true
+      this.isAdd=false
+    },
     formatPrice(value) {
       let val = (value / 1).toFixed(2).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -110,7 +154,7 @@ export default {
       this.isLoading = true;
       const res = await this.$axios
         .patch(
-          `/announcement/${data.id}/`,
+          `/promo/${data.id}/`,
           {
             is_active: status == "Deactivate" ? false : true,
           },

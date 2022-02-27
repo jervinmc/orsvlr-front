@@ -18,7 +18,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-   <amenities-add :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="loadData" :items="selectedItem" :isAdd="isAdd" />
+   <amenities-add :isOpen="dialogAdd" @cancel="cancel" @refresh="loadData" :items="selectedItem" :isAdd="isAdd" />
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
         <b>Amenities Management</b>
@@ -115,6 +115,10 @@ export default {
     };
   },
   methods: {
+    cancel(){
+      this.dialogAdd=false
+      this.selectedItem={}
+    },
      async deleteValue(){
      this.buttonLoad=true
       this.$axios.delete(`/amenities/${this.selectedItem.id}/`,{

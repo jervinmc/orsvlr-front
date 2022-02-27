@@ -277,6 +277,7 @@ export default {
       }
     },
     cancel() {
+      this.$refs.form.reset()
       this.$emit("cancel");
     },
   },

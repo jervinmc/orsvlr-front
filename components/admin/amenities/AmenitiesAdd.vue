@@ -62,6 +62,10 @@ export default {
   },
   methods: {
     async addEvents() {
+      if(this.amenities.name=='' || this.amenities.name==null || this.amenities.descriptions=='' || this.amenities.descriptions==null || this.amenities.price=='' || this.amenities.price==null){
+        alert("Please fill up all fields.")
+        return
+      }
       this.buttonLoad = true;
       try {
         let form_data = new FormData();
@@ -87,7 +91,7 @@ export default {
             });
         } else {
           const response = await this.$axios
-            .patch(`/events/${this.events.id}/`, form_data, {
+            .patch(`/amenities/${this.amenities.id}/`, form_data, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
@@ -101,6 +105,7 @@ export default {
         }
       } catch (error) {
         // alert(error);
+        alert(error)
         this.buttonLoad = false;
       }
     },

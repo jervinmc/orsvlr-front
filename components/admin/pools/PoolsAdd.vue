@@ -32,6 +32,12 @@
           <v-textarea outlined v-model="pools.descriptions"></v-textarea>
         </div>
       </v-col>
+      <v-col cols="12" class="px-0">
+        <div>Pool Features</div>
+        <div>
+          <v-textarea outlined v-model="pools.features"></v-textarea>
+        </div>
+      </v-col>
       <v-col>
         <span class="pt-2 pr-10 pb-10"><b>Upload Image<v-icon @click="$refs.file.click()">mdi-plus</v-icon></b></span>
 
@@ -82,7 +88,6 @@
 export default {
   props: ["isOpen", "items", "isAdd"],
   watch: {
-    
     items() {
         this.pools=this.items
         this.img_holder=this.items.image
@@ -98,6 +103,10 @@ export default {
   },
   methods: {
     async addPools() {
+      if(this.pools.price=='' || this.pools.price==null || this.pools.package=='' || this.pools.package==null || this.pools.descriptions=='' || this.pools.descriptions==null){
+        alert('Please fill up all fields.')
+        return
+      }
       this.buttonLoad = true;
       try {
         let form_data = new FormData();
@@ -108,6 +117,7 @@ export default {
         form_data.append("price", this.pools.price);
         form_data.append("package", this.pools.package);
         form_data.append("descriptions", this.pools.descriptions);
+        form_data.append("features", this.pools.features);
         if (this.isAdd) {
           const response = await this.$axios
             .post("/pools/", form_data, {
@@ -168,6 +178,8 @@ export default {
       }
     },
     cancel() {
+      this.pools=[]
+      this.img_holder=""
       this.$emit("cancel");
 
     },

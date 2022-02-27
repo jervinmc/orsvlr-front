@@ -8,7 +8,7 @@
       <v-card-actions>
         <v-row align="center">
             <v-col align="end">
-                <v-btn color="red" text @click="cancel"> Cancel </v-btn>
+                <v-btn color="red" text @click="cancel"> Back </v-btn>
             </v-col>
             <v-col>
                 <v-btn color="success" :loading="buttonLoad" text @click="confirm"> Confirm </v-btn>

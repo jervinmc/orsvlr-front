@@ -18,7 +18,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-      <rooms-add :isOpen="dialogAdd" @cancel="dialogAdd=false" @refresh="loadData" :items="selectedItem" :isAdd="isAdd" />
+      <rooms-add :isOpen="dialogAdd" @cancel="cancel" @refresh="loadData" :items="selectedItem" :isAdd="isAdd" />
     <v-row>
       <v-col align="start" class="pa-10 text-h5" cols="auto">
         <b>Room Management</b>
@@ -113,6 +113,10 @@ export default {
     };
   },
   methods: {
+    cancel(){
+      this.dialogAdd=false
+      this.selectedItem={}
+    },
     deleteItem(val){
       this.selectedItem = val
       this.deleteConfirmation = true

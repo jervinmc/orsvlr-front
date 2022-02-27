@@ -3,16 +3,15 @@
     <v-img align="start">
       <v-row no-gutters>
         <v-col cols="12" align="center">
-            <v-img src="/main_image2.jpeg" height="450"  gradient="to top right, rgba(0,0,0,.38), rgba(0,0,0,0.38)">
-            <v-col cols="6" class="pa-16 white--text" >
+            <v-img src="/front_room_page.png" height="450" >
+            <!-- <v-col cols="6" class="pa-16 white--text" >
               <div class=" text-h3" style="color:#08FFA6">
                 <b>Chill Out</b>
               </div>
               <div class="my-10">
                 Experience the never ending paradise at Villa Leonora Resort & Events Venues. We will provide a high class experience for you guests to make your visit unforgetable and memorable.
               </div>
-              <!-- <v-btn depressed color="#6609af" dark> Book now ! </v-btn> -->
-            </v-col>
+            </v-col> -->
           </v-img>
         </v-col>
       </v-row>

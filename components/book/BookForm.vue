@@ -211,7 +211,7 @@
             </div>
           </v-card>
           <div class="pt-5">
-            <v-btn text> Cancel </v-btn>
+            <v-btn text @click="e1=1"> Cancel </v-btn>
             <v-btn color="primary" @click="validatePage1"> Continue </v-btn>
           </div>
         </v-stepper-content>
@@ -236,7 +236,7 @@
                     <div>Pool Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                     <div>
                       <v-select
-                     
+                      @change="resetPool"
                         :items="pool_list"
                         v-model="book.pool_type"
                         outlined
@@ -274,6 +274,7 @@
                               v-on="on"
                             ></v-text-field>
                           </template>
+                         
                           <v-date-picker
                             @change="changeDate"
                             v-model="date"
@@ -324,7 +325,7 @@
                     </v-col>
                     <div>Promo Code<span class="grey--text" style="font-size:12px">(optional)</span></div>
                     <v-text-field outlined v-model="book.promo"></v-text-field>
-                    <div>Down Terms<span class="grey--text" style="font-size:12px"></span></div>
+                    <div>Down Terms<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                     <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select>
                     <v-divider></v-divider>
                     <div class="text-h5">
@@ -521,7 +522,7 @@
               </v-row>
             </div>
           </v-card>
-          <v-btn text @click="e1 = 1"> Cancel </v-btn>
+          <v-btn text @click="route"> Cancel </v-btn>
           <v-btn color="primary" @click="validatePage2"> Continue </v-btn>
         </v-stepper-content>
         <v-stepper-content step="3">
@@ -732,6 +733,17 @@ export default {
   },
 
   methods: {
+    resetPool(){
+      this.book.date=''
+      this.date=''
+      this.book.package=''
+      this.book.price=''
+      this.book.promo=''
+      this.book.terms=''
+    },
+    route(){
+      window.location.href="book"
+    },
     async promoGetall() {
       this.isLoading = true;
       const res = await this.$axios
@@ -747,6 +759,10 @@ export default {
         });
     },
     validatePage2(){
+      if(this.book.down=='' || this.book.down==null){
+        alert("Please fill up the form completely")
+        return
+      }
       this.promo.map(val=>{
         if(val.promoCode==this.book.promo){
           this.percentage = val.percentage

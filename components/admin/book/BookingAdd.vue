@@ -33,7 +33,7 @@
       </v-stepper-header>
 
       <v-stepper-items>
-        <v-stepper-content step="1">
+        <v-stepper-content step="2">
           <v-card width="900">
             <div class="pa-5" align="start">
               <v-row>
@@ -108,11 +108,11 @@
             </div>
           </v-card>
           <div class="pt-5">
-            <v-btn text @click="cancel"> Cancel </v-btn>
+            <v-btn text @click="e1=1"> Cancel </v-btn>
             <v-btn color="primary" @click="validatePage1"> Continue </v-btn>
           </div>
         </v-stepper-content>
-        <v-stepper-content step="2">
+        <v-stepper-content step="1">
           <v-card width="900">
             <div class="pa-5" align="start">
               <v-row>
@@ -133,7 +133,7 @@
                     <div>Pool Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                     <div>
                       <v-select
-                     
+                      @change="resetPool"
                         :items="pool_list"
                         v-model="book.pool_type"
                         outlined
@@ -171,6 +171,7 @@
                               v-on="on"
                             ></v-text-field>
                           </template>
+                         
                           <v-date-picker
                             @change="changeDate"
                             v-model="date"
@@ -195,8 +196,6 @@
                       {{ book.descriptions }}
                     </div> -->
                     </v-col>
-                    <div>Promo Code</div>
-                    <v-text-field outlined v-model="book.promo"></v-text-field>
                     <v-col align-self="center" align="center" class="pr-10">
                       <v-btn
                         class="rnd-btn"
@@ -212,7 +211,7 @@
                       </v-btn>
                     </v-col>
                     <v-col cols="12" class="px-0">
-                      <div>Price</div>
+                      <div>Price<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                       <div>
                         <v-text-field
                           outlined
@@ -221,17 +220,16 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                    <div class="red--text">Reminder</div>
-                    <div>
-                      To reserve the booking you need to pay 50%<br />
-                      of the said total prices
-                    </div>
+                    <div>Promo Code<span class="grey--text" style="font-size:12px">(optional)</span></div>
+                    <v-text-field outlined v-model="book.promo"></v-text-field>
+                    <div>Down Terms<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                    <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select>
                     <v-divider></v-divider>
                     <div class="text-h5">
                       To be paid : Php
                       {{
                         formatPrice(
-                          priceToCompute * 0.5 == NaN ? 0 : priceToCompute * 0.5
+                          priceToCompute * 0.5 == NaN ? 0 :   priceToCompute * (book.down=='50%'? 0.5 : 1)
                         )
                       }}
                     </div>
@@ -309,7 +307,7 @@
                         no-title
                       ></v-date-picker>
                     </div>
-                    <div>Promo Code</div>
+                    <div>Promo Code <span class="grey--text" style="font-size:12px">(optional)</span></div>
                     <v-text-field outlined v-model="book.promo"></v-text-field>
                     <v-col cols="12" class="px-0">
                       <div>Total Price</div>
@@ -376,8 +374,6 @@
                       {{ book.descriptions }}
                     </div> -->
                     </v-col>
-                    <div>Promo Code</div>
-                    <v-text-field outlined v-model="book.promo"></v-text-field>
                      <v-col align-self="center" align="center" class="pr-10">
                       <v-btn
                         class="rnd-btn"
@@ -392,8 +388,10 @@
                         <span class="text-none">View</span>
                       </v-btn>
                     </v-col>
+                    <div>Promo Code<span class="grey--text" style="font-size:12px">(optional)</span></div>
+                    <v-text-field outlined v-model="book.promo"></v-text-field>
                     <v-col cols="12" class="px-0">
-                      <div>Total Price</div>
+                      <div>Total Price<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
                       <div>
                         <v-text-field
                           outlined
@@ -402,11 +400,11 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                     <div class="red--text">Reminder</div>
+                     <!-- <div class="red--text">Reminder</div>
                     <div>
                       To reserve the booking you need to pay 50%<br />
                       of the said total prices
-                    </div>
+                    </div> -->
                     <v-divider></v-divider>
                     <div class="text-h5">
                       To be paid : Php
@@ -421,7 +419,7 @@
               </v-row>
             </div>
           </v-card>
-          <v-btn text @click="e1 = 1"> Cancel </v-btn>
+          <v-btn text @click="cancel"> Cancel </v-btn>
           <v-btn color="primary" @click="validatePage2"> Continue </v-btn>
         </v-stepper-content>
         <v-stepper-content step="3">
@@ -447,7 +445,7 @@
                 <div class="text-h6">
                   {{ book.total_price }}
                 </div>
-                <div class="text-h6">
+                 <div class="text-h6">
                  Promo Code : {{book.promo}} ({{ percentage }}%)
                 </div>
               </v-col>
@@ -465,11 +463,11 @@
               Total Amount of 50% Downpayment: Php {{ formatPrice((priceToCompute-(priceToCompute - (priceToCompute*parseInt(percentage)/100)*.50))) }}
             </div> -->
             <v-divider></v-divider>
-              <div class="green--text text-h5" align="center" v-if="this.book.pool_type=='Public Pool'">
-            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.total_price_person * (this.percentage/100)))/2) }}</b>
+             <div class="green--text text-h5" align="center" v-if="this.book.pool_type=='Public Pool'">
+            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.total_price_person * (this.percentage/100)))/ (this.book.down=='50%' ? 2 : 1)) }}</b>
             </div>
             <div class="green--text text-h5" align="center" v-else>
-            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/2) }}</b>
+            <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1)) }}</b>
             </div>
             <div>
                 <!-- Php {{ (formatPrice(priceToCompute * 0.5))*(parseInt(percentage)/100) }} -->
@@ -483,7 +481,7 @@
               CODE : {{ this.book.code }}
             </div>
             <div class="red--text"></div>
-            <v-col cols="12" class="px-0">
+            <v-col cols="12" class="px-0"> 
               <div>Mode of Payment<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
               <div>
                 <v-select
@@ -499,14 +497,36 @@
                 ></v-select>
               </div>
             </v-col>
+              <v-snackbar
+      top
+      absolute
+      bottom
+      color="error"
+      outlined
+      centered
+      v-model="acceptTerms"
+    >
+      Please accept the terms and conditions.
+      <template v-slot:action="{ attrs }">
+        <v-btn color="red" text v-bind="attrs" @click="acceptTerms = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
             <div class="text-h6" align="center">{{ mopAccountName }}</div>
             <div class="text-h6" align="center">{{ mopAccountNumber }}</div>
-           <div class=" pt-5" align="center" style="font-size:15px">
+            <div class=" pt-5" align="center" style="font-size:15px">
               Downpayment should be settle within 1hr to confirm the registration<br /><br/>
-              Terms & Condition
+              <div class="center">
+                <span class="red--text" style="font-size:12px">(You must accept the terms and conditions.)</span>
+                <v-checkbox v-model="isCheckLabel" label="I have read the terms and conditions."></v-checkbox>
+              </div>
+             <div style="cursor:pointer" @click="openTerms=true">
+                Terms & Condition
+             </div>
             </div>
           </v-card>
-          <v-btn text @click="e1 = 2"> Cancel </v-btn>
+          <v-btn text @click="e1 = 1"> Cancel </v-btn>
           <v-btn color="primary" :loading="buttonLoad" @click="confirm">
             Confirm
           </v-btn>
@@ -619,6 +639,14 @@ export default {
       this.loadData()
   },
   methods: {
+    resetPool(){
+      this.book.date=''
+      this.date=''
+      this.book.package=''
+      this.book.price=''
+      this.book.promo=''
+      this.book.terms=''
+    },
      async promoGetall() {
       this.isLoading = true;
       const res = await this.$axios
@@ -634,6 +662,10 @@ export default {
         });
     },
        validatePage2(){
+         if(this.book.down=='' || this.book.down==null){
+        alert("Please fill up the form completely")
+        return
+      }
          this.promo.map(val=>{
         if(val.promoCode==this.book.promo){
           this.percentage = val.percentage
@@ -643,7 +675,7 @@ export default {
 
         return
       }
-      this.e1 = 3
+       this.e1 = 2
     },
      dateRangeOverlaps(a_start, a_end, b_start, b_end) {
     if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
@@ -821,7 +853,7 @@ export default {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
      form_data.append("price", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100))) : (this.priceToCompute - (this.priceToCompute * (this.percentage/100))));
-        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100)))/2 : ((this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/2);
+        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1)  : ((this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/(this.book.down=='50%' ? 2 : 1) );
         form_data.append("date_start", this.service_type =='Room' ? this.date_range[0] : this.date);
         form_data.append("date_end", this.service_type =='Room' ? this.date_range[1] : this.date);
         form_data.append("email", this.book.email);

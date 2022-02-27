@@ -19,55 +19,56 @@
     </v-card>
   </v-dialog>
     <div v-if="$route.name=='admin'"></div>
-    <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-else-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-promo' && isAdmin!='admin-sales' && isAdmin!='admin-events' && isAdmin!='admin-amenities'  && isAdmin!='admin-book' && isAdmin!='admin-archived' && isAdmin!='admin-logs'  && isAdmin!='admin-settings' && isAdmin!='admin-usermanagement'   " >
+    <v-app-bar dark color="#003853" :clipped-left="clipped" fixed app elevation="1" v-else-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-promo' && isAdmin!='admin-sales' && isAdmin!='admin-events' && isAdmin!='admin-amenities'  && isAdmin!='admin-book' && isAdmin!='admin-archived' && isAdmin!='admin-logs'  && isAdmin!='admin-settings' && isAdmin!='admin-usermanagement'   " >
       <div class="text-h6">Villa Leonora Resort</div>
       <v-spacer></v-spacer>
       <v-toolbar-title
-        class="px-4 black--text"
-        style="cursor: pointer; font-size: 16px"
+        
+        class="px-4 white--text"
+        style="cursor: pointer; font-size: 16px;"
         @click="route('index')"
         ><v-icon class="pb-1">mdi-home</v-icon>Home</v-toolbar-title
       >
       <v-toolbar-title
-        class="px-4 black--text"
+        class="px-4 white--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('rooms')"
         ><v-icon class="pb-1">mdi-store</v-icon> Rooms</v-toolbar-title
       >
       <v-toolbar-title
-        class="px-4 black--text"
+        class="px-4 white--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('pools')"
         ><v-icon class="pb-1">mdi-pool</v-icon> Pools</v-toolbar-title
       >
       <v-toolbar-title
-        class="px-4 black--text"
+        class="px-4 white--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('events')"
         ><v-icon class="pb-1">mdi-calendar-multiple</v-icon>Events</v-toolbar-title
       >
       <div></div>
       <v-toolbar-title
-        class="px-4 black--text"
+        class="px-4 white--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('gallery')"
       >
         <v-icon class="pb-1">mdi-image</v-icon>Gallery</v-toolbar-title
       >
       <v-toolbar-title
-        class="px-4 black--text"
+        class="px-4 white--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('contacts')"
         ><v-icon class="pb-1">mdi-phone</v-icon> Contact us</v-toolbar-title
       >
       <v-toolbar-title
-        class="px-4 black--text"
+        class="px-4 white--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('status')"
         ><v-icon class="pb-1">mdi-list-status</v-icon> Status</v-toolbar-title
       >
        <v-toolbar-title
-        class="px-4 black--text"
+        class="px-4 white--text"
         style="cursor: pointer; font-size: 16px"
         @click="route('book')"
         ><v-icon class="pb-1">mdi-plus</v-icon> Book</v-toolbar-title

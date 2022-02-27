@@ -1,5 +1,19 @@
 <template>
   <div>
+     <div align="center" class="py-10">
+      <div class="text-h4 pt-5" >
+        <b>Villa Leonara</b>
+      </div>
+      <div style="color:#FF0909">
+        Resort and Event Venue
+      </div>
+      <div style="font-size:30px">
+        DEBUT & WEDDING & BIRTHDAY
+      </div>
+      <div>
+        We offer memorable events
+      </div>
+    </div>
     <div class="text-h4 mb-10">
       <b>Packages</b>
     </div>
@@ -15,16 +29,20 @@
       <v-col cols="6">
         <v-img :src="i.image" height="400"></v-img>
       </v-col>
-      <v-col>
-        <div class="text-h6">{{i.package}}</div>
-     
+      <v-col align-self="center">
+       <v-card elevation="5" height="300" class="pa-5">
+          <div class="text-h5" align="center"><b>{{i.package}}</b></div>
+        <v-divider></v-divider>
         <div>
-          {{i.descriptions}}
+            {{i.descriptions}}
         </div>
-        <div>{{formatPrice(i.price)}}/ per night</div>
-        <!-- <div class="pt-5">
-          <v-btn depressed color="#6609af" dark @click="route"> Book now ! </v-btn>
-        </div> -->
+        <div>
+             <div>Php {{formatPrice(i.price)}}/ per night</div>
+        </div>
+          <div class="pt-5" align="end">
+          <v-btn depressed color="#2E2E2E" dark @click="route"> Book now ! </v-btn>
+        </div>
+        </v-card> 
       </v-col>
     </v-row>
   </div>

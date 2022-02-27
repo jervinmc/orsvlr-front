@@ -7,7 +7,7 @@
       <about/>
     </div>
     <div>
-      <footer-galery/>
+      <!-- <footer-galery/> -->
     </div>
     <footer-all/>
   </div>

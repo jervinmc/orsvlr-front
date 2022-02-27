@@ -44,7 +44,11 @@
         </v-menu>
       </v-col>
       <v-spacer></v-spacer>
-
+      <v-col align-self="center">
+        <v-btn @click="loadData">
+          Reset
+        </v-btn>
+      </v-col>
       <v-col align-self="center" align="end" class="pr-12">
         <JsonCSV
           class="btn btn-default"
@@ -82,7 +86,7 @@
       </template>
     </v-data-table>
     <div align="end" class="pa-5">
-      Total of transaction: {{items_all.length}}
+      Total of transaction: {{bookCompleted.length}}
     </div>
   <div align="end" class="pa-5">
     Total Price : Php {{formatPrice(totalPriceTransaction)}}
@@ -130,8 +134,11 @@ export default {
   },
   computed: {
     totalPriceTransaction() {
+      var completed = this.items_all.filter((item) => {
+        return item.status == "completed"
+      });
       var total = 0 
-      this.items_all.map(data=>{
+      completed.map(data=>{
         total = total + parseInt(data.price)
       })
       return total
@@ -162,6 +169,7 @@ export default {
             
       },
     loadData() {
+      this.date=[]
       this.eventsGetall();
     },
     async eventsGetall() {

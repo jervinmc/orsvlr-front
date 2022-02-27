@@ -38,6 +38,12 @@
           <v-textarea outlined v-model="rooms.descriptions"></v-textarea>
         </div>
       </v-col>
+      <v-col cols="12" class="px-0">
+        <div>Room Features</div>
+        <div>
+          <v-textarea outlined v-model="rooms.features"></v-textarea>
+        </div>
+      </v-col>
        <v-col>
         <span class="pt-2 pr-10 pb-10"><b>Upload Image <v-icon @click="$refs.file.click()">mdi-plus</v-icon></b></span>
 
@@ -114,6 +120,7 @@ export default {
         form_data.append("price", this.rooms.price);
         form_data.append("package", this.rooms.package);
         form_data.append("descriptions", this.rooms.descriptions);
+        form_data.append("features", this.rooms.features);
         if (this.isAdd) {
           const response = await this.$axios
             .post("/rooms/", form_data, {

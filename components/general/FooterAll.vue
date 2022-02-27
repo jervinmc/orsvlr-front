@@ -1,6 +1,33 @@
 <template>
   <div class="black--text" style="width: 100%">
-    <v-row class="mt-16">
+    <div align="center" class="pb-5 pt-5">
+      <div class="text-h4 pb-5">
+      <b>Villa Leonora</b>
+    </div>
+    <div>
+      Lot 5, Igay Road, Sto. Cristo 3023 San Jose Del Monte Bulacan, Philippines
+    </div>
+    <div class="pb-5">
+      +639350885817 villaleonoraresort@gmail.com
+    </div>
+    </div>
+    <v-card width="100vw" color="#003853" height="100" class="d-flex justify-center align-center">
+        <v-row>
+          <v-col class=" white--text" align-self="center" align="center">
+            <b>CONTACTS</b>
+          </v-col>
+          <v-col class="white--text" align-self="center" align="center">
+            <b>TERMS AND CONDITIONS</b>
+          </v-col>
+          <v-col class="white--text" align-self="center" align="center">
+            <b>PRIVACY</b>
+          </v-col>
+          <v-col class="white--text" align-self="center" align="center">
+            <b>FAQS</b>
+          </v-col>
+        </v-row>
+    </v-card>
+    <!-- <v-row class="mt-16">
       <v-col align="start" cols="6" class="mr-16">
         <v-row>
           <v-col cols="3">
@@ -40,7 +67,7 @@
           +639350885817 
         </div>
       </v-col>
-    </v-row>
+    </v-row> -->
   </div>
 </template>
 
