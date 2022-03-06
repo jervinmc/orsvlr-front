@@ -107,6 +107,12 @@ export default {
       try {
            await this.$axios.post('/login/',{email:this.email,password:this.password})
         .then((res)=>{
+          if(res.data[0].account_type==undefined){
+              this.buttonLoad=false
+            alert('Wrong Credentials')
+           
+            return
+          }
           console.log(res.data)
           this.buttonLoad=false
           localStorage.setItem('account_type',res.data[0].account_type)

@@ -503,6 +503,8 @@
                         ></v-text-field>
                       </div>
                     </v-col>
+                    <!-- <div>Down Terms<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                    <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select> -->
                      <!-- <div class="red--text">Reminder</div>
                     <div>
                       To reserve the booking you need to pay 50%<br />
@@ -740,6 +742,7 @@ export default {
       this.book.price=''
       this.book.promo=''
       this.book.terms=''
+      this.selectedItem={}
     },
     route(){
       window.location.href="book"
@@ -759,9 +762,14 @@ export default {
         });
     },
     validatePage2(){
-      if(this.book.down=='' || this.book.down==null){
-        alert("Please fill up the form completely")
-        return
+      if(this.service_type!='Room'){
+          if(this.book.down=='' || this.book.down==null ){
+            alert("Please fill up the form completely")
+            return
+      }
+        else{
+        alert(this.date_range)
+        }
       }
       this.promo.map(val=>{
         if(val.promoCode==this.book.promo){
@@ -769,7 +777,7 @@ export default {
         }
       })
       if(this.service_type == '' || this.service_type == null || this.book.price == null) {
-
+         alert("Please fill up the form completely")
         return
       }
       this.e1 = 2
@@ -1092,6 +1100,17 @@ export default {
       this.book.total_price = this.book.price;
     },
     loadData() {
+      if(this.$route.query.service_type!=undefined){
+            if(this.$route.query.service_type=='Room'){
+              this.service_type = this.$route.query.service_type
+              this.book.room_type = this.$route.query.type
+            }
+            else{
+              this.service_type = this.$route.query.service_type
+              this.book.pool_type = this.$route.query.type
+            }
+            
+          }
       const string_length = 10;
       this.book.code = [...Array(string_length)]
         .map((i) => (~~(Math.random() * 36)).toString(36))
@@ -1180,6 +1199,8 @@ export default {
           console.log(res.data);
           this.pools = res.data;
           this.isLoading = false;
+     
+          
         });
     },
     async eventsGetall() {

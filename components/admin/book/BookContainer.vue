@@ -481,7 +481,7 @@
             </v-list-item>
             <v-list-item @click.stop="confirmItem(item)" v-if="item.status=='pending'">
               <v-list-item-content>
-                <v-list-item-title>Cofirm</v-list-item-title>
+                <v-list-item-title>Confirm</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item @click.stop="rejectItem(item,'Reject')" v-if="item.status=='pending' || item.status=='To Pay' ">
@@ -499,7 +499,7 @@
                 <v-list-item-title>Cancel</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="rejectItem(item,'Pending')" v-if="item.status=='cancelled'">
+            <v-list-item @click.stop="rejectItem(item,'Pending')" v-if="item.status=='cancelled' || item.status=='rejected'">
               <v-list-item-content>
                 <v-list-item-title>Undo</v-list-item-title>
               </v-list-item-content>

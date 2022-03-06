@@ -40,7 +40,7 @@
              <div>Php {{formatPrice(i.price)}}/ per night</div>
         </div>
           <div class="pt-5" align="end">
-          <v-btn depressed color="#2E2E2E" dark @click="route"> Book now ! </v-btn>
+          <v-btn depressed color="#2E2E2E" dark @click="route"> Contact now ! </v-btn>
         </div>
         </v-card> 
       </v-col>
@@ -66,7 +66,7 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     route(){
-        this.$router.push('/book')
+        this.$router.push('/contacts')
     },
     loadData() {
       this.eventsGetall();

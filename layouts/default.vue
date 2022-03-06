@@ -88,8 +88,19 @@
         <div class="white--text" @click="isViewLogout = true">Logout</div>
       </div>
       <v-list nav dense>
+        <!--eslint-disable-->
         <v-list-item-group active-class="primary" color="white">
           <v-list-item
+            v-if="account_type!='Staff'"
+            :to="items[index].to"
+            v-for="(key, index) in items"
+            :key="index"
+          >
+            <v-icon class="pr-2">{{ items[index].icon }}</v-icon>
+            <v-list-item-title>{{ items[index].title }}</v-list-item-title>
+          </v-list-item>
+           <v-list-item
+            v-if="(account_type=='Staff' && items[index].title=='Book') || (account_type=='Staff' && items[index].title=='Logout')"
             :to="items[index].to"
             v-for="(key, index) in items"
             :key="index"
@@ -98,6 +109,12 @@
             <v-list-item-title>{{ items[index].title }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
+        <v-list-item
+        @click="logout"
+          >
+            <v-icon class="pr-2"></v-icon>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
       </v-list>
     </v-navigation-drawer>
   </v-app>
@@ -183,11 +200,6 @@ export default {
           title: "Logs",
           to: "/admin/logs",
         },
-        {
-          icon: "mdi-logout",
-          title: "Logout",
-          to: "/admin/index",
-        },
       ],
       miniVariant: false,
       right: true,
@@ -197,8 +209,12 @@ export default {
     };
   },
   methods: {
+    logout(){
+      localStorage.clear()
+      window.location.href="/admin"
+    },
     loadData(){
-    
+      this.account_type = localStorage.getItem('account_type')
       this.isAdmin=this.$route.name
     },
     route(name) {

@@ -15,13 +15,13 @@
             v-model="code"
             @keyup.enter="searchCode"
           ></v-text-field>
-          <v-btn depressed color="#6609af" dark @click="searchCode"
+          <v-btn depressed color="#2E2E2E" dark @click="searchCode"
             >Search Code
           </v-btn>
         </v-col>
       </v-row>
-        <div>
-          <div align="center">
+        <div v-if="status != ''">
+          <div align="center" >
             <v-col>
               <div>TIME REMAINING</div>
               <div>{{ 0 > remaining ? 0 : remaining }} Minutes</div>
@@ -32,16 +32,31 @@
               </div>
               <div>
                 <div>Reference Code : {{ code }}</div>
+              </div>  
+              <v-col>
+                    <div>
+                      Customer Status :
+                      <span :style="getColorStatus(status)"> {{ status }}</span>
+                    </div>
+                </v-col>
+              <div>
+                <v-row>
+                  <v-col>
+                    <v-card elevation="5">
+                       
+                    </v-card>
+                  </v-col>
+                </v-row>
               </div>
             </v-col>
             <div></div>
           </div>
         </div>
     </div>
-    <v-row class="pa-5" v-if="status != ''">
-      <v-col align="start">
-        <div>Client Name : {{ name }}</div>
-
+    <v-row class="pa-10">
+      <v-col v-if="status != ''" cols="6">
+         <v-card class="pa-10" elevation="5" align="start">
+            <div>Client Name : {{ name }}</div>
         <div>Contact Number: {{ contact_number }}</div>
         <div>Email: {{ email }}</div>
         <div>Reservation Type : {{ reservation_type }}</div>
@@ -66,7 +81,61 @@
             </div>
           </v-col>
         </v-row>
-        <div v-if="status == 'To Pay'">
+         </v-card>
+      </v-col>
+      <v-col v-if="status != ''" cols="6">
+          <div class="center text-h5 pb-5">
+            <b>PROOF OF PAYMENT</b>
+          </div>
+        <v-card class="pa-5" elevation="5">
+          <v-img :src="img_holder" @click="$refs.file.click()"></v-img>
+          <v-col class="d-none">
+              <input
+                style="display: none"
+                type="file"
+                id="fileInput"
+                ref="file"
+                accept="image/png, image/jpeg"
+                @change="onFileUpload"
+              />
+      </v-col>
+        </v-card>
+       <div class="pa-3">
+           <v-btn depressed color="#2E2E2E" dark @click="$refs.file.click()" > Upload </v-btn>
+       </div>
+        <div class="">
+           <v-btn depressed color="#2E2E2E" dark @click="submit" :loading="buttonLoad"> Submit </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row class="pa-5" v-if="status != ''">
+      <v-col align="start">
+        <!-- <div>Client Name : {{ name }}</div>
+        <div>Contact Number: {{ contact_number }}</div>
+        <div>Email: {{ email }}</div>
+        <div>Reservation Type : {{ reservation_type }}</div>
+        <div>Remaining Balance : {{ formatPrice(remaining_balance) }}</div>
+        <div>To Pay : {{ formatPrice(to_pay) }}</div>
+        <div>Total Price : {{ formatPrice(total_price) }}</div>
+        <v-row>
+          <v-col cols="auto">
+            <div>Reservation Information :</div>
+          </v-col>
+          <v-col>
+            <div>
+              {{ pool_type == "undefined" ? "" : pool_type }}
+            </div>
+            <div>
+              {{
+                reservation_package == "undefined" ? "" : reservation_package
+              }}
+            </div>
+            <div>
+              {{ date_start }}
+            </div>
+          </v-col>
+        </v-row> -->
+        <!-- <div v-if="status == 'To Pay'">
           Upload Proof of Payment Here :
           <v-icon @click="$refs.file.click()">mdi-plus</v-icon>
           <div class="hover_pointer pt-10">
@@ -80,43 +149,18 @@
             />
             <v-btn @click="submit" :loading="buttonLoad">Submit</v-btn>
           </div>
-        </div>
+        </div> -->
 
-        <div v-if="status != 'cancelled' && status != 'confirmed'">
+        <div v-if="status=='To Pay'">
           Cancel Unpaid Reservation :
           <v-icon @click="cancel">mdi-close-circle</v-icon>
         </div>
-        <div v-if="status == 'confirmed'">
+        <div v-if="status == 'confirmed' || status == 'pending' ">
           Cancel Paid Reservation :
           <v-icon @click="cancel">mdi-close-circle</v-icon>
         </div>
       </v-col>
-      <v-col>
-        <div>
-          Customer Status :
-          <span :style="getColorStatus(status)"> {{ status }}</span>
-        </div>
-      </v-col>
-      <v-col class="d-none">
-        <input
-          style="display: none"
-          type="file"
-          id="fileInput"
-          ref="file"
-          accept="image/png, image/jpeg"
-          @change="onFileUpload"
-        />
-      </v-col>
-
-      <!-- <v-col>
-        <div>TIME REMAINING</div>
-        <div>{{ 0 > remaining ? 0 : remaining }} Minutes</div>
-        <div class="red--text">Reminder</div>
-        <div>
-          If Duration of time count to 00:00 <br />
-          the reservation would auto reject
-        </div>
-      </v-col> -->
+      
     </v-row>
   </div>
 </template>
@@ -141,7 +185,7 @@ export default {
       pool_type: "",
       date_start: "",
       contact_number: "",
-      img_holder: "",
+      img_holder: "/image_placeholder.png",
       remaining: "",
       image: "",
       id: "",

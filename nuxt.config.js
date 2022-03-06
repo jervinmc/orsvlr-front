@@ -35,7 +35,9 @@ export default {
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
-
+  router: {
+    middleware: ["authenticated"]
+  },
   axios: {
     baseURL: process.env.BASE_URL_DEV
   },

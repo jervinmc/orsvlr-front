@@ -12,7 +12,7 @@
                 <v-btn color="red" text @click="deleteConfirmation=false"> Cancel </v-btn>
             </v-col>
             <v-col>
-                <v-btn color="success" text :loading="buttonLoad" @click="deleteAnnouncement"> Confirm </v-btn>
+                <v-btn color="success" text :loading="buttonLoad" @click="deleteValue"> Confirm </v-btn>
             </v-col>
         </v-row>
       </v-card-actions>
@@ -72,7 +72,7 @@
                 <v-list-item-title>Edit</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="status(item, 'Deactivate')">
+            <v-list-item @click.stop="deleteItem(item)">
               <v-list-item-content>
                 <v-list-item-title>Delete</v-list-item-title>
               </v-list-item-content>
@@ -97,6 +97,7 @@ export default {
   },
   data() {
     return {
+      buttonLoad:false,
       account_type:'',
       deleteConfirmation:false,
       selectedItem:[],
@@ -116,7 +117,7 @@ export default {
     };
   },
   methods: {
-     async deleteVal(){
+    async deleteValue(){
      this.buttonLoad=true
       this.$axios.delete(`/events/${this.selectedItem.id}/`,{
         headers:{
@@ -129,6 +130,10 @@ export default {
           alert('Successfully Deleted!')
           this.loadData()
       })
+    },
+     deleteItem(val){
+      this.selectedItem = val
+      this.deleteConfirmation=true
     },
 
      formatPrice(value) {
@@ -185,4 +190,5 @@ export default {
 </script>
 
 <style>
+
 </style>

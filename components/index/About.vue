@@ -106,8 +106,16 @@
     </v-dialog>
     <v-row class="pa-5">
       <v-col col="6" align="center">
-        <v-img src="/history_image.png" height="300" width="600" contain>
+        <v-carousel v-model="counter" hide-delimiters>
+      <v-carousel-item
+        v-for="image in history_images"
+        :key="image"
+      >
+          <v-img :src="image" height="300" width="600" contain>
         </v-img>
+      </v-carousel-item>
+    </v-carousel>
+       
       </v-col>
       <v-col align-self="center" align="center">
         <div class="text-h3 py-5"><b>History</b></div>
@@ -129,7 +137,7 @@
           <b> EXCLUSIVE OFFERS</b>
         </div>
       </v-col>
-      <v-col align-self="end"> VIEW ALL </v-col>
+      <v-col align-self="end" > <span style="cursor:pointer" @click="route('events')"> VIEW ALL</span>  </v-col>
     </v-row>
     <v-row>
       <v-col cols="4">
@@ -169,7 +177,7 @@
                 sometimes
               </div>
               <div class="pt-10">
-                <v-btn depressed color="white"> View All Rooms </v-btn>
+                <v-btn depressed color="white" @click="route('rooms')"> View All Rooms </v-btn>
               </div>
             </v-col>
           </div>
@@ -196,7 +204,7 @@
                 Water is the driving force of all nature
               </div>
               <div class="pt-10">
-                <v-btn depressed color="white"> View All Pools </v-btn>
+                <v-btn depressed color="white"  @click="route('pools')"> View All Pools </v-btn>
               </div>
             </v-col>
           </div>
@@ -333,6 +341,9 @@ export default {
     this.loadData();
   },
   methods: {
+    route(link){
+      window.location.href=`/${link}`
+    },
     loadData() {
       this.roomsGetall();
       this.poolsGetall();
@@ -367,6 +378,8 @@ export default {
   },
   data() {
     return {
+      counter:0,
+      history_images:["history_image.png","history_image.png"],
       rooms: [],
       pools: [],
       openTerms: false,

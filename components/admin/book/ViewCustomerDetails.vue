@@ -1,11 +1,88 @@
 <template>
   <v-dialog v-model="isOpen" width="1000" persistent>
     <v-card  align="start" class="pa-16">
-            <div class="text-h5">First Name: {{ items.firstname }}</div>
+
+      <div >
+          <div align="center" class="text-h5 pb-10">
+            <b>COMPLETED TRANSACTION FOR</b>
+          </div>
+          <div>
+            <v-row>
+              <v-col >
+                <v-card class="pa-5 mb-10" elevation="5">
+                  <div>
+                    Reference Code : {{items.code}}
+                  </div>
+                  <div>
+                    Customer Name : {{items.firstname}} {{items.firstname}}
+                  </div>
+                  <div>
+                    Contact : {{items.contact_number}}
+                  </div>
+                   <div>
+                    Email : {{items.email}}
+                  </div>
+                  <div>
+                    <v-row>
+              <v-col cols="auto">
+                    <div>
+                      Reservation Information:
+                    </div>
+                      </v-col>
+                      <v-col align="start">
+                        <div>
+                          {{items.pool_type == 'undefined' ? '' : items.pool_type}}
+                        </div>
+                        <div>
+                          {{items.package=='undefined' ? '' : items.package}}
+                        </div>
+                        <div>
+                          {{items.date}}
+                        </div>
+                        <div class="text-h6">
+                          {{items.total_price}}
+                        </div>
+                      </v-col>
+                    </v-row>
+                  </div>
+                </v-card>
+              </v-col>
+              <v-col>
+               <div align="center">
+                  <div>
+                 <b> PROOF OF PAYMENT</b>
+                </div>
+                <div>
+                 <b> For Online Reservation</b>
+                </div>
+               </div>
+                <v-card class="pa-5" elevation="5">
+                    <v-img :src="items.proofOfPayment" height="300" width="300">
+
+                    </v-img>
+                </v-card>
+              </v-col>
+            </v-row>
+          </div>
+          <div v-if="items.status!='Request For Cancellation'">
+            Remarks:
+          </div>
+          <div v-if="items.status!='Request For Cancellation'">
+            <v-textarea outlined readonly></v-textarea>
+          </div>
+           <div v-if="items.status=='Request For Cancellation'">
+            Reason For Cancellation:
+          </div>
+          <div v-if="items.status=='Request For Cancellation' || items.status=='Cancelled'  ">
+            <v-textarea outlined readonly v-model="items.cancellation_description"></v-textarea>
+          </div>
+      </div>
+
+            <!-- <div class="text-h5">First Name: {{ items.firstname }}</div>
             <div class="text-h5">Last Name: {{ items.lastname }}</div>
             <div class="text-h5">Contact Number: {{ items.contact_number }}</div>
-                  <div class="text-h5">Email: {{ items.email }}</div>
-            <v-row>
+                  <div class="text-h5">Email: {{ items.email }}</div> -->
+            <!-- <v-row>
               <v-col cols="auto">
                 <div>
                   Reservation Information:
@@ -25,22 +102,22 @@
                   {{items.total_price}}
                 </div>
               </v-col>
-            </v-row>
-            <div align="center" class="pt-10">
+            </v-row> -->
+            <!-- <div align="center" class="pt-10">
               To Pay: {{items.to_pay}}
             </div>
             <div align="center" class="pt-10">
               Remaining Balance: {{items.price-items.to_pay}}
-            </div>
+            </div> -->
             <!-- <div align="center" class="pt-10">
               Time Remaining: {{items.remaining}} Minutes
             </div> -->
-            <div align="center" class="pt-10">
+            <!-- <div align="center" class="pt-10">
               Total Price: {{items.price}}
-            </div>
+            </div> -->
             <div class="red--text"></div>
             <v-col cols="12" class="px-0" align="center">
-              <div>Mode of Payment</div>
+              <!-- <div>Mode of Payment</div>
               <div>
                 {{items.mode_of_payment}}
               </div>
@@ -49,18 +126,13 @@
             </div>
             <div>
               PROOF OF PAYMENT
-            </div>
-            <div>
-              <v-img :src="items.proofOfPayment" height="300" width="300">
-
-              </v-img>
-            </div>
-            <div v-if="items.status=='Request For Cancellation'">
+            </div> -->
+            <!-- <div v-if="items.status=='Request For Cancellation'">
               Reason for Cancellation:
             </div>
             <div>
               {{items.cancellation_description}}
-            </div>
+            </div> -->
             <v-btn color="transparent" @click="cancel">
               Go back
             </v-btn>

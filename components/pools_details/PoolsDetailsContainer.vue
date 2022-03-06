@@ -29,7 +29,7 @@
               {{details.descriptions}}
           </div>
           <div class="pt-5" align="start">
-          <v-btn depressed color="#2E2E2E" dark to="/book"> Book Now</v-btn>
+          <v-btn depressed color="#2E2E2E" dark :to="`/book?service_type=Pool&type=${type=details.pool_type}`"> Book Now</v-btn>
         </div>
         </v-col>
         <v-col class="pa-0" align="center">

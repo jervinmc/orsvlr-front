@@ -19,7 +19,7 @@
       <v-col cols="12" class="px-0">
         <div>Price</div>
         <div>
-          <v-text-field outlined v-model="amenities.price"></v-text-field>
+          <v-text-field outlined v-model="amenities.price" type="number"></v-text-field>
         </div>
       </v-col>
       <v-card-actions>
