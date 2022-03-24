@@ -191,6 +191,11 @@ export default {
           to: "/admin/usermanagement",
         },
         {
+          icon: "mdi-account-multiple",
+          title: "Content",
+          to: "/admin/content",
+        },
+        {
           icon: "mdi-cog",
           title: "Settings",
           to: "/admin/settings",

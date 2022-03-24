@@ -109,10 +109,10 @@
       <b>Villa Leonora</b>
     </div>
     <div>
-      Lot 5, Igay Road, Sto. Cristo 3023 San Jose Del Monte Bulacan, Philippines
+     {{settings.address}}
     </div>
     <div class="pb-5">
-      +639350885817 villaleonoraresort@gmail.com
+     {{settings.contacts}} {{settings.email}}
     </div>
     </div>
     <v-card width="100vw" color="#003853" height="100" class="d-flex justify-center align-center">
@@ -177,16 +177,188 @@
 
 <script>
 export default {
-  data(){
-    return{
+   created() {
+    this.loadData();
+  },
+  data() {
+    return {
+      buttonLoad:false,
+      image:"",
+      account_type:'',
+      deleteConfirmation:false,
+      selectedItem:[],
+        events:[],
+      selectedItem:{},
+      isLoading: false,
+      users: [],
+      dialogAdd:false,
+      isEdit:false,
+      image:'',
+      img_holder:'',
       openTerms:false,
-    }
+      address:'',
+      contacts:'',
+      email:'',
+      settings:[],
+      isAdd:true,
+      headers: [
+        { text: "ID", value: "id" },
+        { text: "Page", value: "page" },
+        { text: "Image", value: "image" },
+        { text: "Actions", value: "opt" },
+        ,
+      ],
+    };
   },
   methods: {
-    route(url) {
+     async settingsGetall() {
+      this.isLoading = true;
+      const res = await this.$axios
+        .get(`/settings/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+
+          this.settings = res.data;
+        //   alert(res.data[0]['contacts'])
+          this.settings.history = res.data[0].history;
+           this.settings.contacts = res.data[0].contacts;
+            this.settings.address = res.data[0].address;
+        this.settings.email = res.data[0].email;
+        this.carousel1_holder = res.data[0].carousel1;
+        this.carousel2_holder = res.data[0].carousel2;
+        this.carousel3_holder= res.data[0].carousel3;
+        this.history_images.push(this.carousel1_holder)
+        this.history_images.push(this.carousel2_holder)
+        this.history_images.push(this.carousel3_holder)
+        //   for(let x in this)
+          this.isLoading = false;
+        });
+    },
+   async  editValue(){
+          this.buttonLoad=true;
+           let form_data = new FormData();
+                if (this.image != null && this.image != "") {
+                form_data.append("image", this.image);
+                }
+           const response = await this.$axios
+            .patch(`/content/${this.selectedItem.id}/`, form_data, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            })
+            .then(() => {
+              this.buttonLoad = false;
+            this.isEdit=false
+              this.loadData()
+            });
+      },
+      onFileUpload(e) {
+      this.image = e;
+      e = e.target.files[0];
+      if (e["name"].length > 100) {
+        alert("255 characters exceeded filename.");
+        return;
+      }
+      try {
+        if (e.size > 16000000) {
+          alert("Only 15mb file can be accepted.");
+          return;
+        }
+      } catch (error) {
+        alert(error);
+        return;
+      }
+      this.image = e;
+      if (e == null) {
+      } else {
+        this.url, (this.img_holder = URL.createObjectURL(e));
+      }
+    },
+     route(url) {
       this.$router.push(`/${url}`);
     },
+    async deleteValue(){
+     this.buttonLoad=true
+      this.$axios.delete(`/events/${this.selectedItem.id}/`,{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.deleteConfirmation=false
+          this.buttonLoad=false
+          alert('Successfully Deleted!')
+          this.loadData()
+      })
+    },
+     deleteItem(val){
+      this.selectedItem = val
+      this.deleteConfirmation=true
+    },
+
+     formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    editItem(val){
+      this.selectedItem=val
+    //   this.dialogAdd=true
+      this.isEdit=true
+    },
+    addItem(){
+      this.isAdd=true
+      this.dialogAdd=true
+    },
+    async status(data, status) {
+      this.isLoading = true;
+      const res = await this.$axios
+        .patch(
+          `/announcement/${data.id}/`,
+          {
+            is_active: status == "Deactivate" ? false : true,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((res) => {
+          this.loadData();
+        });
+    },
+    loadData() {
+      this.settingsGetall()
+      this.account_type=localStorage.getItem('account_type')
+      this.eventsGetall();
+    },
+    async eventsGetall() {
+      this.isLoading = true;
+      const res = await this.$axios
+        .get(`/content/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.events = res.data;
+          for(let x in this.events){
+  
+            if(this.events[x].page=='pool'){
+              this.image = this.events[x].image
+         
+            }
+          }
+          // image
+          this.isLoading = false;
+        });
+    },
   },
+
 };
 </script>
 

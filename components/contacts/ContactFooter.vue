@@ -16,7 +16,7 @@
                     <v-icon>mdi-phone</v-icon>
                 </v-col>
                 <v-col align="start">
-                    0936 186 9579
+                   {{settings.contacts}}
                 </v-col>
             </v-row>
             <v-row>
@@ -24,8 +24,7 @@
                     <v-icon>mdi-map-marker</v-icon>
                 </v-col>
                 <v-col align="start">
-                    Lot 5, Igay Road, Sto. Cristo 3023 ,
-San Jose Del Monte Bulacan, Philippine.
+                    {{settings.address}}
                 </v-col>
             </v-row>
             <v-row>
@@ -33,10 +32,10 @@ San Jose Del Monte Bulacan, Philippine.
                     <v-icon>mdi-email</v-icon>
                 </v-col>
                 <v-col align="start">
-              villaleonoraresort@gmail.com
+              {{settings.email}}
                 </v-col>
             </v-row>
-             <v-row>
+             <!-- <v-row>
                 <v-col cols="auto">
                     <v-icon>mdi-email</v-icon>
                 </v-col>
@@ -44,7 +43,7 @@ San Jose Del Monte Bulacan, Philippine.
                     Please Inquire: 
                     Ronoldof2022@gmail.com
                 </v-col>
-            </v-row>
+            </v-row> -->
           </v-col>
       </v-row>
       <div >
@@ -60,7 +59,7 @@ San Jose Del Monte Bulacan, Philippine.
                   Phone No.
               </div>
               <div>
-                  +63902934234
+                  {{settings.contacts}}
               </div>
           </v-col>
           <v-col align-self="start">
@@ -71,7 +70,7 @@ San Jose Del Monte Bulacan, Philippine.
                   Email
               </div>
               <div>
-                  villaleonoraresort@gmail.com
+                  {{settings.email}}
               </div>
           </v-col>
           <v-col align-self="start">
@@ -82,7 +81,7 @@ San Jose Del Monte Bulacan, Philippine.
                   Address
               </div>
               <div>
-                  Lot 5, lgay Road, Sto. Cristo 3023 <br/> San Jose Del Monte Bulacan, Philippines.
+                 {{settings.address}}
               </div>
           </v-col>
           <!-- <v-col align-self="start">
@@ -102,8 +101,86 @@ San Jose Del Monte Bulacan, Philippine.
 
 <script>
 export default {
+  created() {
+    this.loadData();
+    this.settingsGetall()
+  },
+  methods: {
+    async settingsGetall() {
+      this.isLoading = true;
+      const res = await this.$axios
+        .get(`/settings/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
 
-}
+          this.settings = res.data;
+        //   alert(res.data[0]['contacts'])
+          this.settings.history = res.data[0].history;
+           this.settings.contacts = res.data[0].contacts;
+            this.settings.address = res.data[0].address;
+        this.settings.email = res.data[0].email;
+        this.carousel1_holder = res.data[0].carousel1;
+        this.carousel2_holder = res.data[0].carousel2;
+        this.carousel3_holder= res.data[0].carousel3;
+        this.history_images.push(this.carousel1_holder)
+        this.history_images.push(this.carousel2_holder)
+        this.history_images.push(this.carousel3_holder)
+        //   for(let x in this)
+          this.isLoading = false;
+        });
+    },
+    route(link){
+      window.location.href=`/${link}`
+    },
+    loadData() {
+      this.roomsGetall();
+      this.poolsGetall();
+    },
+    async poolsGetall() {
+      // this.isLoading = true;
+      const res = await this.$axios
+        .get(`/pools/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.pools = res.data;
+          // this.isLoading = false;
+        });
+    },
+    async roomsGetall() {
+      // this.isLoading = true;
+      const res = await this.$axios
+        .get(`/rooms/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.rooms = res.data;
+        });
+    },
+  },
+  data() {
+    return {
+      carousel1_holder:'',
+      carousel2_holder:'',
+      carousel3_holder:'',
+      counter:0,
+      history_images:[],
+      rooms: [],
+      pools: [],
+      settings:[],
+      openTerms: false,
+    };
+  },
+};
 </script>
 
 <style>

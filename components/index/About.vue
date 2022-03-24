@@ -120,14 +120,7 @@
       <v-col align-self="center" align="center">
         <div class="text-h3 py-5"><b>History</b></div>
         <div>
-          The business owner's first idea was turn to their land to an apartment
-          for the abs-cbn workers in the area. But then decided to transition to
-          resorts instead and because of that the first couple of rooms are
-          studio-type rooms. During the Pandemic the resorts are closed due to
-          the rise of Covid19 outbreak and this time of need the resorts are
-          allowed to invite frontliners in the resort especially those
-          frontliners that are in need of a place to stay. On the new normal the
-          resorts move on and continues it's services for the mass.
+         {{settings.history}}
         </div>
       </v-col>
     </v-row>
@@ -146,11 +139,11 @@
       </v-col>
       <v-col cols="4">
         <v-img width="445" height="263" src="/front_event2.png"></v-img>
-        <div align="center">Simple Debut</div>
+        <div align="center">Debut</div>
       </v-col>
       <v-col cols="4">
         <v-img width="445" height="263" src="/front_event3.png"></v-img>
-        <div align="center">Simple Wedding</div>
+        <div align="center">Wedding</div>
       </v-col>
     </v-row>
     <div class="text-h5 py-10" align="center">
@@ -339,8 +332,35 @@
 export default {
   created() {
     this.loadData();
+    this.settingsGetall()
   },
   methods: {
+    async settingsGetall() {
+      this.isLoading = true;
+      const res = await this.$axios
+        .get(`/settings/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+
+          this.settings = res.data;
+        //   alert(res.data[0]['contacts'])
+          this.settings.history = res.data[0].history;
+           this.settings.contacts = res.data[0].contacts;
+            this.settings.address = res.data[0].address;
+        this.settings.email = res.data[0].email;
+        this.carousel1_holder = res.data[0].carousel1;
+        this.carousel2_holder = res.data[0].carousel2;
+        this.carousel3_holder= res.data[0].carousel3;
+        this.history_images.push(this.carousel1_holder)
+        this.history_images.push(this.carousel2_holder)
+        this.history_images.push(this.carousel3_holder)
+        //   for(let x in this)
+          this.isLoading = false;
+        });
+    },
     route(link){
       window.location.href=`/${link}`
     },
@@ -378,10 +398,14 @@ export default {
   },
   data() {
     return {
+      carousel1_holder:'',
+      carousel2_holder:'',
+      carousel3_holder:'',
       counter:0,
-      history_images:["history_image.png","history_image.png"],
+      history_images:[],
       rooms: [],
       pools: [],
+      settings:[],
       openTerms: false,
     };
   },

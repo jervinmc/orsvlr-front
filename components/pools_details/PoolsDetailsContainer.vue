@@ -23,7 +23,7 @@
               <b>{{details.pool_type}}</b>
           </div>
           <div class="text-h6 white--text">
-              {{details.package}} | Php {{details.price}}
+              {{details.package}} | Php {{formatPrice(details.price)}}
           </div>
            <div class="text-h6 white--text pt-5">
               {{details.descriptions}}
@@ -59,6 +59,10 @@ export default {
     this.loadData()
    },
    methods:{
+     formatPrice(value) {
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
      loadData(){
        this.getDetails()
      },
