@@ -64,10 +64,10 @@
               </v-col>
             </v-row>
           </div>
-          <div v-if="items.status!='Request For Cancellation'">
+          <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule' ">
             Remarks:
           </div>
-          <div v-if="items.status!='Request For Cancellation'">
+          <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule'">
             <v-textarea outlined readonly></v-textarea>
           </div>
            <div v-if="items.status=='Request For Cancellation'">
@@ -76,6 +76,16 @@
           <div v-if="items.status=='Request For Cancellation' || items.status=='Cancelled'  ">
             <v-textarea outlined readonly v-model="items.cancellation_description"></v-textarea>
           </div>
+          <div v-if="items.status=='reschedule'">
+              Reason For Reschedule:
+          </div>
+          <div v-if="items.status=='reschedule' || items.status=='Cancelled'">
+            <v-textarea outlined readonly v-model="items.reason_reschedule"></v-textarea>
+          </div>
+          <div v-if="items.status=='reschedule'">
+            Preferred Schedule: {{items.date_reschedule}}
+          </div>
+        
       </div>
 
             <!-- <div class="text-h5">First Name: {{ items.firstname }}</div>

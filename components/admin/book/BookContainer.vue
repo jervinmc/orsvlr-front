@@ -385,17 +385,30 @@
                 >
               </v-row>
             </v-col>
-
+             <v-col
+              :class="active_page == 7 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 7"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-timer-sand-complete</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >Rescheduled</b
+                >
+              </v-row>
+            </v-col>
           </v-row>
         </v-container>
-       
     <div class="px-3 ">
       <v-card  class="card-settings pa-10 px-2" elevation="10" >
         <div align="end">
               <v-col align-self="center" align="end" cols="1">
               <JsonCSV
           class="btn btn-default"
-          :data="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : bookCompleted"
+          :data="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : bookReschedule "
           :name="new Date()"
         >
           <v-btn
@@ -431,7 +444,7 @@
       class="pa-5"
       :search="search"
       :headers="headers"
-      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : bookCompleted "
+      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : bookReschedule "
       :loading="isLoading"
     >
       <template v-slot:[`item.status`]="{ item }">
@@ -537,6 +550,12 @@ export default {
 
   },
   computed:{
+    
+    bookReschedule(){
+      return this.book.filter(item=>{
+        return item.status=='reschedule'
+      });
+    },
     bookToPay(){
       return this.book.filter(item=>{
         return item.status=='To Pay'

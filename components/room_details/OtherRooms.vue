@@ -10,12 +10,12 @@
                 <div align="end">
                     <v-row>
                     <v-col cols="auto">
-                       <v-icon>
+                       <v-icon style="cursor:pointer" @click="previous">
                             mdi-arrow-left
                        </v-icon>
                     </v-col>
                     <v-col cols="auto">
-                        <v-icon>
+                        <v-icon style="cursor:pointer" @click="next">
                              mdi-arrow-right
                         </v-icon>
                     </v-col>
@@ -31,7 +31,7 @@
               <v-row>
                   <v-col class="white--text">
                       <div class="white--text">
-                        {{rooms[i].pool_type}}
+                        {{rooms[i].service_type}}
                       </div>
                   </v-col>
                   <v-col align="end">
@@ -41,11 +41,11 @@
           </v-img>
         </v-col>
         <v-col cols="6">
-          <v-img :src="rooms[i + 1].image" height="300" class="d-flex justify-center align-end">
+          <v-img v-if="i!=rooms.length-1" :src="rooms[i + 1].image" height="300" class="d-flex justify-center align-end">
               <v-row>
                   <v-col class="white--text">
                       <div class="white--text">
-                        {{rooms[i+1].pool_type}}
+                       {{rooms[i].service_type}}
                       </div>
                   </v-col>
                   <v-col align="end">
@@ -79,7 +79,10 @@ export default {
           this.i--;
       },
       next(){
-          if(this.rooms.length-1 == this.i) return
+  
+          if(this.rooms.length-1 == this.i){
+             return
+          }
           this.i++;
       },
         loadData(){

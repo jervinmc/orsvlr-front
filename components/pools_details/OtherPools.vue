@@ -34,7 +34,7 @@
           </v-img>
         </v-col>
         <v-col cols="6">
-          <v-img :src="rooms[i + 1].image" height="300" class="d-flex justify-center align-end">
+          <v-img  v-if="i!=rooms.length-1" :src="rooms[i + 1].image" height="300" class="d-flex justify-center align-end">
               <v-row>
                   <v-col class="white--text">
                       <div class="white--text">

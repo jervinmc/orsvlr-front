@@ -1,10 +1,52 @@
 <template>
   <div align="center">
+    <v-dialog v-model="isResched" width="500" persistent>
+      <v-card class="pa-10">
+        <div align="center" class="text-h6">Reschedule</div>
+        <div align="center" class="pa-10">
+          Are you sure you want to reschedule your booking?
+        </div>
+        <v-textarea
+          outlined
+          v-model="reason_reschedule"
+          placeholder="Reason for rescheduling"
+        ></v-textarea>
+        <div align="center">
+          <div>
+            Choose preferred reschedule date:
+          </div>
+          <v-date-picker
+            v-model="date_reschedule"
+            no-title
+          ></v-date-picker>
+        </div>
+        <v-card-actions>
+          <v-row align="center">
+            <v-col align="end">
+              <v-btn color="red" text @click="isResched = false">
+                Cancel
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                color="success"
+                :loading="buttonLoad"
+                text
+                @click="resched"
+              >
+                Confirm
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <confirmation
       :isOpen="dialogConfirm"
       @cancel="dialogConfirm = false"
       :items="{ status: status, id: id, email: email }"
     />
+
     <div class="text-h4">Status</div>
     <div class="pa-16">
       <v-row>
@@ -20,91 +62,114 @@
           </v-btn>
         </v-col>
       </v-row>
-        <div v-if="status != ''">
-          <div align="center" >
+      <div v-if="status != ''">
+        <div align="center">
+          <v-col>
+            <div>TIME REMAINING</div>
+            <div>{{ 0 > remaining ? 0 : remaining }} Minutes</div>
+            <div class="red--text">Reminder</div>
+            <div>
+              If Duration of time count to 00:00 <br />
+              the reservation would auto reject
+            </div>
+            <div>
+              <div>Reference Code : {{ code }}</div>
+            </div>
             <v-col>
-              <div>TIME REMAINING</div>
-              <div>{{ 0 > remaining ? 0 : remaining }} Minutes</div>
-              <div class="red--text">Reminder</div>
               <div>
-                If Duration of time count to 00:00 <br />
-                the reservation would auto reject
-              </div>
-              <div>
-                <div>Reference Code : {{ code }}</div>
-              </div>  
-              <v-col>
-                    <div>
-                      Customer Status :
-                      <span :style="getColorStatus(status)"> {{ status }}</span>
-                    </div>
-                </v-col>
-              <div>
-                <v-row>
-                  <v-col>
-                    <v-card elevation="5">
-                       
-                    </v-card>
-                  </v-col>
-                </v-row>
+                Customer Status :
+                <span :style="getColorStatus(status)"> {{ status }}</span>
               </div>
             </v-col>
-            <div></div>
-          </div>
+            <div>
+              <v-row>
+                <v-col>
+                  <v-card elevation="5"> </v-card>
+                </v-col>
+              </v-row>
+            </div>
+          </v-col>
+          <div></div>
         </div>
+      </div>
     </div>
     <v-row class="pa-10">
       <v-col v-if="status != ''" cols="6">
-         <v-card class="pa-10" elevation="5" align="start">
-            <div>Client Name : {{ name }}</div>
-        <div>Contact Number: {{ contact_number }}</div>
-        <div>Email: {{ email }}</div>
-        <div>Reservation Type : {{ reservation_type }}</div>
-        <div>Remaining Balance : {{ formatPrice(remaining_balance) }}</div>
-        <div>To Pay : {{ formatPrice(to_pay) }}</div>
-        <div>Total Price : {{ formatPrice(total_price) }}</div>
-        <v-row>
-          <v-col cols="auto">
-            <div>Reservation Information :</div>
-          </v-col>
-          <v-col>
-            <div>
-              {{ pool_type == "undefined" ? "" : pool_type }}
-            </div>
-            <div>
-              {{
-                reservation_package == "undefined" ? "" : reservation_package
-              }}
-            </div>
-            <div>
-              {{ date_start }}
-            </div>
-          </v-col>
-        </v-row>
-         </v-card>
+        <v-card class="pa-10" elevation="5" align="start">
+          <div>Client Name : {{ name }}</div>
+          <div>Contact Number: {{ contact_number }}</div>
+          <div>Email: {{ email }}</div>
+          <div>Reservation Type : {{ reservation_type }}</div>
+          <div>Remaining Balance : {{ formatPrice(remaining_balance) }}</div>
+          <div>To Pay : {{ formatPrice(to_pay) }}</div>
+          <div>Total Price : {{ formatPrice(total_price) }}</div>
+          <v-row>
+            <v-col cols="auto">
+              <div>Reservation Information :</div>
+            </v-col>
+            <v-col>
+              <div>
+                {{ pool_type == "undefined" ? "" : pool_type }}
+              </div>
+              <div>
+                {{
+                  reservation_package == "undefined" ? "" : reservation_package
+                }}
+              </div>
+              <div>
+                {{ date_start }}
+              </div>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
       <v-col v-if="status != ''" cols="6">
-          <div class="center text-h5 pb-5">
-            <b>PROOF OF PAYMENT</b>
-          </div>
-        <v-card class="pa-5" elevation="5">
+        <div class="center text-h5 pb-5">
+          <b>PROOF OF PAYMENT</b>
+        </div>
+        <v-card class="pa-5" elevation="5" v-if="status == 'pending'">
           <v-img :src="img_holder" @click="$refs.file.click()"></v-img>
           <v-col class="d-none">
-              <input
-                style="display: none"
-                type="file"
-                id="fileInput"
-                ref="file"
-                accept="image/png, image/jpeg"
-                @change="onFileUpload"
-              />
-      </v-col>
+            <input
+              style="display: none"
+              type="file"
+              id="fileInput"
+              ref="file"
+              accept="image/png, image/jpeg"
+              @change="onFileUpload"
+            />
+          </v-col>
         </v-card>
-       <div class="pa-3">
-           <v-btn depressed color="#2E2E2E" dark @click="$refs.file.click()" > Upload </v-btn>
-       </div>
-        <div class="">
-           <v-btn depressed color="#2E2E2E" dark @click="submit" :loading="buttonLoad"> Submit </v-btn>
+        <v-card v-else class="pa-16">
+          <v-img :src="image" height="200" width="200"></v-img>
+        </v-card>
+
+        <div class="pa-3" v-if="status == 'pending'">
+          <v-btn depressed color="#2E2E2E" dark @click="$refs.file.click()">
+            Upload
+          </v-btn>
+        </div>
+        <div class="" v-if="status == 'Pending'">
+          <v-btn
+            depressed
+            color="#2E2E2E"
+            dark
+            @click="submit"
+            :loading="buttonLoad"
+          >
+            Submit
+          </v-btn>
+        </div>
+        <div class="" v-if="status == 'confirmed'">
+          <v-btn
+            depressed
+            color="#2E2E2E"
+            dark
+            @click="isResched = true"
+            :loading="buttonLoad"
+          >
+            Rescheduled
+          </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -151,16 +216,15 @@
           </div>
         </div> -->
 
-        <div v-if="status=='To Pay'">
+        <div v-if="status == 'To Pay'">
           Cancel Unpaid Reservation :
           <v-icon @click="cancel">mdi-close-circle</v-icon>
         </div>
-        <div v-if="status == 'confirmed' || status == 'pending' ">
+        <div v-if="status == 'confirmed' || status == 'pending'">
           Cancel Paid Reservation :
           <v-icon @click="cancel">mdi-close-circle</v-icon>
         </div>
       </v-col>
-      
     </v-row>
   </div>
 </template>
@@ -172,6 +236,10 @@ export default {
   components: { Confirmation },
   data() {
     return {
+      date_reschedule:'',
+      reschedule: "",
+      isResched: false,
+      image: "",
       remaining_balance: 0,
       code: "",
       name: "",
@@ -190,12 +258,38 @@ export default {
       image: "",
       id: "",
       buttonLoad: false,
+      reason_reschedule: "",
     };
   },
   created() {
     //   this.getMinutes()
   },
   methods: {
+    async resched() {
+      this.buttonLoad = true;
+      const res = await this.$axios
+        .patch(
+          `/book/${this.id}/`,
+          {
+            status: "reschedule",
+            reason_reschedule: this.reason_reschedule,
+            date_reschedule:this.date_reschedule
+            // email: this.items.email,
+            // id: this.items.id,
+            // cancellation_description:this.cancellation_request
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((res) => {
+          this.isResched = false;
+          this.buttonLoad = false;
+          alert("Successfully Sent!");
+        });
+    },
     formatPrice(value) {
       let val = (value / 1).toFixed(2).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -312,6 +406,7 @@ export default {
             this.to_pay = res.data[0].to_pay / 2;
             this.date_start = res.data[0].date_start;
             this.id = res.data[0].id;
+            this.image = res.data[0].proofOfPayment;
             this.remaining =
               60 -
               this.timeRemaining(this.formatDate(res.data[0].transaction_date));

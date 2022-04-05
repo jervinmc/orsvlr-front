@@ -114,6 +114,18 @@
     <div class="pb-5">
      {{settings.contacts}} {{settings.email}}
     </div>
+    <div>
+      <v-row>
+        <v-col style="cursor:pointer" cols="6" align="end" class="pa-0">
+        <v-icon @click="routeto">
+            mdi-facebook
+        </v-icon>
+        </v-col>
+        <v-col style="cursor:pointer" @click="routeto" class="pa-0" cols="6" align-self="center" align="start">
+          villaleonoraresort
+        </v-col>
+      </v-row>
+    </div>
     </div>
     <v-card width="100vw" color="#003853" height="100" class="d-flex justify-center align-center">
         <v-row>
@@ -211,6 +223,9 @@ export default {
     };
   },
   methods: {
+    routeto(){
+      window.location.href="https://facebook.com/villaleonoraresort"
+    },
      async settingsGetall() {
       this.isLoading = true;
       const res = await this.$axios

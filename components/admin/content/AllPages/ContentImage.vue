@@ -65,7 +65,7 @@
         <b>Content Management</b>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col align-self="center" align="end" class="pr-10" v-if="account_type!='Staff'">
+      <!-- <v-col align-self="center" align="end" class="pr-10" v-if="account_type!='Staff'">
         <v-btn
           class="rnd-btn"
           rounded
@@ -78,7 +78,7 @@
         >
           <span class="text-none">Add Event</span>
         </v-btn>
-      </v-col>
+      </v-col> -->
     </v-row>
     <v-data-table
       class="pa-5"
