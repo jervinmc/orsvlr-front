@@ -29,16 +29,22 @@
       </v-col>
       <v-col align-self="center">
        <v-card elevation="5" height="300" class="pa-5">
-          <div class="text-h5" align="center"><b>{{i.package}}</b></div>
+            <div class="text-h4 pb-5" align="center"><b>{{i.package}}</b></div>
         <v-divider></v-divider>
         <div>
             {{i.descriptions}}
         </div>
-        <div>
-             <div>Php {{formatPrice(i.price)}}/ per night</div>
-        </div>
-          <div class="pt-5" align="end">
-          <v-btn depressed color="#2E2E2E" dark @click="route(i.id)"> View Details</v-btn>
+       <div class="pt-16" align="end">
+          <v-row>
+            <v-col>
+                   <div>
+                    <div class="text-h6">Php {{formatPrice(i.price)}}/ per night</div>
+                </div>
+            </v-col>
+            <v-col>
+              <v-btn depressed color="#2E2E2E" dark @click="route(i.id)"> View Room</v-btn>
+            </v-col>
+          </v-row>
         </div>
         </v-card> 
       </v-col>

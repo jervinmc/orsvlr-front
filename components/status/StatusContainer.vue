@@ -127,7 +127,7 @@
         <div class="center text-h5 pb-5">
           <b>PROOF OF PAYMENT</b>
         </div>
-        <v-card class="pa-5" elevation="5" v-if="status == 'pending'">
+        <v-card class="pa-5" elevation="5" v-if="status == 'To Pay'">
           <v-img :src="img_holder" @click="$refs.file.click()"></v-img>
           <v-col class="d-none">
             <input
@@ -144,12 +144,12 @@
           <v-img :src="image" height="200" width="200"></v-img>
         </v-card>
 
-        <div class="pa-3" v-if="status == 'pending'">
+        <div class="pa-3" v-if="status == 'To Pay'">
           <v-btn depressed color="#2E2E2E" dark @click="$refs.file.click()">
             Upload
           </v-btn>
         </div>
-        <div class="" v-if="status == 'Pending'">
+        <div class="" v-if="status == 'To Pay'">
           <v-btn
             depressed
             color="#2E2E2E"

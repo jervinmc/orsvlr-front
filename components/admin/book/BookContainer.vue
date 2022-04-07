@@ -492,7 +492,7 @@
                 <v-list-item-title>View</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="confirmItem(item)" v-if="item.status=='pending'">
+            <v-list-item @click.stop="confirmItem(item)" v-if="item.status=='pending' || item.status=='reschedule'">
               <v-list-item-content>
                 <v-list-item-title>Confirm</v-list-item-title>
               </v-list-item-content>
@@ -507,7 +507,7 @@
                 <v-list-item-title>Check as Completed</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="rejectItem(item,'Cancel')" v-if="item.status=='Request For Cancellation'">
+            <v-list-item @click.stop="rejectItem(item,'Cancel')" v-if="item.status=='Request For Cancellation' || item.status=='reschedule'">
               <v-list-item-content>
                 <v-list-item-title>Cancel</v-list-item-title>
               </v-list-item-content>

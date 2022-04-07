@@ -50,7 +50,7 @@
         </v-btn>
       </v-col>
       <v-col align-self="center" align="end" class="pr-12">
-        <JsonCSV
+        <JsonExcel
           class="btn btn-default"
           :data="bookCompleted"
           :name="new Date()"
@@ -64,9 +64,9 @@
             dark
             width="170"
           >
-            <span class="text-none">Download CSV</span>
+            <span class="text-none">Download Report</span>
           </v-btn>
-        </JsonCSV>
+        </JsonExcel>
       </v-col>
     </v-row>
     <v-data-table
@@ -96,10 +96,12 @@
 
 <script>
 import JsonCSV from "vue-json-csv";
+import JsonExcel from "vue-json-excel";
 import moment from 'moment';
 export default {
   components: {
     JsonCSV,
+    JsonExcel
   },
   created() {
     this.loadData();
