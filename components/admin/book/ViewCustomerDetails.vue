@@ -1,5 +1,20 @@
 <template>
   <v-dialog v-model="isOpen" width="1000" persistent>
+    <v-overlay
+            :absolute="true"
+            :value="fullscreenImage"
+          >
+
+          
+              <v-img :src="items.proofOfPayment" height="800" width="800">
+                  <div align="end" class="pa-10"> 
+              <v-icon @click="fullscreenImage=false" color="red" size="40">
+                mdi-close
+              </v-icon>
+            </div>
+              </v-img>
+          
+       </v-overlay>
     <v-card  align="start" class="pa-16">
 
       <div >
@@ -57,7 +72,7 @@
                 </div>
                </div>
                 <v-card class="pa-5" elevation="5">
-                    <v-img :src="items.proofOfPayment" height="300" width="300">
+                    <v-img :src="items.proofOfPayment" height="300" width="300" @click="fullscreenImage=true">
 
                     </v-img>
                 </v-card>
@@ -163,6 +178,7 @@ export default {
     return {
       room_list:['Standard','Deluxe','Suite'],
       events: [],
+      fullscreenImage:false,
       buttonLoad: false,
       img_holder:'image_placeholder.png'
     };

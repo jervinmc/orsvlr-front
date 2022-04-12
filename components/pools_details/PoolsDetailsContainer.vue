@@ -25,9 +25,9 @@
           <div class="text-h6 white--text">
               {{details.package}} | Php {{formatPrice(details.price)}}
           </div>
-           <div class="text-h6 white--text pt-5">
+           <!-- <div class="text-h6 white--text pt-5">
               {{details.descriptions}}
-          </div>
+          </div> -->
           <div class="pt-5" align="start">
           <v-btn depressed color="#2E2E2E" dark :to="`/book?service_type=Pool&type=${type=details.pool_type}`"> Book Now</v-btn>
         </div>

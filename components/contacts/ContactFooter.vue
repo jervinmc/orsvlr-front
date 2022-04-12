@@ -6,10 +6,10 @@
           </v-col>
           <v-col align-self="center">
             <div class="text-h5 py-5">
-                <b>HAVE A QUESTIONS?</b>
+                <b>HAVE SOME QUESTIONS?</b>
             </div>
             <div class="pb-5">
-                <b>C O N T A C T U S</b>
+                <b>CONTACT US</b>
             </div>
             <v-row>
                 <v-col cols="auto" >
@@ -46,10 +46,7 @@
             </v-row> -->
           </v-col>
       </v-row>
-      <div >
-          Copy
-<iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d30858.795515846905!2d121.04296842207233!3d14.805633561255009!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x3397af537408ea85%3A0x4674ed3c60a7f012!2sTokyo%20liquor%20house%2C%20Sarmiento%20Homes%2C%20San%20Jose%20del%20Monte%20City%2C%20Bulacan!3m2!1d14.804644699999999!2d121.0353284!4m5!1s0x3397a585b0b969d5%3A0x9ff8828ded0445a!2sR36P%2B5QW%20Villa%20Leonora%20Resort%20%26%20Event%20Venue%2C%20San%20Jose%20del%20Monte%20City%2C%20Bulacan!3m2!1d14.810488699999999!2d121.0869544!5e0!3m2!1sen!2sph!4v1645254863464!5m2!1sen!2sph" width="1250" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-      </div>
+    <div class="mapouter" ><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=bulacan,%20villa%20leonora%20resort&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://2piratebay.org">pirate bay</a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net">google maps widget html</a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
       <v-row align="center" class="pa-10">
           <v-col align-self="start">
               <v-icon size="50" color="#6609af">

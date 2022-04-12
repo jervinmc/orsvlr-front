@@ -1,5 +1,17 @@
 <template>
   <div>
+    <v-overlay
+            :absolute="true"
+            :value="fullscreenImage"
+          >  
+              <v-img :src="selectedImage" height="800" width="800">
+                  <div align="end" class="pa-10"> 
+              <v-icon @click="fullscreenImage=false" color="red" size="40">
+                mdi-close
+              </v-icon>
+            </div>
+              </v-img>
+       </v-overlay>
       <!-- eslint-disable -->
        <v-skeleton-loader
           v-for="n in 5"
@@ -10,7 +22,7 @@
         ></v-skeleton-loader>
       <v-row>
           <v-col class="pa-5" cols="4" v-for="i in gallery" :key="i">
-              <v-img height="400" width="400" :src="i.image">
+              <v-img height="400" width="400" :src="i.image" @click="viewFull(i.image)">
               </v-img>
           </v-col>
       </v-row>
@@ -24,10 +36,16 @@ export default {
     },
     data(){
         return{
-            gallery:[]
+          selectedImage:'',
+            gallery:[],
+            fullscreenImage:false,
         }
     },
     methods:{
+      viewFull(image){
+        this.fullscreenImage=true
+        this.selectedImage=image
+      },
         loadData() {
       this.galleryGetall();
     },

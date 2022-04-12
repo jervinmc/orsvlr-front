@@ -141,7 +141,7 @@
             <div class="pa-5" align="start">
               <v-row>
                 <v-col cols="12">
-                  <div>First Name <span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                  <div>First Name <span class="red--text" style="font-size:12px">*</span></div>
                   <div>
                     <v-text-field
                       outlined
@@ -165,7 +165,7 @@
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Last Name<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                  <div>Last Name<span class="red--text" style="font-size:12px">*</span></div>
                   <div>
                     <v-text-field
                       outlined
@@ -177,7 +177,7 @@
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Contact Number<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                  <div>Contact Number<span class="red--text" style="font-size:12px">*</span></div>
                   <div>
                     <v-text-field
                       :counter="11"
@@ -195,7 +195,7 @@
                   </div>
                 </v-col>
                 <v-col cols="12">
-                  <div>Email<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                  <div>Email<span class="red--text" style="font-size:12px">*</span></div>
                   <div>
                     <v-text-field
                       outlined
@@ -220,7 +220,7 @@
             <div class="pa-5" align="start">
               <v-row>
                 <v-col cols="12" class="px-0">
-                  <div>Service Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                  <div>Service Type<span class="red--text" style="font-size:12px">*</span></div>
                   <div>
                     <v-select
                       :items="service_list"
@@ -233,7 +233,7 @@
                 </v-col>
                 <div v-if="service_type == 'Pool'" style="width: 100%">
                   <v-col cols="12" class="px-0">
-                    <div>Pool Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                    <div>Pool Type<span class="red--text" style="font-size:12px">*</span></div>
                     <div>
                       <v-select
                       @change="resetPool"
@@ -251,7 +251,7 @@
                     "
                   >
                     <v-col class="pa-0">
-                      <div>Check in Date<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                      <div>Check in Date<span class="red--text" style="font-size:12px">*</span></div>
                       <div>
                         <v-menu
                           class="pa-0"
@@ -285,7 +285,7 @@
                       </div>
                     </v-col>
                     <v-col cols="12" class="px-0">
-                      <div>Package<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                      <div>Package<span class="red--text" style="font-size:12px">*</span></div>
                       <div>
                         <v-select
                           @change="packageSetter"
@@ -314,7 +314,7 @@
                       </v-btn>
                     </v-col>
                     <v-col cols="12" class="px-0">
-                      <div>Price<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                      <div>Price<span class="red--text" style="font-size:12px">*</span></div>
                       <div>
                         <v-text-field
                           outlined
@@ -323,9 +323,9 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                    <div>Promo Code<span class="grey--text" style="font-size:12px">(optional)</span></div>
+                    <div>Promo Code<span class="grey--text" style="font-size:12px">(Optional)</span></div>
                     <v-text-field outlined v-model="book.promo"></v-text-field>
-                    <div>Down Terms<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                    <div>Down Terms<span class="red--text" style="font-size:12px">*</span></div>
                     <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select>
                     <v-divider></v-divider>
                     <div class="text-h5">
@@ -410,7 +410,7 @@
                         no-title
                       ></v-date-picker>
                     </div>
-                    <div>Promo Code <span class="grey--text" style="font-size:12px">(optional)</span></div>
+                    <div>Promo Code <span class="grey--text" style="font-size:12px">(Optional)</span></div>
                     <v-text-field outlined v-model="book.promo"></v-text-field>
                     <v-col cols="12" class="px-0">
                       <div>Total Price</div>
@@ -441,7 +441,7 @@
                 </div>
                 <div v-if="service_type == 'Room'" style="width: 100%">
                   <v-col cols="12" class="px-0">
-                    <div>Room Type<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                    <div>Room Type<span class="red--text" style="font-size:12px">*</span></div>
                     <div>
                       <v-select
                         :items="room_list"
@@ -463,7 +463,7 @@
                     <v-btn @click="resetDate">Reset Date</v-btn>
                   </div>
                    <v-col cols="12" class="px-0">
-                      <div>Package<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                      <div>Package<span class="red--text" style="font-size:12px">*</span></div>
                       <div>
                         <v-select
                           @change="packageSubtypeSetter"
@@ -491,10 +491,10 @@
                         <span class="text-none">View</span>
                       </v-btn>
                     </v-col>
-                    <div>Promo Code<span class="grey--text" style="font-size:12px">(optional)</span></div>
+                    <div>Promo Code<span class="grey--text" style="font-size:12px">(Optional)</span></div>
                     <v-text-field outlined v-model="book.promo"></v-text-field>
                     <v-col cols="12" class="px-0">
-                      <div>Total Price<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                      <div>Total Price<span class="red--text" style="font-size:12px">*</span></div>
                       <div>
                         <v-text-field
                           outlined
@@ -503,7 +503,7 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                    <!-- <div>Down Terms<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+                    <!-- <div>Down Terms<span class="red--text" style="font-size:12px">*</span></div>
                     <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select> -->
                      <!-- <div class="red--text">Reminder</div>
                     <div>
@@ -587,7 +587,7 @@
             </div>
             <div class="red--text"></div>
             <v-col cols="12" class="px-0"> 
-              <div>Mode of Payment<span class="red--text" style="font-size:12px">(this field is required.)</span></div>
+              <div>Mode of Payment<span class="red--text" style="font-size:12px">*</span></div>
               <div>
                 <v-select
                   :error-messages="
@@ -736,12 +736,12 @@ export default {
 
   methods: {
     resetPool(){
-      this.book.date=''
-      this.date=''
-      this.book.package=''
-      this.book.price=''
-      this.book.promo=''
-      this.book.terms=''
+      this.book.date=null
+      this.date=null
+      this.book.package=null
+      this.book.price=null
+      this.book.promo=null
+      this.book.terms=null
       this.selectedItem={}
     },
     route(){
@@ -762,15 +762,32 @@ export default {
         });
     },
     validatePage2(){
+       if (this.book.price == null) {
+        this.isErrorEmail = true;
+        return;
+      } 
       if(this.service_type!='Room'){
+        if(this.book.pool_type=='Public Pool'){
+  
+        }
+      else{
           if(this.book.down=='' || this.book.down==null ){
             alert("Please fill up the form completely")
             return
       }
-        else{
-        alert(this.date_range)
-        }
+      else{
+
       }
+      }
+        
+       
+      }
+      else{
+          if(this.book.room_type==null){
+        
+            return
+          }
+        }
       this.promo.map(val=>{
         if(val.promoCode==this.book.promo){
           this.percentage = val.percentage
@@ -908,13 +925,13 @@ export default {
       this.dialogAdd = true;
     },
     validatePage1() {
-      if (this.book.email == null) {
+      if (this.book.email == null || this.book.email == '') {
         this.isErrorEmail = true;
         return;
       } else {
         this.isErrorEmail = false;
       }
-      if (this.book.contact_number == null) {
+      if (this.book.contact_number == null || this.book.contact_number == '') {
         this.isErrorContactNumber = true;
         return;
       } else if (this.book.contact_number.length != 11) {
@@ -923,13 +940,13 @@ export default {
       } else {
         this.isErrorContactNumber = false;
       }
-      if (this.book.firstname == null) {
+      if (this.book.firstname == null || this.book.firstname == '') {
         this.isErrorFirstName = true;
         return;
       } else {
         this.isErrorFirstName = false;
       }
-      if (this.book.lastname == null) {
+      if (this.book.lastname == null || this.book.lastname == '') {
         this.isErrorLastName = true;
         return;
       } else {

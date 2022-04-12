@@ -1,5 +1,17 @@
 <template>
   <div align="center">
+     <v-overlay
+            :absolute="true"
+            :value="fullscreenImage"
+          >  
+              <v-img :src="image" height="800" width="800">
+                  <div align="end" class="pa-10"> 
+              <v-icon @click="fullscreenImage=false" color="red" size="40">
+                mdi-close
+              </v-icon>
+            </div>
+              </v-img>
+       </v-overlay>
     <v-dialog v-model="isResched" width="500" persistent>
       <v-card class="pa-10">
         <div align="center" class="text-h6">Reschedule</div>
@@ -53,7 +65,7 @@
         <v-col cols="12">
           <v-text-field
             outlined
-            placeholder="Enter Code"
+            placeholder="Enter Your Reservation Code"
             v-model="code"
             @keyup.enter="searchCode"
           ></v-text-field>
@@ -128,7 +140,7 @@
           <b>PROOF OF PAYMENT</b>
         </div>
         <v-card class="pa-5" elevation="5" v-if="status == 'To Pay'">
-          <v-img :src="img_holder" @click="$refs.file.click()"></v-img>
+          <v-img :src="img_holder" @click="fullscreenImage=true"></v-img>
           <v-col class="d-none">
             <input
               style="display: none"
@@ -141,7 +153,7 @@
           </v-col>
         </v-card>
         <v-card v-else class="pa-16">
-          <v-img :src="image" height="200" width="200"></v-img>
+          <v-img :src="image" height="200" width="200" @click="fullscreenImage=true"></v-img>
         </v-card>
 
         <div class="pa-3" v-if="status == 'To Pay'">
@@ -168,7 +180,7 @@
             @click="isResched = true"
             :loading="buttonLoad"
           >
-            Rescheduled
+            Reschedule
           </v-btn>
         </div>
       </v-col>
@@ -259,6 +271,7 @@ export default {
       id: "",
       buttonLoad: false,
       reason_reschedule: "",
+      fullscreenImage:false
     };
   },
   created() {
@@ -379,6 +392,10 @@ export default {
       }
     },
     async searchCode() {
+      if(this.code==''){
+        alert("Please enter your code.")
+        return
+      }
       try {
         const response = await this.$axios
           .post(
@@ -412,7 +429,7 @@ export default {
               this.timeRemaining(this.formatDate(res.data[0].transaction_date));
           });
       } catch (error) {
-        alert(error);
+        alert('No reservation found.');
         // alert(errors);
       }
     },

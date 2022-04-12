@@ -125,7 +125,7 @@
         <b>Settings Management</b>
       </v-col>
     <div align="center">
-        <div style="width:1400px" align="center">
+        <div style="width:1200px" align="center">
        <v-card class="pa-10">
             <div align="center">
             <v-row>

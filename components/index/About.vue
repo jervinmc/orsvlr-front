@@ -130,20 +130,20 @@
           <b> EXCLUSIVE OFFERS</b>
         </div>
       </v-col>
-      <v-col align-self="end" > <span style="cursor:pointer" @click="route('events')"> VIEW ALL</span>  </v-col>
+      <v-col align-self="end" > <span style="cursor:pointer" @click="route('events')"> View All</span>  </v-col>
     </v-row>
     <v-row>
       <v-col cols="4">
         <v-img width="445" height="263" src="/front_event1.png"></v-img>
-        <div align="center">Wedding and Debut Packages</div>
+        <div align="center" class="pt-2"><b>Wedding and Debut Packages</b></div>
       </v-col>
       <v-col cols="4">
         <v-img width="445" height="263" src="/front_event2.png"></v-img>
-        <div align="center">Debut</div>
+        <div align="center" class="pt-2"><b>Debut</b></div>
       </v-col>
       <v-col cols="4">
         <v-img width="445" height="263" src="/front_event3.png"></v-img>
-        <div align="center">Wedding</div>
+        <div align="center" class="pt-2"><b>Wedding</b></div>
       </v-col>
     </v-row>
     <div class="text-h5 py-10" align="center">
@@ -156,7 +156,7 @@
       <v-col align="center">
         <v-card
           height="329"
-          width="740"
+      
           color="#003853"
           class="d-flex justify-center align-center"
         >
@@ -184,7 +184,6 @@
       <v-col align="center">
         <v-card
           height="329"
-          width="740"
           color="#003853"
           class="d-flex justify-center align-center"
         >

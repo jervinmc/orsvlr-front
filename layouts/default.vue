@@ -19,7 +19,7 @@
     </v-card>
   </v-dialog>
     <div v-if="$route.name=='admin'"></div>
-    <v-app-bar dark color="#003853" :clipped-left="clipped" fixed app elevation="1" v-else-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-promo' && isAdmin!='admin-sales' && isAdmin!='admin-events' && isAdmin!='admin-amenities'  && isAdmin!='admin-book' && isAdmin!='admin-archived' && isAdmin!='admin-logs'  && isAdmin!='admin-settings' && isAdmin!='admin-usermanagement'   " >
+    <v-app-bar dark color="#003853" :clipped-left="clipped" fixed app elevation="1" v-else-if="$route.name!='admin' && isAdmin!='admin-pools' && isAdmin!='admin-rooms' && isAdmin!='admin-gallery' && isAdmin!='admin-promo' && isAdmin!='admin-sales' && isAdmin!='admin-events' && isAdmin!='admin-amenities'  && isAdmin!='admin-book' && isAdmin!='admin-archived' && isAdmin!='admin-logs'  && isAdmin!='admin-settings' && isAdmin!='admin-usermanagement' && isAdmin!='admin-content'   " >
       <div class="text-h6">Villa Leonora Resort</div>
       <v-spacer></v-spacer>
       <v-toolbar-title
