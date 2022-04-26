@@ -529,15 +529,22 @@
         </v-stepper-content>
         <v-stepper-content step="3">
           <v-card width="900" align="start">
-            <div class="text-h5">First Name: {{ book.firstname }}</div>
-            <div class="text-h5">Last Name: {{ book.lastname }}</div>
-            <div class="text-h5">Contact Number: {{ book.contact_number }}</div>
-            <div class="text-h5">Email: {{ book.email }}</div>
-            <v-row>
+            <div class="text-h6">First Name: {{ book.firstname }}</div>
+            <div class="text-h6">Last Name: {{ book.lastname }}</div>
+            <div class="text-h6">Contact Number: {{ book.contact_number }}</div>
+            <div class="text-h6">Email: {{ book.email }}</div>
+            <v-row class="pt-10">
               <v-col cols="auto">
                 <div>Reservation Information:</div>
               </v-col>
               <v-col align="start">
+                <div v-if="book.pool_type=='Public Pool'">
+                  Amenities:
+                  <div v-for="(x,index) in amenities" :key="index">
+                    {{x['name']}} - {{x['price']}}
+                  </div>
+                  Total Amenities: Php {{total_amenities}}
+                </div>
                 <div>
                   {{ book.pool_type }}
                 </div>
@@ -545,7 +552,7 @@
                   {{ book.package }}
                 </div>
                 <div>
-                  {{ date }}
+                  {{service_type=='Room' ? `${date_range}` : date }}
                 </div>
                 <div class="text-h6">
                   {{ book.total_price }}
@@ -556,13 +563,13 @@
               </v-col>
             </v-row>
             <div  class="pt-10" align="center">
-              Total Price : {{formatPrice((((priceToCompute ))))}}
+              Total Price : {{formatPrice((((priceToCompute ))))}} (- Php {{ formatPrice(((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code))
             </div>
-            <div class="red--text" align="center" v-if="this.book.pool_type=='Public Pool'">
-            Total Discount :  -  Php {{ formatPrice(((this.total_price_person-((this.total_price_person - (this.total_price_person*parseInt(percentage)/100)))))) }}(Promo Code)
+            <div class="green--text" align="center" v-if="this.book.pool_type=='Public Pool'">
+            Final Price :  -  Php {{ formatPrice((((priceToCompute )))-((this.total_price_person-((this.total_price_person - (this.total_price_person*parseInt(percentage)/100)))))) }}(Promo Code)
             </div>
-            <div class="red--text" align="center" v-else>
-            Total Discount :  -  Php {{ formatPrice(((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code)
+            <div class="green--text" align="center" v-else>
+            Final Price :  -  Php {{ formatPrice(priceToCompute-((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code)
             </div>
             <!-- <div align="center">
               Total Amount of 50% Downpayment: Php {{ formatPrice((priceToCompute-(priceToCompute - (priceToCompute*parseInt(percentage)/100)*.50))) }}
@@ -1054,6 +1061,7 @@ export default {
       });
     },
     packageMapper() {
+      this.priceToCompute = 0
       this.isErrorServiceType = false
       this.package_list = [];
       this.pools.map((val) => {

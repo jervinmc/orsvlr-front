@@ -14,8 +14,8 @@
                 <div>
                     {{items.descriptions}}
                 </div>
-                <div class="red--text">
-                    {{items.price}}
+                <div class="black--text">
+                   Php {{items.price}}
                 </div>
             </v-col>
         </v-row>

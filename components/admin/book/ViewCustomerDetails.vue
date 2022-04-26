@@ -37,6 +37,13 @@
                    <div>
                     Email : {{items.email}}
                   </div>
+                   <div>
+                    Total Price : {{items.price}}
+                  </div>
+                   <div>
+                     <!-- {{items}} -->
+                    Remaining Balance : {{items.status=='To Pay' ? items.price : (items.price-items.to_pay) }}
+                  </div>
                   <div>
                     <v-row>
               <v-col cols="auto">
