@@ -590,13 +590,12 @@ export default {
       return this.book.filter(item=>{
         return item.status=='cancelled'
       });
-    }
-    
+    } 
   },
   created() {
-     this.name = localStorage.getItem('name')
-    this.account_type = localStorage.getItem('account_type')
-    this.loadData();
+    this.name = localStorage.getItem('name')
+  this.account_type = localStorage.getItem('account_type')
+  this.loadData();
   },
   data() {
     return {

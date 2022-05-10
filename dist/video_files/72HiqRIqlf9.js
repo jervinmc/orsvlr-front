@@ -1,0 +1,5 @@
+if (self.CavalryLogger) { CavalryLogger.start_js(["F3Knzw+"]); }
+
+__d("CometVideoHomeHashtagRootQuery_facebookRelayOperation",[],(function(a,b,c,d,e,f){e.exports="4569216593158496"}),null);
+__d("CometVideoHomeHashtagRootQuery$Parameters",["CometVideoHomeHashtagRootQuery_facebookRelayOperation"],(function(a,b,c,d,e,f){"use strict";a={kind:"PreloadableConcreteRequest",params:{id:b("CometVideoHomeHashtagRootQuery_facebookRelayOperation"),metadata:{},name:"CometVideoHomeHashtagRootQuery",operationKind:"query",text:null}};e.exports=a}),null);
+__d("CometVideoHomeHashtagRoot.entrypoint",["CometVideoHomeHashtagRootQuery$Parameters","JSResourceForInteraction","WebPixelRatio","buildCometVideoHomeRoute.entrypoint"],(function(a,b,c,d,e,f,g){"use strict";a=c("buildCometVideoHomeRoute.entrypoint")(c("JSResourceForInteraction")("CometVideoHomeHashtagRoot.react").__setRef("CometVideoHomeHashtagRoot.entrypoint"),function(a){a={hashtag:a.routeProps.id};return{queries:{queryReference:{parameters:b("CometVideoHomeHashtagRootQuery$Parameters"),variables:{scale:d("WebPixelRatio").get(),triggerData:a}}}}});g["default"]=a}),98);
