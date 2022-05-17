@@ -107,20 +107,15 @@
     <v-row class="pa-5">
       <v-col col="6" align="center">
         <v-carousel v-model="counter" hide-delimiters>
-      <v-carousel-item
-        v-for="image in history_images"
-        :key="image"
-      >
-          <v-img :src="image" height="300" width="600" contain>
-        </v-img>
-      </v-carousel-item>
-    </v-carousel>
-       
+          <v-carousel-item v-for="image in history_images" :key="image">
+            <v-img :src="image" height="300" width="600" contain> </v-img>
+          </v-carousel-item>
+        </v-carousel>
       </v-col>
       <v-col align-self="center" align="center">
         <div class="text-h3 py-5"><b>History</b></div>
         <div>
-         {{settings.history}}
+          {{ settings.history }}
         </div>
       </v-col>
     </v-row>
@@ -130,7 +125,9 @@
           <b> EXCLUSIVE OFFERS</b>
         </div>
       </v-col>
-      <v-col align-self="end" > <span style="cursor:pointer" @click="route('events')"> View All</span>  </v-col>
+      <v-col align-self="end">
+        <span style="cursor: pointer" @click="route('events')"> View All</span>
+      </v-col>
     </v-row>
     <v-row>
       <v-col cols="4">
@@ -156,7 +153,6 @@
       <v-col align="center">
         <v-card
           height="329"
-      
           color="#003853"
           class="d-flex justify-center align-center"
         >
@@ -170,7 +166,9 @@
                 sometimes
               </div>
               <div class="pt-10">
-                <v-btn depressed color="white" @click="route('rooms')"> View All Rooms </v-btn>
+                <v-btn depressed color="white" @click="route('rooms')">
+                  View All Rooms
+                </v-btn>
               </div>
             </v-col>
           </div>
@@ -196,7 +194,9 @@
                 Water is the driving force of all nature
               </div>
               <div class="pt-10">
-                <v-btn depressed color="white"  @click="route('pools')"> View All Pools </v-btn>
+                <v-btn depressed color="white" @click="route('pools')">
+                  View All Pools
+                </v-btn>
               </div>
             </v-col>
           </div>
@@ -206,31 +206,46 @@
         <v-img :src="pools[0].image" width="580" height="329"> </v-img>
       </v-col>
     </v-row>
-    <div class="white--text py-10" >
+    <div class="white--text py-10">
       <v-card width="100vw" color="#003853" class="px-10 py-10">
         <v-row>
           <v-col>
             <div class="white--text text-h4">
-          <b>Booking Guide:</b>
-        </div>
-        <div class="text-h6 pt-5" style="color:#09FFA6"><b>Step 1:</b></div>
-        <div class="white--text">
-          MAKE A RESERVATION AT THE BOOK SECTION!
-        </div>
-        <div class="white--text">
-         GET YOUR REFERENCE CODE TO CHECK YOUR STATUS IN STATUS SECTION
-        </div>
-        <div class="white--text">
-          YOU CAN ALSO CHECK YOUR EMAIL FOR THE REFERENCE CODE
-        </div>
-        <div class="text-h6 pt-5" style="color:#09FFA6"><b>Step 2:</b></div>
-        <div class="white--text">
-          MAKE A RESERVATION AT THE BOOK SECTION!
-        </div>
-        <div class="white--text">
-         GET YOUR REFERENCE CODE TO CHECK YOUR STATUS IN STATUS SECTION
-        </div>
-        <div class="white--text">
+              <b>Booking Guide:</b>
+            </div>
+            <div class="text-h6 pt-5" style="color: #09ffa6">
+              <b>Step 1:</b>
+            </div>
+            <div class="white--text">
+              MAKE A RESERVATION AT THE BOOK SECTION!
+            </div>
+            <div class="white--text">
+              GET YOUR REFERENCE CODE TO CHECK YOUR STATUS IN STATUS SECTION
+            </div>
+            <div class="white--text">
+              YOU CAN ALSO CHECK YOUR EMAIL FOR THE REFERENCE CODE
+            </div>
+            <div class="text-h6 pt-5" style="color: #09ffa6">
+              <b>Step 2:</b>
+            </div>
+            <div class="white--text">
+              Type your Refference Code into Seach box and click SEARCH BUTTON
+            </div>
+            <div class="white--text">
+              Status of reservation will show to your monitor and all about your
+              reservation information
+            </div>
+            <div class="text-h6 pt-5" style="color: #09ffa6">
+              <b>Step 3:</b>
+            </div>
+            <div class="white--text">
+              Upload your Proof of payment into the upload button in STATUS
+              SECTION
+            </div>
+            <div class="white--text">
+              And wait for the confirmation of your reservation.
+            </div>
+            <!-- <div class="white--text">
           YOU CAN ALSO CHECK YOUR EMAIL FOR THE REFERENCE CODE
         </div>
         <div class="text-h6 pt-5" style="color:#09FFA6"><b>Step 3:</b></div>
@@ -242,15 +257,15 @@
         </div>
         <div class="white--text">
           YOU CAN ALSO CHECK YOUR EMAIL FOR THE REFERENCE CODE
-        </div>
+        </div> -->
           </v-col>
-          <v-col cols="5" >
+          <v-col cols="5">
             <v-img src="/front_flow.png" height="482" width="511"></v-img>
           </v-col>
         </v-row>
       </v-card>
     </div>
-    
+
     <!-- <v-row class="pa-10">
       <v-col cols="6">
         <div class="text-h6">More About Us</div>
@@ -259,7 +274,7 @@
           various of services. From public pools, venue renting, private pool
           and event packages. Frequestly Ask Questions.
         </div> -->
-        <!-- <div class="text-h6 pt-5">History</div>
+    <!-- <div class="text-h6 pt-5">History</div>
         <div>
           The business owner's first idea was turn to their land to an apartment
           for the abs-cbn workers in the area. But then decided to transition to
@@ -270,7 +285,7 @@
           frontliners that are in need of a place to stay. On the new normal the
           resorts move on and continues it's services for the mass.
         </div> -->
-        <!-- <div class="text-h6 pt-5">OUR TERMS AND CONDITION</div>
+    <!-- <div class="text-h6 pt-5">OUR TERMS AND CONDITION</div>
         <div class="pt-5">
           <b>EAST STEP FOR RESERVATION</b>
         </div>
@@ -331,7 +346,7 @@
 export default {
   created() {
     this.loadData();
-    this.settingsGetall()
+    this.settingsGetall();
   },
   methods: {
     async settingsGetall() {
@@ -343,25 +358,24 @@ export default {
           },
         })
         .then((res) => {
-
           this.settings = res.data;
-        //   alert(res.data[0]['contacts'])
+          //   alert(res.data[0]['contacts'])
           this.settings.history = res.data[0].history;
-           this.settings.contacts = res.data[0].contacts;
-            this.settings.address = res.data[0].address;
-        this.settings.email = res.data[0].email;
-        this.carousel1_holder = res.data[0].carousel1;
-        this.carousel2_holder = res.data[0].carousel2;
-        this.carousel3_holder= res.data[0].carousel3;
-        this.history_images.push(this.carousel1_holder)
-        this.history_images.push(this.carousel2_holder)
-        this.history_images.push(this.carousel3_holder)
-        //   for(let x in this)
+          this.settings.contacts = res.data[0].contacts;
+          this.settings.address = res.data[0].address;
+          this.settings.email = res.data[0].email;
+          this.carousel1_holder = res.data[0].carousel1;
+          this.carousel2_holder = res.data[0].carousel2;
+          this.carousel3_holder = res.data[0].carousel3;
+          this.history_images.push(this.carousel1_holder);
+          this.history_images.push(this.carousel2_holder);
+          this.history_images.push(this.carousel3_holder);
+          //   for(let x in this)
           this.isLoading = false;
         });
     },
-    route(link){
-      window.location.href=`/${link}`
+    route(link) {
+      window.location.href = `/${link}`;
     },
     loadData() {
       this.roomsGetall();
@@ -397,14 +411,14 @@ export default {
   },
   data() {
     return {
-      carousel1_holder:'',
-      carousel2_holder:'',
-      carousel3_holder:'',
-      counter:0,
-      history_images:[],
+      carousel1_holder: "",
+      carousel2_holder: "",
+      carousel3_holder: "",
+      counter: 0,
+      history_images: [],
       rooms: [],
       pools: [],
-      settings:[],
+      settings: [],
       openTerms: false,
     };
   },

@@ -42,7 +42,7 @@
                 </div>
             </v-col>
             <v-col>
-              <v-btn depressed color="#2E2E2E" dark @click="route(i.id)"> View Room</v-btn>
+              <v-btn depressed color="#2E2E2E" dark @click="route(i.id)"> View Pool</v-btn>
             </v-col>
           </v-row>
         </div>
@@ -64,6 +64,7 @@ export default {
           this.loadData()
       },
   methods: {
+    cancel(){},
     formatPrice(value) {
       let val = (value / 1).toFixed(2).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

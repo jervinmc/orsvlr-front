@@ -540,10 +540,14 @@
               <v-col align="start">
                 <div v-if="book.pool_type=='Public Pool'">
                   Amenities:
-                  <div v-for="(x,index) in amenities" :key="index">
-                    {{x['name']}} - {{x['price']}}
+                  <div v-for="(x,index) in detailAmenities" :key="index">
+                     {{
+                       
+                       x['name']}} - {{formatPrice(x['price'])
+                       
+                       }}
                   </div>
-                  Total Amenities: Php {{total_amenities}}
+                  Total Amenities: Php {{formatPrice(total_amenities_price)}}
                 </div>
                 <div>
                   {{ book.pool_type }}
@@ -663,6 +667,8 @@ export default {
   },
   data() {
     return {
+      total_amenities_price:0,
+      detailAmenities:[],
       acceptTerms:false,
       isCheckLabel:false,
       openTerms:false,
@@ -1091,8 +1097,18 @@ export default {
           if (this.selected_amenities[key]) {
             total_amenities =
               parseInt(total_amenities) + parseInt(this.amenities[key].price);
+              this.detailAmenities.push(this.amenities[key])
+            this.total_amenities_price = total_amenities
+         
           }
         }
+        var packageAmenities = []
+           for(let key in this.detailAmenities){
+            
+                packageAmenities.push(`${this.detailAmenities[key].name} - ${this.detailAmenities[key].price}`)
+            }
+        
+            this.book.package = packageAmenities
         if (this.book.dateoption == "day") rate = 50;
         else if (this.book.dateoption == "night") rate = 100;
         else if (this.book.dateoption == "overnight") rate = 150;

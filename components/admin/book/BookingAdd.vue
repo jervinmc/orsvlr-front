@@ -801,6 +801,7 @@ export default {
       this.dialogAdd = true;
     },
     validatePage1() {
+
       if (this.book.email == null) {
         this.isErrorEmail = true;
         return;
@@ -828,7 +829,7 @@ export default {
       } else {
         this.isErrorLastName = false;
       }
-      this.e1 = 2;
+      this.e1 = 3;
     },
     disablePastDates(val) {
       console.log(new Date().toISOString().substr(0, 10));

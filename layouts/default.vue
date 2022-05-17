@@ -197,7 +197,7 @@ export default {
         },
         {
           icon: "mdi-cog",
-          title: "Settings",
+          title: "Mode of Payment",
           to: "/admin/settings",
         },
         {
