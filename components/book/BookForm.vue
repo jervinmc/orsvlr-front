@@ -995,7 +995,7 @@ export default {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
         form_data.append("price", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100))) : (this.priceToCompute - (this.priceToCompute * (this.percentage/100))));
-        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1)  : ((this.priceToCompute - (this.priceToCompute * (this.percentage/100))))/(this.book.down=='50%' ? 2 : 1) );
+        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100))/ (this.book.down=='50%' ? 2 : 1))  : (this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1));
         form_data.append("date_start", this.service_type =='Room' ? this.date_range[0] : this.date);
         form_data.append("date_end", this.service_type =='Room' ? this.date_range[1] : this.date);
         form_data.append("email", this.book.email);
@@ -1107,7 +1107,7 @@ export default {
             
                 packageAmenities.push(`${this.detailAmenities[key].name} - ${this.detailAmenities[key].price}`)
             }
-        
+           packageAmenities.push(`Adults - ${this.book.adults} Kids - ${this.book.kids}` )
             this.book.package = packageAmenities
         if (this.book.dateoption == "day") rate = 50;
         else if (this.book.dateoption == "night") rate = 100;

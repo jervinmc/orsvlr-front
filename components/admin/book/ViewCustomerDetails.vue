@@ -42,7 +42,7 @@
                   </div>
                    <div>
                      <!-- {{items}} -->
-                    Remaining Balance : {{items.status=='To Pay' ? items.price : (items.price-items.to_pay) }}
+                    Remaining Balance : {{items.status=='To Pay' ? items.price : (items.to_pay) }}
                   </div>
                   <div>
                     <v-row>
@@ -59,7 +59,7 @@
                           {{items.package=='undefined' ? '' : items.package}}
                         </div>
                         <div>
-                          {{items.date}}
+                          {{items.date_start}}
                         </div>
                         <div class="text-h6">
                           {{items.total_price}}
@@ -86,10 +86,10 @@
               </v-col>
             </v-row>
           </div>
-          <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule' ">
+          <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule' && items.status!='confirmed' && items.status!='completed' ">
             Remarks:
           </div>
-          <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule'">
+          <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule' && items.status!='confirmed' && items.status!='completed'">
             <v-textarea outlined readonly></v-textarea>
           </div>
            <div v-if="items.status=='Request For Cancellation'">

@@ -1,5 +1,11 @@
 <template>
   <v-card elevation="5" >
+    <completed
+     :isOpen="dialogCompleted"
+      @cancel="dialogCompleted = false"
+      :items="selectedItem"
+      @refresh="loadData"
+     />
     <v-dialog v-model="isCompletion">
       <v-card  class="pa-5">
         <div align="center">
@@ -539,6 +545,7 @@ import ViewCustomerDetails from "./ViewCustomerDetails.vue";
 import moment from 'moment';
 import BookingAdd from './BookingAdd.vue';
 import EventAdd from './EventAdd.vue';
+import Completed from './Completed.vue';
 export default {
   components: {
     ViewCustomerDetails,
@@ -547,6 +554,7 @@ export default {
     BookingAdd,
     EventAdd,
     JsonCSV,
+    Completed,
 
   },
   computed:{
@@ -599,6 +607,7 @@ export default {
   },
   data() {
     return {
+      dialogCompleted:false,
       isCancellation:false,
       isCompletion:false,
       dialogEvent:false,
@@ -658,7 +667,7 @@ export default {
     completion(val){
       this.selectedItem = val
     
-      this.isCompletion=true
+      this.dialogCompleted=true
     },
       async confirm(val) {
       this.buttonLoad = true;

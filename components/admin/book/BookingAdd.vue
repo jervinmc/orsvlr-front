@@ -433,6 +433,17 @@
                 <div>Reservation Information:</div>
               </v-col>
               <v-col align="start">
+                 <div v-if="book.pool_type=='Public Pool'">
+                  Amenities:
+                  <div v-for="(x,index) in detailAmenities" :key="index">
+                     {{
+                       
+                       x['name']}} - {{formatPrice(x['price'])
+                       
+                       }}
+                  </div>
+                  Total Amenities: Php {{formatPrice(total_amenities_price)}}
+                </div>
                 <div>
                   {{ book.pool_type }}
                 </div>
@@ -572,6 +583,8 @@ export default {
   },
   data() {
     return {
+      detailAmenities:[],
+      total_amenities_price:0.0,
       total_price_person:0,
       percentage:0,
       priceToCompute:0,
@@ -662,6 +675,11 @@ export default {
         });
     },
        validatePage2(){
+        
+         if(this.book.pool_type=='Public Pool' || this.service_type=='Room'){
+           this.book.down = '50%'
+
+         }
          if(this.book.down=='' || this.book.down==null){
         alert("Please fill up the form completely")
         return
@@ -955,8 +973,18 @@ export default {
           if (this.selected_amenities[key]) {
             total_amenities =
               parseInt(total_amenities) + parseInt(this.amenities[key].price);
+                 this.detailAmenities.push(this.amenities[key])
+            this.total_amenities_price = total_amenities
+             this.total_amenities_price = total_amenities
           }
         }
+        var packageAmenities = []
+           for(let key in this.detailAmenities){
+            
+                packageAmenities.push(`${this.detailAmenities[key].name} - ${this.detailAmenities[key].price}`)
+            }
+            packageAmenities.push(`Adults - ${this.book.adults} Kids - ${this.book.kids}` )
+            this.book.package = packageAmenities
         if (this.book.dateoption == "day") rate = 50;
         else if (this.book.dateoption == "night") rate = 100;
         else if (this.book.dateoption == "overnight") rate = 150;

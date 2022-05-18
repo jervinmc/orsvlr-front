@@ -112,7 +112,7 @@
           <div>Contact Number: {{ contact_number }}</div>
           <div>Email: {{ email }}</div>
           <div>Reservation Type : {{ reservation_type }}</div>
-          <div>Remaining Balance : {{ formatPrice(remaining_balance) }}</div>
+          <div>Remaining Balance : {{ status=='To Pay' ? formatPrice(total_price)  : formatPrice(remaining_balance) }}</div>
           <div>To Pay : {{ formatPrice(to_pay) }}</div>
           <div>Total Price : {{ formatPrice(total_price) }}</div>
           <v-row>
@@ -344,9 +344,16 @@ export default {
       );
     },
     async submit() {
+         let form_data = new FormData();
+      if( this.total_price / parseInt(this.to_pay)==2){
+            form_data.append("to_pay", this.total_price/2);
+      }
+      else{
+        form_data.append("to_pay",0);
+      }
       this.buttonLoad = true;
       try {
-        let form_data = new FormData();
+     
         if (this.image != null && this.image != "") {
           form_data.append("proofOfPayment", this.image);
           form_data.append("status", "pending");
@@ -420,7 +427,7 @@ export default {
             this.pool_type = res.data[0].subtype;
             this.reservation_type = res.data[0].service_type;
             this.contact_number = res.data[0].contact_number;
-            this.to_pay = res.data[0].to_pay / 2;
+            this.to_pay = res.data[0].to_pay;
             this.date_start = res.data[0].date_start;
             this.id = res.data[0].id;
             this.image = res.data[0].proofOfPayment;

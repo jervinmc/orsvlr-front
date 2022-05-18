@@ -1,5 +1,24 @@
 <template>
   <div class="black--text" style="width: 100%">
+    <v-dialog v-model="privacy" >
+      <v-card class="pa-16">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean odio nulla, laoreet a orci nec, rhoncus sodales ipsum. Cras dignissim vitae elit quis suscipit. Sed suscipit dolor lectus, sit amet dapibus tellus aliquet eu. Nunc nec mi feugiat, ultrices dolor vitae, maximus turpis. Aenean varius diam massa, a condimentum erat tempus et. Fusce fermentum porttitor est et molestie. Aliquam consequat purus sed ligula auctor semper. Ut laoreet ex nulla, et rutrum leo dapibus vel. In hac habitasse platea dictumst. Etiam vehicula vitae massa vitae imperdiet. Morbi non ligula diam. In bibendum, ex in mattis vestibulum, tortor arcu blandit urna, vitae facilisis dui tellus nec arcu. Etiam in tellus urna.
+         <v-col align="end">
+              <v-btn color="grey" text @click="privacy = false">Back </v-btn>
+            </v-col>
+      </v-card>
+      
+    </v-dialog>
+    <v-dialog v-model="faq">
+      <v-card>
+        <div class="pa-16">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean odio nulla, laoreet a orci nec, rhoncus sodales ipsum. Cras dignissim vitae elit quis suscipit. Sed suscipit dolor lectus, sit amet dapibus tellus aliquet eu. Nunc nec mi feugiat, ultrices dolor vitae, maximus turpis. Aenean varius diam massa, a condimentum erat tempus et. Fusce fermentum porttitor est et molestie. Aliquam consequat purus sed ligula auctor semper. Ut laoreet ex nulla, et rutrum leo dapibus vel. In hac habitasse platea dictumst. Etiam vehicula vitae massa vitae imperdiet. Morbi non ligula diam. In bibendum, ex in mattis vestibulum, tortor arcu blandit urna, vitae facilisis dui tellus nec arcu. Etiam in tellus urna.
+        </div>
+         <v-col align="end">
+              <v-btn color="grey" text @click="faq = false">Back </v-btn>
+            </v-col>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="openTerms" width="900" persistent>
       <v-card class="pa-10">
         <div align="center" class="text-h6">
@@ -142,10 +161,10 @@
             >TERMS AND CONDITIONS</b
           >
         </v-col>
-        <v-col class="white--text" align-self="center" align="center">
+        <v-col @click="privacy=true" style="cursor:pointer" class="white--text" align-self="center" align="center">
           <b>PRIVACY</b>
         </v-col>
-        <v-col class="white--text" align-self="center" align="center">
+        <v-col @click="faq=true" style="cursor:pointer" class="white--text" align-self="center" align="center">
           <b>FAQS</b>
         </v-col>
       </v-row>
@@ -201,6 +220,8 @@ export default {
   },
   data() {
     return {
+      privacy:false,
+      faq:false,
       buttonLoad: false,
       image: "",
       account_type: "",
