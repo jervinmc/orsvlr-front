@@ -12,11 +12,9 @@
         Enjoy your summer with us by swimming in our lavish pools.
     </div>
     <div>
-      <!-- <video width="400" controls>
-        <source src="mov_bbb.mp4" type="video/mp4" />
-        <source src="mov_bbb.ogg" type="video/ogg" />
-        Your browser does not support HTML video.
-      </video> -->
+      <video width="800" controls>
+        <source src="Villa Leonora Resort.mp4" type="video/mp4" />
+      </video>
     </div>
   </div>  
 </template>
