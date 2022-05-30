@@ -1,5 +1,10 @@
 <template>
   <v-dialog v-model="isOpen" width="1000" persistent>
+    <check-in :isOpen="dialogCheckin"
+      @cancel="dialogCheckin=false"
+      @save="save"
+      @refresh="loadData"
+      :items="events"  />
     <v-overlay
             :absolute="true"
             :value="fullscreenImage"
@@ -83,15 +88,35 @@
 
                     </v-img>
                 </v-card>
+                <v-btn @click="checkin" v-if="items.status=='Checked In'" >Ad ons</v-btn>
+                <div v-if="items.status=='Checked In'">
+                    Checked In : {{items.checkin_time}}
+                </div>
+                <div v-if="items.status=='Checked Out'">
+                    Checked Out : {{items.checkout_time}}
+                </div>
               </v-col>
             </v-row>
           </div>
-          <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule' && items.status!='confirmed' && items.status!='completed' ">
+         <div>
+            <div>
+         Ad Ons :   {{items.ad_ons}}
+          </div>
+           <div>
+         Others :   {{items.ad_other}}
+          </div>
+           <div>
+         Discount :   {{items.ad_discount}}
+          </div>
+          <v-divider></v-divider>
+
+         </div>
+          <!-- <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule' && items.status!='confirmed' && items.status!='completed' ">
             Remarks:
           </div>
           <div v-if="items.status!='Request For Cancellation' && items.status!='reschedule' && items.status!='confirmed' && items.status!='completed'">
             <v-textarea outlined readonly></v-textarea>
-          </div>
+          </div> -->
            <div v-if="items.status=='Request For Cancellation'">
             Reason For Cancellation:
           </div>
@@ -165,32 +190,181 @@
             <div>
               {{items.cancellation_description}}
             </div> -->
-            <v-btn color="transparent" @click="cancel">
+          <div v-if="items.status=='Checked In'">
+             <v-row>
+             <v-col align="start">
+                <div>
+                  <div v-for="x in ads" :key="x">
+                    {{x}}
+                  </div>
+                    <div>
+                  total ad ons : {{ad_total}}
+                </div>
+                </div>
+             </v-col>
+           </v-row>
+            <v-row>
+             <v-col align="start">
+                <div>
+                  <div v-for="x in others" :key="x">
+                    {{x}}
+                  </div>
+                    <div>
+                  total other payment : {{total_others}}
+                </div>
+                </div>
+             </v-col>
+           </v-row>
+            <v-row>
+             <v-col align="start">
+                <div>
+                  <div v-for="x in discount" :key="x">
+                    {{x}}
+                  </div>
+                    <div>
+                  total discount : {{discount_total}}
+                </div>
+                </div>
+             </v-col>
+           </v-row>
+          </div>
+          <v-divider></v-divider>
+        <div align="start" v-if="items.status=='Checked In'">
+           Other Payment {{(ad_total+total_others) - discount_total}}
+          
+          <div>
+            Remaining Balance : {{items.to_pay}}
+          </div>
+          <div>
+            To be paid: {{parseInt(items.to_pay)+((ad_total+total_others) - discount_total) }}
+          </div>
+        </div>
+           <v-row>
+             <v-col>
+                <v-btn color="transparent" @click="cancel">
               Go back
             </v-btn>
+             </v-col>
+             <v-col>
+           <v-btn color="transparent" @click="checkedIn" :loading="buttonLoad" v-if="items.status=='confirmed'">
+            Check In
+            </v-btn>
+             <v-btn color="transparent" @click="checkedOut" :loading="buttonLoad" v-if="items.status=='Checked In'">
+            Check Out
+            </v-btn>
+             </v-col>
+           </v-row>
             </v-col>
           </v-card>
   </v-dialog>
 </template>
 
 <script>
+import CheckIn from './CheckIn.vue';
 export default {
+  components: { CheckIn },
   props: ["isOpen", "items", "isAdd"],
   watch: {
     items() {
       //   this.announcement=this.items
     },
   },
+  created(){
+   
+  },
   data() {
     return {
+      dialogCheckin:false,
       room_list:['Standard','Deluxe','Suite'],
       events: [],
       fullscreenImage:false,
       buttonLoad: false,
-      img_holder:'image_placeholder.png'
+      ads:[],
+      ad_total:0,
+      img_holder:'image_placeholder.png',
+      discount:[],
+      discount_total:0,
+      others:[],
+      total_others:0
     };
   },
   methods: {
+    async  checkedOut(){
+        this.buttonLoad=true
+       let form_data = new FormData();
+        if (this.image != null && this.image != "") {
+          form_data.append("image", this.image);
+        }
+         form_data.append("ad_discount", this.discount);
+          form_data.append("ads", this.ads);
+           form_data.append("others", this.others);
+        form_data.append("status", 'Checked Out');
+        form_data.append("ad_ons_total", this.ad_total);
+        form_data.append("ad_discount_total", this.discount_total);
+        form_data.append("ad_other", this.others);
+        form_data.append("to_pay", 0);
+         form_data.append("ad_other_total", this.total_others);
+       form_data.append("checkout_time", this.timestamp());
+          const response = await this.$axios
+            .patch(`/book/${this.items.id}/`, form_data, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            })
+            .then(() => {
+              this.buttonLoad = false;
+              // this.$emit("cancel");
+              this.$emit("refresh");
+              this.$emit("cancel");
+            });
+      },
+       timestamp() {
+      var today = new Date();
+      var date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes();
+      var dateTime = date + " " + time;
+
+      return dateTime;
+    },
+    save(val){
+      this.ads = val.ads
+      this.ad_total = val.total
+      this.discount = val.discount
+      this.discount_total = val.total_discount
+      this.others = val.other
+      this.total_others = val.total_other
+      this.dialogCheckin=false
+      console.log(val)
+    },
+    checkin(){
+      this.dialogCheckin = true
+    },
+   async checkedIn(){
+     this.buttonLoad=true
+       let form_data = new FormData();
+        if (this.image != null && this.image != "") {
+          form_data.append("image", this.image);
+        }
+        form_data.append("status", 'Checked In');
+       form_data.append("checkin_time", this.timestamp());
+          const response = await this.$axios
+            .patch(`/book/${this.items.id}/`, form_data, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            })
+            .then(() => {
+              this.buttonLoad = false;
+              this.$emit("cancel");
+              this.$emit("refresh");
+            });
+        
+    },
     async addEvents() {
       this.buttonLoad = true;
       try {

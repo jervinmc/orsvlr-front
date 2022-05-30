@@ -1,5 +1,9 @@
 <template>
   <v-card elevation="5" >
+    <check-in  :isOpen="dialogCheckin"
+      @cancel="dialogCheckin=false"
+      @refresh="loadData"
+      :items="selectedItem" />
     <completed
      :isOpen="dialogCompleted"
       @cancel="dialogCompleted = false"
@@ -508,11 +512,21 @@
                 <v-list-item-title>Reject</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item @click.stop="completion(item)" v-if="item.status=='confirmed'">
+            <v-list-item @click.stop="completion(item)" v-if="item.status=='Checked Out'">
               <v-list-item-content>
                 <v-list-item-title>Check as Completed</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+              <!-- <v-list-item @click.stop="checkin(item)" v-if="item.status=='confirmed'">
+              <v-list-item-content>
+                <v-list-item-title>Check In</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item> -->
+             <!-- <v-list-item @click.stop="viewcheckin(item)" v-if="item.status=='Checked In'">
+              <v-list-item-content>
+                <v-list-item-title>View Check In</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item> -->
             <v-list-item @click.stop="rejectItem(item,'Cancel')" v-if="item.status=='Request For Cancellation' || item.status=='reschedule'">
               <v-list-item-content>
                 <v-list-item-title>Cancel</v-list-item-title>
@@ -546,6 +560,7 @@ import moment from 'moment';
 import BookingAdd from './BookingAdd.vue';
 import EventAdd from './EventAdd.vue';
 import Completed from './Completed.vue';
+import CheckIn from './CheckIn.vue';
 export default {
   components: {
     ViewCustomerDetails,
@@ -555,9 +570,12 @@ export default {
     EventAdd,
     JsonCSV,
     Completed,
+    CheckIn
+
 
   },
-  computed:{
+  
+    computed:{
     
     bookReschedule(){
       return this.book.filter(item=>{
@@ -576,7 +594,7 @@ export default {
     },
     bookConfirmed(){
       return this.book.filter(item=>{
-        return item.status=='confirmed'
+        return item.status=='confirmed' || item.status=='Checked In' || item.status=='Checked Out'
       });
     },
     bookPending(){
@@ -607,6 +625,8 @@ export default {
   },
   data() {
     return {
+      adsAll:[],
+      dialogCheckin:false,
       dialogCompleted:false,
       isCancellation:false,
       isCompletion:false,
@@ -642,6 +662,22 @@ export default {
     };
   },
   methods: {
+  async  adsGetall(){
+       const res = await this.$axios
+        .get(`/ads/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.adsAll = res.data;
+          this.isLoading = false;
+        });
+    },
+    viewcheckin(){
+
+    },
    async setComplete(){
         this.buttonLoad = true;
       const res = await this.$axios
@@ -664,6 +700,11 @@ export default {
         this.isCompletion=false
         });
     },
+    checkin(item){
+      this.dialogCheckin = true
+      this.selectedItem = item
+    },
+
     completion(val){
       this.selectedItem = val
     
@@ -778,6 +819,7 @@ export default {
     loadData() {
       this.dialogAdd=false
       this.eventsGetall();
+      this.adsGetall()
       this.dialogReject=false
       this.dialogConfirm=false
     },
