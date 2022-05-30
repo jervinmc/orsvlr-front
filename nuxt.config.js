@@ -41,6 +41,7 @@ export default {
   axios: {
     baseURL: "https://06f3-130-105-134-21.ngrok.io/api/v1/"
   },
+  //
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
