@@ -39,7 +39,7 @@ export default {
     middleware: ["authenticated"]
   },
   axios: {
-    baseURL: process.env.BASE_URL_DEV
+    baseURL: "https://06f3-130-105-134-21.ngrok.io/api/v1/"
   },
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
