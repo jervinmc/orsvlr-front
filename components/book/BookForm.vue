@@ -174,7 +174,7 @@
                       "
                       v-model="book.lastname"
                     ></v-text-field>
-                  </div>
+                  </div>``
                 </v-col>
                 <v-col cols="12">
                   <div>Contact Number<span class="red--text" style="font-size:12px">*</span></div>
@@ -206,8 +206,16 @@
                       "
                     ></v-text-field>
                   </div>
+                  <div>
+                    <v-text-field
+                      outlined
+                      placeholder="Enter Code"
+                      v-model="book.code_verification"
+                    ></v-text-field>
+                  </div>
                 </v-col>
               </v-row>
+               <v-btn color="black" dark @click="otp" :loading="codeLoad">Send Code </v-btn>
             </div>
           </v-card>
           <div class="pt-5">
@@ -664,9 +672,12 @@ export default {
     this.disableMinDate();
     this.timestamp();
     this.loadData();
+    this.generateCode()
   },
   data() {
     return {
+      otpVal:'',
+      codeLoad:false,
       total_amenities_price:0,
       detailAmenities:[],
       acceptTerms:false,
@@ -748,6 +759,24 @@ export default {
   },
 
   methods: {
+    async otp(){
+      this.codeLoad=true
+       const res = this.$axios.post(`/otp/`,{ code: this.otpVal, email: this.book.email },
+                {
+                  headers: {
+                    // Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              )
+              .then((res) => {
+                alert('Successfully sent')
+                this.codeLoad=false
+                this.buttonLoad = false
+              })
+    },
+    generateCode(){
+       this.otpVal = Math.random().toString(36).slice(2)
+    },
     resetPool(){
       this.book.date=null
       this.date=null
@@ -938,6 +967,10 @@ export default {
       this.dialogAdd = true;
     },
     validatePage1() {
+      if(this.otpVal!=this.book.code_verification){
+        alert("Verification Doesn't")
+        return
+      }
       if (this.book.email == null || this.book.email == '') {
         this.isErrorEmail = true;
         return;
