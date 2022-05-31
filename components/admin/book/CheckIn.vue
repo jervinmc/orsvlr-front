@@ -11,11 +11,7 @@
             </v-col>
             <v-col align="end" cols="auto">
               <v-row>
-                <v-col>
-                  <div>
-                    <v-icon @click="removeSize">mdi-minus</v-icon>
-                  </div>
-                </v-col>
+             
                 <v-col>
                   <div>
                     <v-icon @click="addSize">mdi-plus</v-icon>
@@ -31,11 +27,24 @@
               </v-col>
               <v-col>
                 <v-text-field
+                readonly
                   label="Price"
                   outlined
                   v-model="ads_price[index]"
                 ></v-text-field>
               </v-col>
+              <v-col>
+                <v-text-field
+                  label="Quantity"
+                  outlined
+                  v-model="ads_quantity[index]"
+                ></v-text-field>
+              </v-col>
+                 <v-col class="pt-0" cols="2" align-self="center">
+                  <div>
+                    <v-icon @click="removeSize(index)" color="red">mdi-delete</v-icon>
+                  </div>
+                </v-col>
             </v-row>
         </div>
         <v-row>
@@ -44,11 +53,6 @@
             </v-col>
             <v-col align="end" cols="auto">
               <v-row>
-                <v-col>
-                  <div>
-                    <v-icon @click="removeOther">mdi-minus</v-icon>
-                  </div>
-                </v-col>
                 <v-col>
                   <div>
                     <v-icon @click="addOther">mdi-plus</v-icon>
@@ -73,6 +77,11 @@
                   v-model="other_price[index]"
                 ></v-text-field>
               </v-col>
+               <v-col class="pt-0" cols="2" align-self="center">
+                  <div>
+                    <v-icon @click="removeOther(index)" color="red">mdi-delete</v-icon>
+                  </div>
+                </v-col>
             </v-row>
         </div>
          <v-row>
@@ -81,11 +90,6 @@
             </v-col>
             <v-col align="end" cols="auto">
               <v-row>
-                <v-col>
-                  <div>
-                    <v-icon @click="removeDiscount">mdi-minus</v-icon>
-                  </div>
-                </v-col>
                 <v-col>
                   <div>
                     <v-icon @click="addDiscount">mdi-plus</v-icon>
@@ -110,6 +114,11 @@
                   v-model="discount_price[index]"
                 ></v-text-field>
               </v-col>
+                <v-col class="pt-0" cols="2" align-self="center">
+                  <div>
+                    <v-icon @click="removeDiscount(index)" color="red">mdi-delete</v-icon>
+                  </div>
+                </v-col>
             </v-row>
         </div>
        </div>
@@ -137,6 +146,7 @@ export default {
   },
   data() {
     return {
+      ads_quantity:[],
         other_label:[],
         other_price:[],
         ads_label:[],
@@ -178,25 +188,27 @@ export default {
           this.isLoading = false;
         });
     },
-       removeSize() {
-      this.$delete(this.ads_label, 0);
-      this.$delete(this.ads_price, 0);
+       removeSize(index) {
+      this.$delete(this.ads_label, index);
+      this.$delete(this.ads_price, index);
+      this.$delete(this.ads_quantity, index);
     },
       addSize() {
       this.ads_label.push("");
       this.ads_price.push("");
+      this.ads_quantity.push("1");
     },
-     removeOther() {
-      this.$delete(this.other_label, 0);
-      this.$delete(this.other_price, 0);
+     removeOther(index) {
+      this.$delete(this.other_label, index);
+      this.$delete(this.other_price, index);
     },
       addOther() {
       this.other_label.push("");
       this.other_price.push("");
     },
-      removeDiscount() {
-      this.$delete(this.discount_label, 0);
-      this.$delete(this.discount_price, 0);
+      removeDiscount(index) {
+      this.$delete(this.discount_label, index);
+      this.$delete(this.discount_price, index);
     },
       addDiscount() {
       this.discount_label.push("");
@@ -211,8 +223,8 @@ export default {
       var total_other = 0
       var other = []
       for(let key in this.ads_label){
-            ads.push(`${this.ads_label[key]} - ${this.ads_price[key]}`)
-            total = total + parseInt(this.ads_price[key])
+            ads.push(`${this.ads_label[key]} - ${this.ads_price[key]} (${this.ads_quantity[key]}x = ${parseInt(this.ads_price[key]*parseInt(this.ads_quantity[key]))} )`)
+            total = total + parseInt(this.ads_price[key]*parseInt(this.ads_quantity[key]))
         }
          for(let key in this.discount_label){
             discount.push(`${this.discount_label[key]} - ${this.discount_price[key]}`)

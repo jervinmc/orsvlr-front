@@ -450,6 +450,37 @@
         </div>
       </v-col>
         </v-row>
+         <v-col class="pa-10 ">
+          <v-menu
+          class="pa-0"
+          ref="eventDate"
+          v-model="eventDate"
+          :close-on-content-click="false"
+          transition="scale-transition"
+          offset-y
+          max-width="290px"
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+            hide-details=""
+              v-model="date"
+              outlined
+              label="Date"
+              persistent-hint
+              v-bind="attrs"
+              @blur="date = date"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            @change="changeDate"
+            v-model="date"
+            no-title
+            range
+          ></v-date-picker>
+        </v-menu>
+       </v-col>
       <v-data-table
       class="pa-5"
       :search="search"
@@ -625,6 +656,7 @@ export default {
   },
   data() {
     return {
+      date:[],
       adsAll:[],
       dialogCheckin:false,
       dialogCompleted:false,
@@ -662,6 +694,14 @@ export default {
     };
   },
   methods: {
+    changeDate(){
+          this.items_all = []
+           for(let key in this.events){
+          if(new Date(this.date[0])<=new Date(this.events[key].date_start) && new Date(this.date[1])>=new Date(this.events[key].date_start)){
+             this.items_all.push(this.events[key])
+          }
+        } 
+      },
   async  adsGetall(){
        const res = await this.$axios
         .get(`/ads/`, {
