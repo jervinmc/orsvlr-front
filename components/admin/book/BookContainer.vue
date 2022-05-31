@@ -301,7 +301,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >To Pay</b
+                  >Pay</b
                 >
               </v-row>
             </v-col>
@@ -316,7 +316,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Pending</b
+                  >Pen</b
                 >
               </v-row>
             </v-col>
@@ -331,7 +331,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Cancel Rqst</b
+                  >CRQ</b
                 >
               </v-row>
             </v-col>
@@ -346,7 +346,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Confirmed</b
+                  >CFD</b
                 >
               </v-row>
             </v-col>
@@ -361,7 +361,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Rejected</b
+                  >RJD</b
                 >
               </v-row>
             </v-col>
@@ -376,7 +376,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Cancelled</b
+                  >CLD</b
                 >
               </v-row>
             </v-col>
@@ -391,7 +391,7 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Completed</b
+                  >CPD</b
                 >
               </v-row>
             </v-col>
@@ -406,7 +406,37 @@
                 ><b
                   v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
                   class="tab-name"
-                  >Rescheduled</b
+                  >RES</b
+                >
+              </v-row>
+            </v-col>
+             <v-col
+              :class="active_page == 8 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 8"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-timer-sand-complete</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >CKI</b
+                >
+              </v-row>
+            </v-col>
+             <v-col
+              :class="active_page == 9 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 9"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-timer-sand-complete</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >CKO</b
                 >
               </v-row>
             </v-col>
@@ -484,8 +514,8 @@
       <v-data-table
       class="pa-5"
       :search="search"
-      :headers="headers"
-      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : bookReschedule "
+      :headers="active_page==0 ? headers_topay : headers"
+      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : active_page==8 ? bookCheckedIn : active_page==8 ? bookCheckedOut :  bookReschedule "
       :loading="isLoading"
     >
       <template v-slot:[`item.status`]="{ item }">
@@ -625,7 +655,7 @@ export default {
     },
     bookConfirmed(){
       return this.book.filter(item=>{
-        return item.status=='confirmed' || item.status=='Checked In' || item.status=='Checked Out'
+        return item.status=='confirmed'
       });
     },
     bookPending(){
@@ -646,6 +676,16 @@ export default {
     bookCancelled(){
       return this.book.filter(item=>{
         return item.status=='cancelled'
+      });
+    } ,
+     bookCheckedIn(){
+      return this.book.filter(item=>{
+        return item.status=='Checked In'
+      });
+    } ,
+    bookCheckedOut(){
+      return this.book.filter(item=>{
+        return item.status=='Checked Out'
       });
     } 
   },
@@ -676,6 +716,21 @@ export default {
       search:'',
       dialogReject:false,
       headers: [
+        { text: "ID", value: "id" },
+        { text: "First Name", value: "firstname" },
+        { text: "Last Name", value: "lastname" },
+        { text: "Email", value: "email" },
+        { text: "Date Start", value: "date_start" },
+        { text: "Date End", value: "date_end" },
+        { text: "Code", value: "code" },
+        { text: "Price", value: "price" },
+        { text: "Service Type", value: "service_type" },
+        { text: "Status", value: "status" },
+           { text: "Trasanction Date", value: "transaction_date" },
+        { text: "Actions", value: "opt" },
+        ,
+      ],
+       headers_topay: [
         { text: "ID", value: "id" },
         { text: "First Name", value: "firstname" },
         { text: "Last Name", value: "lastname" },

@@ -20,7 +20,7 @@
     <v-card align="start" class="pa-16">
       <div>
         <div align="center" class="text-h5 pb-10">
-          <b>COMPLETED TRANSACTION FOR</b>
+          <b>RESERVATION DETAILS</b>
         </div>
         <div>
           <v-row>
@@ -36,7 +36,7 @@
                 <div>
                   <!-- {{items}} -->
                   Remaining Balance :
-                  {{ items.status == "To Pay" ? items.price : items.to_pay }}
+                  {{ items.status == "To Pay" || items.status == "pending" ? items.price : items.to_pay }}
                 </div>
                 <div>
                   <v-row>
@@ -54,6 +54,12 @@
                       </div>
                       <div>
                         {{ items.date_start }}
+                      </div>
+                      <div v-if="items.service_type =='Room'">
+                        {{ items.date_end }}
+                      <div>
+                          ({{datediff(items.date_start,items.date_end)}} Days)
+                      </div>
                       </div>
                       <div class="text-h6">
                         {{ items.total_price }}
@@ -243,7 +249,10 @@
             </div>
             <div>
               Amount Received:
-              <v-text-field outlined v-model="amountReceived"></v-text-field>
+              <v-text-field outlined v-model="amountReceived" hide-details=""></v-text-field>
+              <div>
+                Amount Received accepts string as an input
+              </div>
             </div>
           </v-col>
         </v-row>
@@ -308,7 +317,7 @@
 
 <script>
 import jsPDF from 'jspdf'
-
+import moment from "moment";
 import CheckIn from "./CheckIn.vue";
 export default {
   components: { CheckIn },
@@ -337,6 +346,9 @@ export default {
     };
   },
   methods: {
+       datediff(first, second) {
+      return Math.round((moment(second) - moment(first)) / (1000 * 60 * 60 * 24));
+    },
     downloadPdf(){
       let pdfName = 'test'; 
     var doc = new jsPDF();

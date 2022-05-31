@@ -18,6 +18,24 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+    <v-dialog v-model="deleteConfirmationBulk" width="500" persistent>
+    <v-card class="pa-10">
+    <div align="center" class="text-h6">Confirmation</div>
+    <div align="center" class="pa-10">
+        Are you sure you want to delete these selected items?
+    </div>
+      <v-card-actions>
+        <v-row align="center">
+            <v-col align="end">
+                <v-btn color="red" text @click="deleteConfirmationBulk=false"> Cancel </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn color="success" text :loading="buttonLoad" @click="bulkDelete"> Confirm </v-btn>
+            </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
     <v-dialog v-model="undoConfirmation" width="500" persistent>
     <v-card class="pa-10">
     <div align="center" class="text-h6">Confirmation</div>
@@ -42,8 +60,13 @@
         <b>Archive Management</b>
       </v-col>
       <v-spacer></v-spacer>
+      <v-col align-self="center">
+        <v-btn @click="deleteConfirmationBulk=true">Delete</v-btn>
+      </v-col>
     </v-row>
     <v-data-table
+    show-select
+    v-model="itemSelected"
       class="pa-5"
       :headers="headers"
       :items="bookArchive"
@@ -91,6 +114,8 @@ export default {
   },
   data() {
     return {
+      deleteConfirmationBulk:false,
+      itemSelected:[],
       selectedItem:{},
       isLoading: false,
       pools: [],
@@ -144,6 +169,19 @@ export default {
           this.loadData()
       })
     },
+     async bulkDelete(){
+     this.buttonLoad=true
+      this.$axios.post(`/bulk-delete-book/`,{items:this.itemSelected},{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.deleteConfirmation=false
+          this.buttonLoad=false
+          this.loadData()
+      })
+    },
        deleteItem(val){
       this.selectedItem = val
       this.deleteConfirmation = true
@@ -156,7 +194,7 @@ export default {
         }
       })
       .then(()=>{
-          this.deleteConfirmation=false
+          this.deleteConfirmationBulk=false
           this.buttonLoad=false
           alert('Successfully Deleted!')
           this.loadData()

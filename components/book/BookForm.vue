@@ -211,7 +211,11 @@
                       outlined
                       placeholder="Enter Code"
                       v-model="book.code_verification"
+                      hide-details=""
                     ></v-text-field>
+                    <div class="pb-5">
+                      To verify your email address, please enter the code that is sent to your email.
+                    </div>
                   </div>
                 </v-col>
               </v-row>
@@ -578,10 +582,10 @@
               Total Price : {{formatPrice((((priceToCompute ))))}} (- Php {{ formatPrice(((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code))
             </div>
             <div class="green--text" align="center" v-if="this.book.pool_type=='Public Pool'">
-            Final Price :  -  Php {{ formatPrice((((priceToCompute )))-((this.total_price_person-((this.total_price_person - (this.total_price_person*parseInt(percentage)/100)))))) }}(Promo Code)
+            Final Price :   Php {{ formatPrice((((priceToCompute )))-((this.total_price_person-((this.total_price_person - (this.total_price_person*parseInt(percentage)/100)))))) }}(Promo Code)
             </div>
             <div class="green--text" align="center" v-else>
-            Final Price :  -  Php {{ formatPrice(priceToCompute-((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code)
+            Final Price :   Php {{ formatPrice(priceToCompute-((priceToCompute-((priceToCompute - (priceToCompute*parseInt(percentage)/100)))))) }}(Promo Code)
             </div>
             <!-- <div align="center">
               Total Amount of 50% Downpayment: Php {{ formatPrice((priceToCompute-(priceToCompute - (priceToCompute*parseInt(percentage)/100)*.50))) }}
@@ -606,7 +610,7 @@
             </div>
             <div class="red--text"></div>
             <v-col cols="12" class="px-0"> 
-              <div>Mode of Payment<span class="red--text" style="font-size:12px">*</span></div>
+              <div>Payment Option<span class="red--text" style="font-size:12px">*</span></div>
               <div>
                 <v-select
                   :error-messages="
@@ -676,6 +680,7 @@ export default {
   },
   data() {
     return {
+      numberOfDays:0,
       otpVal:'',
       codeLoad:false,
       total_amenities_price:0,
@@ -869,12 +874,14 @@ export default {
       if(this.service_type=='Room'){
         var threshold_item = []
           var dates = this.items.map(item=>{
-            if((item.subtype==this.book.room_type && item.status=='To Pay') || item.subtype==this.book.room_type && item.status=='confirmed'){
-              
+            if((item.subtype==this.book.room_type && item.status!='cancelled')){
+          
               if(this.dateRangeOverlaps(this.date_range[0],this.date_range[1],this.formatDateFuture(new Date(item.date_start)),this.formatDateFuture(new Date(item.date_end)))){
-              
+                
                  for (let x in this.package_list) {
+                   
                   if (item.package == this.package_list[x]) {
+                        
                     this.package_list.splice(x, 1);
                   }
           }
@@ -1067,6 +1074,7 @@ export default {
                var start = moment(this.date_range[0]);
               var end = moment(this.date_range[1]);
               var vals = this.datediff(start, end);
+              this.numberOfDays = vals
               this.book.price = (val.price)*vals
                this.priceToCompute = (val.price)*vals
             }

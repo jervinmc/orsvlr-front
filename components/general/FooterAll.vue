@@ -11,8 +11,25 @@
     </v-dialog>
     <v-dialog v-model="faq">
       <v-card>
+        <div align="center" class="text-h5 pt-5">
+         <b> FAQs </b>
+        </div>
         <div class="pa-16">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean odio nulla, laoreet a orci nec, rhoncus sodales ipsum. Cras dignissim vitae elit quis suscipit. Sed suscipit dolor lectus, sit amet dapibus tellus aliquet eu. Nunc nec mi feugiat, ultrices dolor vitae, maximus turpis. Aenean varius diam massa, a condimentum erat tempus et. Fusce fermentum porttitor est et molestie. Aliquam consequat purus sed ligula auctor semper. Ut laoreet ex nulla, et rutrum leo dapibus vel. In hac habitasse platea dictumst. Etiam vehicula vitae massa vitae imperdiet. Morbi non ligula diam. In bibendum, ex in mattis vestibulum, tortor arcu blandit urna, vitae facilisis dui tellus nec arcu. Etiam in tellus urna.
+          <div>
+            <v-expansion-panels>
+              <v-expansion-panel
+                v-for="(item,i) in faqItems"
+                :key="i"
+              >
+                <v-expansion-panel-header>
+                  {{item.question}}
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  {{item.answer}}
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </div>
         </div>
          <v-col align="end">
               <v-btn color="grey" text @click="faq = false">Back </v-btn>
@@ -220,6 +237,7 @@ export default {
   },
   data() {
     return {
+      faqItems:[],
       privacy:false,
       faq:false,
       buttonLoad: false,
@@ -276,6 +294,19 @@ export default {
           this.history_images.push(this.carousel2_holder);
           this.history_images.push(this.carousel3_holder);
           //   for(let x in this)
+          this.isLoading = false;
+        });
+    },
+    async faqGetall() {
+      this.isLoading = true;
+      const res = await this.$axios
+        .get(`/faq/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          this.faqItems = res.data
           this.isLoading = false;
         });
     },
@@ -377,6 +408,7 @@ export default {
       this.settingsGetall();
       this.account_type = localStorage.getItem("account_type");
       this.eventsGetall();
+      this.faqGetall();
     },
     async eventsGetall() {
       this.isLoading = true;

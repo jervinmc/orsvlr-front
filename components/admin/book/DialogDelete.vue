@@ -11,7 +11,7 @@
                 <v-btn color="red" text @click="cancel"> Cancel </v-btn>
             </v-col>
             <v-col>
-                <v-btn :loading="buttonLoad" text @click="decline"> {{book.status_action=='Completed' ? 'COMPLETE' : book.status_action=='Reject' ? 'REJECT' : book.status_action=='Pending' ? 'UNDO' : book.status_action=='Archive' ? 'Archive'  : 'CANCEL' }}  </v-btn>
+                <v-btn :loading="buttonLoad" text @click="decline"> {{book.status_action=='Completed' ? 'COMPLETE' : book.status_action=='Reject' ? 'REJECT' : book.status_action=='Pending' ? 'UNDO' : book.status_action=='Archive' ? 'Archive'  : 'Yes' }}  </v-btn>
             </v-col>
         </v-row>
       </v-card-actions>

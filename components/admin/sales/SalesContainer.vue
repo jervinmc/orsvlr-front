@@ -119,7 +119,7 @@ export default {
         { text: "Date Start", value: "date_start" },
         { text: "Date End", value: "date_end" },
         { text: "Code", value: "code" },
-        { text: "Price", value: "price" },
+        { text: "Revenue", value: "total_paid" },
         { text: "Service Type", value: "service_type" },
         { text: "Status", value: "status" },
         { text: "Trasanction Date", value: "transaction_date" },
@@ -141,7 +141,7 @@ export default {
       });
       var total = 0 
       completed.map(data=>{
-        total = total + parseInt(data.price)
+        total = total + parseInt(data.total_paid)
       })
       return total
     },
