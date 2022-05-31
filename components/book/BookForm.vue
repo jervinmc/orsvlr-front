@@ -809,6 +809,9 @@ export default {
         });
     },
     validatePage2(){
+      if(this.service_type=='Room'){
+        this.book.down = "50%"
+      }
        if (this.book.price == null) {
         this.isErrorEmail = true;
         return;

@@ -390,6 +390,10 @@ export default {
     
     },
     async checkedOut() {
+      if(this.amountReceived==''){
+         alert("Please input field");
+        return
+      }
       if (
         parseInt(this.items.to_pay) +
           (this.ad_total + this.total_others - this.discount_total) >
