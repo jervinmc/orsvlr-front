@@ -307,7 +307,8 @@
 </template>
 
 <script>
-import jspdf from 'jspdf'
+import jsPDF from 'jspdf'
+
 import CheckIn from "./CheckIn.vue";
 export default {
   components: { CheckIn },
@@ -337,14 +338,42 @@ export default {
   },
   methods: {
     downloadPdf(){
-       const doc = new jspdf()
-      const html = this.$refs.content.innerHTML
-     doc.html(html, {
-   callback: function (doc) {
+      let pdfName = 'test'; 
+    var doc = new jsPDF();
+     doc.text(`Receipt Form`, 70, 10);
+    doc.text(`Contact Number : ${this.items.contact_number}`, 10, 20);
+    doc.text(`Accommodation Type : ${this.items.service_type}`, 10, 25);
+    doc.text(`Email : ${this.items.email}`, 10, 30);
+    doc.text(`Accommodation Type : ${this.items.service_type}`, 10, 35);
+    doc.text(`Package Type : ${this.items.package}`, 10, 40);
+    doc.text(`Date of Schedule : ${this.items.date_start}`, 10, 45);
+    doc.text(`Discount : ${this.items.ad_discount}`, 10, 55);
+    doc.text(`Other : ${this.items.ad_other}`, 10, 60);
+    doc.text(`Add Ons : ${this.items.ad_ons}`, 10, 65);
+    doc.text(`Total Paid : ${this.items.total_paid}`, 10, 70);
+        //  <div style="padding-left:20px">
+        //    <div  style="padding:0px;width:100px;font-size:5px">Contact : {{items.contact_number}} </div>
+        //   <div style="padding:0px;width:100px;font-size:5px">Email : {{items.email}} </div>
+        //  <div style="padding:0px;width:100px;font-size:5px">Accommodation Type : {{items.service_type}} </div>
+        //   <div style="padding:0px;width:100px;font-size:5px">Package Type : {{items.package}} </div>
+        //    <div style="padding:0px;width:100px;font-size:5px">Date of Schedule : {{items.date_start}} </div>
+        //    <div style="padding-top:10px">
+             
+        //    </div>
+        //    <div style="padding:0px;width:100px;font-size:5px">Discount : {{items.ad_discount}} </div>
+        //    <div style="padding:0px;width:100px;font-size:5px">Other : {{items.ad_other}} </div>
+        //    <div style="padding:0px;width:100px;font-size:5px">Add Ons : {{items.ad_ons}} </div>
+        //     <div style="padding:0px;width:100px;font-size:5px">Total Paid : {{items.total_paid}} </div>
+        //  </div>
+    doc.save(pdfName + '.pdf');
+  //      const doc = new jspdf()
+  //     const html = this.$refs.content.innerHTML
+  //    doc.html(html, {
+  //  callback: function (doc) {
     
-     doc.save("out.pdf");
-        }
-      });
+  //    doc.save("out.pdf");
+  //       }
+  //     });
  
     
     },
