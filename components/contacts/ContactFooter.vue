@@ -35,6 +35,43 @@
               {{settings.email}}
                 </v-col>
             </v-row>
+            <div class="text-h5">
+              Get In Touch
+            </div>
+            <div  align="start">
+              Fullname
+            </div>
+            <div>
+              <v-text-field outlined v-model="touch.email" label="Fullname"></v-text-field>
+            </div>
+             <div  align="start">
+              Contact Number
+            </div>
+            <div>
+              <v-text-field outlined v-model="touch.contact_number" label="Contact Number"></v-text-field>
+            </div>
+             <div  align="start">
+              Email Address
+            </div>
+            <div>
+              <v-text-field outlined v-model="touch.email" label="Email Address"></v-text-field>
+            </div>
+             <div  align="start">
+              Verification Code
+            </div>
+            <div>
+              <v-text-field outlined v-model="touch.code" label="Verification Code"></v-text-field>
+           </div>
+           <v-row>
+             <v-col>
+               <v-btn @click="send_code">
+                 Send Code
+               </v-btn>
+             </v-col>
+             <v-col>
+               <v-btn>Submit</v-btn>
+             </v-col>
+           </v-row>
              <!-- <v-row>
                 <v-col cols="auto">
                     <v-icon>mdi-email</v-icon>
@@ -101,8 +138,27 @@ export default {
   created() {
     this.loadData();
     this.settingsGetall()
+    this.generateCode()
   },
   methods: {
+     generateCode(){
+       this.otpVal = Math.random().toString(36).slice(2)
+    },
+    async send_code(){
+      this.codeLoad=true
+       const res = this.$axios.post(`/otp/`,{ code: this.otpVal, email: this.touch.email },
+                {
+                  headers: {
+                    // Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              )
+              .then((res) => {
+                alert('Successfully sent')
+                this.codeLoad=false
+                this.buttonLoad = false
+              })
+    },
     async settingsGetall() {
       this.isLoading = true;
       const res = await this.$axios
@@ -166,6 +222,8 @@ export default {
   },
   data() {
     return {
+      otpVal:'',
+      touch:{},
       carousel1_holder:'',
       carousel2_holder:'',
       carousel3_holder:'',

@@ -112,8 +112,8 @@
           <div>Contact Number: {{ contact_number }}</div>
           <div>Email: {{ email }}</div>
           <div>Reservation Type : {{ reservation_type }}</div>
-          <div>Remaining Balance : {{ status=='To Pay' ? formatPrice(total_price)  : formatPrice(remaining_balance) }}</div>
-          <div>To Pay : {{ formatPrice(to_pay) }}</div>
+          <div>Remaining Balance : {{ status=='To Pay' || status=='pending'  ? formatPrice(total_price)  : formatPrice(remaining_balance) }}</div>
+          <div>To Pay :  {{ status=='To Pay' || status=='pending'  ? formatPrice(total_price)  : formatPrice(to_pay) }}</div>
           <div>Total Price : {{ formatPrice(total_price) }}</div>
           <v-row>
             <v-col cols="auto">
@@ -130,6 +130,9 @@
               </div>
               <div>
                 {{ date_start }}
+              </div>
+               <div>
+                {{ date_end }}
               </div>
             </v-col>
           </v-row>
@@ -248,6 +251,7 @@ export default {
   components: { Confirmation },
   data() {
     return {
+      date_end:'',
       date_reschedule:'',
       reschedule: "",
       isResched: false,
@@ -301,6 +305,7 @@ export default {
           this.isResched = false;
           this.buttonLoad = false;
           alert("Successfully Sent!");
+          window.location.href='status'
         });
     },
     formatPrice(value) {
@@ -367,10 +372,12 @@ export default {
           .then(() => {
             alert("Successfully Sent!");
             this.buttonLoad = false;
+               window.location.href='status'
           });
       } catch (error) {
         // alert(error);
         this.buttonLoad = false;
+      
       }
     },
     cancel() {
@@ -429,6 +436,7 @@ export default {
             this.contact_number = res.data[0].contact_number;
             this.to_pay = res.data[0].to_pay;
             this.date_start = res.data[0].date_start;
+            this.date_end = res.data[0].date_end;
             this.id = res.data[0].id;
             this.image = res.data[0].proofOfPayment;
             this.remaining =

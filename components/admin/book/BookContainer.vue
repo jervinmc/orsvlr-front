@@ -1,5 +1,23 @@
 <template>
   <v-card elevation="5" >
+    <v-dialog v-model="deleteConfirmationBulk" width="500" persistent>
+    <v-card class="pa-10">
+    <div align="center" class="text-h6">Confirmation</div>
+    <div align="center" class="pa-10">
+        Are you sure you want to delete these selected items?
+    </div>
+      <v-card-actions>
+        <v-row align="center">
+            <v-col align="end">
+                <v-btn color="red" text @click="deleteConfirmationBulk=false"> Cancel </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn color="success" text :loading="buttonLoad" @click="bulkDelete"> Confirm </v-btn>
+            </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
     <check-in  :isOpen="dialogCheckin"
       @cancel="dialogCheckin=false"
       @refresh="loadData"
@@ -125,10 +143,28 @@
       <v-card-actions>
         <v-row align="center">
             <v-col align="end">
-                <v-btn color="red" text @click="cancel"> Back </v-btn>
+                <v-btn color="red" text @click="isOpenSetComplete=false"> Back </v-btn>
             </v-col>
             <v-col>
                 <v-btn color="success" :loading="buttonLoad" text @click="confirmComplete"> Confirm </v-btn>
+            </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+    <v-dialog v-model="isOpenSetArchived" width="500" persistent>
+    <v-card class="pa-10">
+    <div align="center" class="text-h6">Confirmation</div>
+    <div align="center" class="pa-10">
+      Are you sure you want to mark these as archived?
+    </div>
+      <v-card-actions>
+        <v-row align="center">
+            <v-col align="end">
+                <v-btn color="red" text @click="isOpenSetArchived=false"> Back </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn color="success" :loading="buttonLoad" text @click="confirmArchived"> Confirm </v-btn>
             </v-col>
         </v-row>
       </v-card-actions>
@@ -267,6 +303,7 @@
     <view-customer-details
       :isOpen="dialogView"
       @cancel="dialogView = false"
+      @refresh="loadData"
       :items="selectedItem"
     />
     <event-add :isOpen="dialogEvent"
@@ -554,7 +591,7 @@
       <v-data-table
       v-model="checkedItems"
       class="pa-5"
-      :show-select="active_page==9"
+      :show-select="active_page==9 || active_page==4 || active_page==5 || active_page==6"
       :search="search"
       :headers="active_page==0 ? headers_topay : headers"
       :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : active_page==8 ? bookCheckedIn : active_page==9 ? bookCheckedOut :  bookReschedule "
@@ -574,7 +611,7 @@
       </template>
        <template #[`item.price`]="{ item }">
           <div>
-            {{formatPrice(item.price)}}
+            {{item.status=='completed' ? formatPrice(item.total_paid) : formatPrice(item.price)}}
           </div>
       </template>
       <template #[`item.transaction_date`]="{ item }">
@@ -650,6 +687,17 @@
                 <v-list-item-title>Archive</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+             <v-list-item @click.stop="isOpenSetArchived=true" v-if="item.status=='cancelled' || item.status=='completed' || item.status=='rejected' || item.status=='confirmed'">
+              <v-list-item-content>
+                <v-list-item-title>Bulk Set Archived</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+              <v-list-item @click.stop="deleteConfirmationBulk=true" v-if="item.status=='cancelled' || item.status=='rejected'">
+              <v-list-item-content>
+                <v-list-item-title>Bulk Delete</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+           
           </v-list>
         </v-menu>
       </template>
@@ -743,6 +791,8 @@ export default {
   },
   data() {
     return {
+      deleteConfirmationBulk:false,
+      isOpenSetArchived:false,
       itemContainer:[],
       dateFilter:'',
       isOpenSetComplete:false,
@@ -800,6 +850,32 @@ export default {
     };
   },
   methods: {
+      async bulkDelete(){
+     this.buttonLoad=true
+      this.$axios.post(`/bulk-delete-book/`,{items:this.checkedItems},{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.deleteConfirmationBulk=false
+          this.buttonLoad=false
+          this.loadData()
+      })
+    },
+    async confirmArchived(){
+     this.buttonLoad=true
+      this.$axios.post(`/bulk-archived-book/`,{items:this.checkedItems},{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.isOpenSetArchived=false
+          this.buttonLoad=false
+          this.loadData()
+      })
+    },
      async confirmComplete(){
      this.buttonLoad=true
       this.$axios.post(`/bulk-completed-book/`,{items:this.checkedItems},{

@@ -1,8 +1,12 @@
 <template>
   <div>
         <book-form/>
-        <div>
-            <footer-all/>
+        <div class="pt-16">
+          <div class="pt-2">
+
+          </div>
+          <footer-all/>
+          
         </div>
   </div>
 </template>

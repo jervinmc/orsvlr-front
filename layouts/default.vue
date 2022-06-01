@@ -76,6 +76,7 @@
     </v-app-bar>
     <v-app-bar color="white" :clipped-left="clipped" fixed app elevation="1" v-else >
     <v-app-bar-nav-icon @click="drawer=true"></v-app-bar-nav-icon>
+    <b>Villa Leonora Resort Admin Site</b>
     </v-app-bar>
     <v-main>
       <v-container fluid class="pa-0">
@@ -192,7 +193,7 @@ export default {
         },
         {
           icon: "mdi-account-multiple",
-          title: "Usermanagment",
+          title: "User Management",
           to: "/admin/usermanagement",
         },
         {

@@ -75,6 +75,9 @@
           </v-list>
         </v-menu>
       </template>
+      <template #[`item.image`]="{ item }">
+          <v-img :src="item.image" height="100" width="100"></v-img>
+      </template>
     </v-data-table>
   </v-card>
 </template>

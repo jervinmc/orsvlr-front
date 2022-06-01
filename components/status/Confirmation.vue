@@ -57,6 +57,7 @@ export default {
         .then((res) => {
         this.buttonLoad=false
         alert('Successfully Sent!')
+        window.location.href="status" 
         this.$emit('cancel')
         });
     },

@@ -36,7 +36,7 @@
                 <div>
                   <!-- {{items}} -->
                   Remaining Balance :
-                  {{ items.status == "To Pay" || items.status == "pending" ? items.price : items.to_pay }}
+                  {{ items.status == "To Pay" || items.status == "pending" || items.status == "Request For Cancellation" || items.status == "cancelled" ? items.price : items.to_pay }}
                 </div>
                 <div>
                   <v-row>
@@ -250,9 +250,9 @@
             <div>
               Amount Received:
               <v-text-field outlined v-model="amountReceived" hide-details=""></v-text-field>
-              <div>
+              <!-- <div>
                 Amount Received accepts string as an input
-              </div>
+              </div> -->
             </div>
           </v-col>
         </v-row>
@@ -390,16 +390,16 @@ export default {
     
     },
     async checkedOut() {
-      if(this.amountReceived==''){
-         alert("Please input field");
-        return
-      }
+      // if(this.amountReceived!=this.items.to_pay){
+      //    alert("Please input exact amount.");
+      //   return
+      // }
       if (
         parseInt(this.items.to_pay) +
-          (this.ad_total + this.total_others - this.discount_total) >
-        parseInt(this.amountReceived)
+          (this.ad_total + this.total_others - this.discount_total) !=this.amountReceived
+
       ) {
-        alert("Not enough money");
+        alert("Please enter exact amount.");
         return;
       }
       this.buttonLoad = true;
@@ -459,8 +459,8 @@ export default {
       this.dialogCheckin = true;
     },
     async checkedIn() {
-      if (parseInt(this.items.to_pay) > parseInt(this.amountReceived)) {
-        alert("Not enough money");
+     if(this.amountReceived!=this.items.to_pay){
+        alert("Please enter exact amount.");
         return;
       }
       this.buttonLoad = true;
