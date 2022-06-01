@@ -515,7 +515,7 @@
       class="pa-5"
       :search="search"
       :headers="active_page==0 ? headers_topay : headers"
-      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : active_page==8 ? bookCheckedIn : active_page==8 ? bookCheckedOut :  bookReschedule "
+      :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : active_page==8 ? bookCheckedIn : active_page==9 ? bookCheckedOut :  bookReschedule "
       :loading="isLoading"
     >
       <template v-slot:[`item.status`]="{ item }">
