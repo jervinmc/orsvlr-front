@@ -116,6 +116,24 @@
         </div>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="isOpenSetComplete" width="500" persistent>
+    <v-card class="pa-10">
+    <div align="center" class="text-h6">Confirmation</div>
+    <div align="center" class="pa-10">
+      Are you sure you want to mark these as completed?
+    </div>
+      <v-card-actions>
+        <v-row align="center">
+            <v-col align="end">
+                <v-btn color="red" text @click="cancel"> Back </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn color="success" :loading="buttonLoad" text @click="confirmComplete"> Confirm </v-btn>
+            </v-col>
+        </v-row>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
      <v-dialog v-model="isCancellation">
       <v-card  class="pa-5">
         <div align="center">
@@ -464,6 +482,24 @@
           </v-btn>
         </JsonCSV>
           </v-col>
+           <v-col align-self="center" align="end" cols="1" v-if="active_page==3">
+              <JsonCSV
+          class="btn btn-default"
+          :data="book.filter(data=>data.status=='confirmed')"
+        >
+          <v-btn
+            class="rnd-btn"
+            rounded
+            large
+            color="black"
+            depressed
+            dark
+            width="200"
+          >
+            <span class="text-none">Download Filtered Date</span>
+          </v-btn>
+        </JsonCSV>
+          </v-col>
         </div>
       <v-row>
       
@@ -480,7 +516,8 @@
         </div>
       </v-col>
         </v-row>
-         <v-col class="pa-10 ">
+       <v-row>
+           <v-col class="pa-10 ">
           <v-menu
           class="pa-0"
           ref="eventDate"
@@ -504,15 +541,20 @@
             ></v-text-field>
           </template>
           <v-date-picker
-            @change="changeDate"
-            v-model="date"
+            @change="changeDateFilter"
+            v-model="dateFilter"
             no-title
-            range
           ></v-date-picker>
         </v-menu>
        </v-col>
+       <v-col align-self="center">
+          <v-btn @click="book = itemContainer">Reset Filter Date</v-btn>
+       </v-col>
+       </v-row>
       <v-data-table
+      v-model="checkedItems"
       class="pa-5"
+      :show-select="active_page==9"
       :search="search"
       :headers="active_page==0 ? headers_topay : headers"
       :items="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : active_page==8 ? bookCheckedIn : active_page==9 ? bookCheckedOut :  bookReschedule "
@@ -576,6 +618,11 @@
             <v-list-item @click.stop="completion(item)" v-if="item.status=='Checked Out'">
               <v-list-item-content>
                 <v-list-item-title>Check as Completed</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+             <v-list-item @click.stop="isOpenSetComplete=true" v-if="item.status=='Checked Out'">
+              <v-list-item-content>
+                <v-list-item-title>Bulk set complete</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
               <!-- <v-list-item @click.stop="checkin(item)" v-if="item.status=='confirmed'">
@@ -696,6 +743,10 @@ export default {
   },
   data() {
     return {
+      itemContainer:[],
+      dateFilter:'',
+      isOpenSetComplete:false,
+      checkedItems:[],
       date:[],
       adsAll:[],
       dialogCheckin:false,
@@ -749,6 +800,23 @@ export default {
     };
   },
   methods: {
+     async confirmComplete(){
+     this.buttonLoad=true
+      this.$axios.post(`/bulk-completed-book/`,{items:this.checkedItems},{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(()=>{
+          this.isOpenSetComplete=false
+          this.buttonLoad=false
+          this.loadData()
+      })
+    },
+    
+    changeDateFilter(){
+       this.book = this.itemContainer.filter(data => data.date_start.toString()==this.dateFilter.toString())
+      },
     changeDate(){
           this.items_all = []
            for(let key in this.events){
@@ -929,6 +997,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.book = res.data;
+          this.itemContainer = res.data;
           this.isLoading = false;
         });
     },

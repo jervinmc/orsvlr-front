@@ -28,7 +28,7 @@
               <v-card class="pa-5 mb-10" elevation="5">
                 <div>Reference Code : {{ items.code }}</div>
                 <div>
-                  Customer Name : {{ items.firstname }} {{ items.firstname }}
+                  Customer Name : {{ items.firstname }} {{ items.lastname }}
                 </div>
                 <div>Contact : {{ items.contact_number }}</div>
                 <div>Email : {{ items.email }}</div>

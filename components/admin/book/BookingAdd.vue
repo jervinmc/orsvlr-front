@@ -796,12 +796,14 @@ export default {
 
       return dateTime;
     },
-    disableMinDate() {
+      disableMinDate() {
       var today = new Date();
       var day = today.getDate() + 1;
+      if(day.toString().length==1){
+        day = 0+day.toString()
+      }
       var date =
-        today.getFullYear() + "-0" + (today.getMonth() + 1) + "-" + day;
-
+        today.getFullYear() + "-0" + (today.getMonth() + 1) + "-" +day;
       this.min_date = date;
       this.currentMinDate = date
     },
