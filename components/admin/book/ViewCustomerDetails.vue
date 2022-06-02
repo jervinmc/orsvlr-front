@@ -354,11 +354,13 @@ export default {
     var doc = new jsPDF();
      doc.text(`Receipt Form`, 70, 10);
     doc.text(`Contact Number : ${this.items.contact_number}`, 10, 20);
-    doc.text(`Accommodation Type : ${this.items.service_type}`, 10, 25);
+    doc.text(`Fullname : ${this.items.firstname} ${this.items.lastname}`, 10, 25);
     doc.text(`Email : ${this.items.email}`, 10, 30);
     doc.text(`Accommodation Type : ${this.items.service_type}`, 10, 35);
     doc.text(`Package Type : ${this.items.package}`, 10, 40);
     doc.text(`Date of Schedule : ${this.items.date_start}`, 10, 45);
+    doc.text(`Date Checked In : ${this.items.checkin_date}`, 10, 45);
+    doc.text(`Date Checked Out : ${this.items.checkout_date}`, 10, 45);
     doc.text(`Discount : ${this.items.ad_discount}`, 10, 55);
     doc.text(`Other : ${this.items.ad_other}`, 10, 60);
     doc.text(`Add Ons : ${this.items.ad_ons}`, 10, 65);
@@ -459,8 +461,8 @@ export default {
       this.dialogCheckin = true;
     },
     async checkedIn() {
-     if(this.amountReceived!=this.items.to_pay){
-        alert("Please enter exact amount.");
+     if(this.amountReceived<this.items.to_pay){
+        alert('Insufficient amount.')
         return;
       }
       this.buttonLoad = true;

@@ -174,7 +174,7 @@
                       "
                       v-model="book.lastname"
                     ></v-text-field>
-                  </div>``
+                  </div>
                 </v-col>
                 <v-col cols="12">
                   <div>Contact Number<span class="red--text" style="font-size:12px">*</span></div>
@@ -606,7 +606,7 @@
                 To reserve the booking you need to pay the downpayment required.
             </div>
             <div align="center" class="text-h5">
-              CODE : {{ this.book.code }}
+              <!-- CODE : {{ this.book.code }} -->
             </div>
             <div class="red--text"></div>
             <v-col cols="12" class="px-0"> 
@@ -809,7 +809,7 @@ export default {
         });
     },
     validatePage2(){
-      if(this.service_type=='Room'){
+      if(this.service_type=='Room' || this.service_type=='Public Pool'){
         this.book.down = "50%"
       }
        if (this.book.price == null) {

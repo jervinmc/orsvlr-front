@@ -501,7 +501,7 @@
       <v-card  class="card-settings pa-10 px-2" elevation="10" >
         <div align="end">
               <v-col align-self="center" align="end" cols="1">
-              <JsonCSV
+              <JsonExcel
           class="btn btn-default"
           :data="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : bookReschedule "
           :name="new Date()"
@@ -515,12 +515,12 @@
             dark
             width="170"
           >
-            <span class="text-none">Download CSV</span>
+            <span class="text-none">Download Report</span>
           </v-btn>
-        </JsonCSV>
+        </JsonExcel>
           </v-col>
            <v-col align-self="center" align="end" cols="1" v-if="active_page==3">
-              <JsonCSV
+              <JsonExcel
           class="btn btn-default"
           :data="book.filter(data=>data.status=='confirmed')"
         >
@@ -535,7 +535,7 @@
           >
             <span class="text-none">Download Filtered Date</span>
           </v-btn>
-        </JsonCSV>
+        </JsonExcel>
           </v-col>
         </div>
       <v-row>
@@ -717,6 +717,7 @@ import BookingAdd from './BookingAdd.vue';
 import EventAdd from './EventAdd.vue';
 import Completed from './Completed.vue';
 import CheckIn from './CheckIn.vue';
+import JsonExcel from "vue-json-excel";
 export default {
   components: {
     ViewCustomerDetails,
@@ -725,6 +726,7 @@ export default {
     BookingAdd,
     EventAdd,
     JsonCSV,
+    JsonExcel,
     Completed,
     CheckIn
 

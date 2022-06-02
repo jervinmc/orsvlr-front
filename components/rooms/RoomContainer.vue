@@ -71,7 +71,7 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     route(id){
-        this.$router.push('/room_details/'+id)
+        window.location.href='/room_details/'+id
     },
     loadData() {
       this.roomsGetall();

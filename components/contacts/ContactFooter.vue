@@ -42,7 +42,7 @@
               Fullname
             </div>
             <div>
-              <v-text-field outlined v-model="touch.email" label="Fullname"></v-text-field>
+              <v-text-field outlined v-model="touch.fullname" label="Fullname"></v-text-field>
             </div>
              <div  align="start">
               Contact Number
@@ -56,6 +56,9 @@
             <div>
               <v-text-field outlined v-model="touch.email" label="Email Address"></v-text-field>
             </div>
+             <div>
+              <v-textarea outlined v-model="touch.message" label="Message"></v-textarea>
+            </div>
              <div  align="start">
               Verification Code
             </div>
@@ -64,12 +67,12 @@
            </div>
            <v-row>
              <v-col>
-               <v-btn @click="send_code">
+               <v-btn :loading="codeLoad" @click="send_code">
                  Send Code
                </v-btn>
              </v-col>
              <v-col>
-               <v-btn>Submit</v-btn>
+               <v-btn :loading="submitLoading" @click="send">Submit</v-btn>
              </v-col>
            </v-row>
              <!-- <v-row>
@@ -141,6 +144,32 @@ export default {
     this.generateCode()
   },
   methods: {
+  async send(){
+      if(this.touch.code!=this.otpVal){
+        alert('Wrong Code')
+        return
+      }
+        this.submitLoading = true
+         this.codeLoad=true
+       const res = this.$axios.post(`/getintouch/`,{
+         fullname:this.touch.fullname,
+         contact_number:this.touch.contact_number,
+         email:this.touch.email,
+         message:this.touch.message
+        },
+                {
+                  headers: {
+                    // Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                }
+              )
+              .then((res) => {
+                window.location.href="contacts"
+                alert('Successfully sent')
+                this.codeLoad=false
+                this.submitLoading = false
+              })
+    },
      generateCode(){
        this.otpVal = Math.random().toString(36).slice(2)
     },
@@ -222,7 +251,9 @@ export default {
   },
   data() {
     return {
+      codeLoad:false,
       otpVal:'',
+      submitLoading:false,
       touch:{},
       carousel1_holder:'',
       carousel2_holder:'',

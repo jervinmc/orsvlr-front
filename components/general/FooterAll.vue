@@ -2,7 +2,31 @@
   <div class="black--text" style="width: 100%">
     <v-dialog v-model="privacy" >
       <v-card class="pa-16">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean odio nulla, laoreet a orci nec, rhoncus sodales ipsum. Cras dignissim vitae elit quis suscipit. Sed suscipit dolor lectus, sit amet dapibus tellus aliquet eu. Nunc nec mi feugiat, ultrices dolor vitae, maximus turpis. Aenean varius diam massa, a condimentum erat tempus et. Fusce fermentum porttitor est et molestie. Aliquam consequat purus sed ligula auctor semper. Ut laoreet ex nulla, et rutrum leo dapibus vel. In hac habitasse platea dictumst. Etiam vehicula vitae massa vitae imperdiet. Morbi non ligula diam. In bibendum, ex in mattis vestibulum, tortor arcu blandit urna, vitae facilisis dui tellus nec arcu. Etiam in tellus urna.
+        <p>Villa Leonora Resorts and Venue respects your interest in us. We understand and respect your privacy as part of our partnership. This Privacy Statement (&quot;Privacy Statement&quot;) is meant to explain: How Villa Leonora Resorts and Venue collects, uses, processes, secures, and stores information. What kind(s) of information we collect. How you can edit and delete certain information and change preferences. This Privacy Statement does not apply to the company's practices outside this website, does not own or control, or to people that Villa Leonora Resorts and Venue does not employ or manage. This Privacy Statement may be updated without prior notice to reflect changes in our information practices or relevant laws. When we make changes, we will post them here. If we make material changes to this Privacy Statement, we will place a notice on our website or send a message to the e-mail address you provided to us. You may revisit this section of our website from time to time since, by doing so, you agree to accept any changes to our Privacy Statement. This Privacy Statement only addresses the use and sharing of information we gather from you on our website unless otherwise stated.</p>
+
+<p>How Do We Use the Information We Receive? Your information is the information that's required when you want to experience the special feature of the system, it is the information you choose to share. Villa Leonora Resorts and Venue uses the information we collect from you for the following purposes:</p>
+
+<p>To provide advertisements to you about our products and services on this website. To provide services to you. To contact or notify you if necessary. To develop new services and products. To satisfy your need and promote healthy eating. To provide you a mock-up plan as a guide to you. To comply with our objectives, policies and procedures.</p>
+
+<p>Data Integrity Villa Leonora Resorts and Venue uses personally identifiable information only for the purposes it was acquired and in line with the terms of this Privacy Statement. We periodically review our data collection, storage, and processing practices to ensure that we are only collecting, storing, and processing personally identifiable information necessary to provide or improve our website, services, and products, or as otherwise permitted by this Privacy Statement. Regardless of the preceding, we rely on you to keep your personally identifiable information up to date and correct it as needed.</p>
+
+<p>We Protect Personal Information We believe we have adequate administrative, technical, and physical safeguards in place to protect the personal information you provide on this website from unintentional, unlawful, or unauthorized destruction, loss, alteration, access, disclosure, or use, as well as other forms of illegal processing. While we take steps to protect your information using the above and other security measures, please keep in mind that no administrative, technical, or physical safeguards can guarantee that the personal information you provide on this website or data transmitted over the Internet or any other public network is entirely secure. The personal information you provide to Villa Leonora Resorts and Venue will not be sold or rented to anyone else. Villa Leonora Resorts and Venue will not sell or rent the personal information you provide to us online to any third party.</p>
+
+<p>Your Security Obligations It would help if you kept your password and computer safe from unauthorized access. When you've finished using a shared computer, please sign off. Do not include sensitive information in your emails because they are not guaranteed to be safe against interception. We don't ask for passwords in emails very often, and you should presume that it's a phishing attempt if you do. YOU MUST DO WHAT YOU CAN TO ENSURE THE SECURITY OF YOUR PERSONAL INFORMATION IN A REASONABLE MANNER.</p>
+
+<p>Public Forums When you contribute to a public area or feature, such as a chat room, bulletin board, list serve , wall, blog, wiki or other open forum that we may make available on through our website or an authorized third-party website, the information that you submit may be made available to the general public. We do not restrict the distribution of personal information that you voluntarily disclose in these public forums, and so that information can be collected and used by others. For this reason, we recommend that you do not submit any sensitive information, including your full name, home address, phone number, other information that would enable other users to locate you, or financial information on these areas. We cannot prevent such information from being used in a manner that may violate this Privacy Statement or applicable law.</p>
+
+<p>What Kind(s) of Information We Collect? TThe information that you provided us is voluntarily disclose when you choose to book for the site.</p>
+
+<p>Booking information When you sign up for Villa Leonora Resorts and Venue you are required to provide information such as your name, address, contact information, email address.</p>
+
+<p>Other information we receive about you We receive data when you reach us to our contact number or email us when you inquire, suggest, complain or other concern reaching us.</p>
+
+<p>Access and Correction We provide you with access to personal information we have retained about you and the ability to review, correct and update the information where it is inaccurate.</p>
+
+<p> Your Choices We offer you certain choices about how we communicate with you and what information. You may withdraw any consent you previously provided to us. You can choose not to receive marketing communications from us by clicking on the unsubscribe link in our marketing emails or contacting us as specified in the &quot;How to Contact Us&quot; section below. Please include your name, contact number and email address if you send us your request by email.</p>
+
+<p>How to Contact US If you have any questions or comments about this Privacy Statement please email us at villaleonora00@gmail.com, call us at 09171921876.</p>
          <v-col align="end">
               <v-btn color="grey" text @click="privacy = false">Back </v-btn>
             </v-col>
@@ -130,6 +154,21 @@
             would have been reasonably foreseeable that the Business would not
             have accepted the booking
           </div>
+        </div>
+         <div align="start" class="px-10 pt-10">
+          <b> 4. ADDITIONAL TERMS</b>
+        </div>
+        <div  class="pl-16 pt-5">
+      <br>
+              I. If a property of the resort is missing or damaged the customer will have to pay.<br>
+              II. If a customer exceeds the number of people in their package or pax the customer will pay the additional head. (the price Depends on the package)<br>
+              III. If there are 12 years old children in a group. There must be a guardian for the child at all times.<br>
+              IV. Running beside of the pools are strictly prohibited and it might cause an accident.<br>
+              V. If there are missing items of a customer the staff of the resort are not to blame.<br>
+              a. The reservation for service is 50% deposit and the other 50% are needed to be pay on the day of the reservation.<br>
+              VI. Customers have to pay their remaining balance of their reservation upon check-in. <br>
+              VII. Add-ons and other payment are paid upon check-out<br>
+          
         </div>
         <v-card-actions>
           <v-row align="center">

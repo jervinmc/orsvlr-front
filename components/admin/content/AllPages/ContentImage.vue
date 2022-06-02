@@ -311,6 +311,7 @@ export default {
                 form_data.append("address", this.settings.address);
                 form_data.append("history", this.settings.history);
                 form_data.append("email", this.settings.email);
+                form_data.append("contacts", this.settings.contacts);
                 form_data.append("history", this.settings.history);
            const response = await this.$axios
             .patch(`/settings/1/`, form_data, {

@@ -1,5 +1,9 @@
 <template>
   <v-app dark>
+    <title> Villa Leonora Resort and Venue </title>
+      <meta name ="description" content =" A resort where you can rest for a day or two">
+      <meta name = "keywords" content = "resort , venue , villa , leonora">
+      <meta name = "author" content="Halaman E. , Ugking J. , Leang J. , Lacambra K.">
     <v-dialog v-model="isOpenLogout" width="500" persistent>
     <v-card class="pa-10">
     <div align="center" class="text-h6">Logout User</div>

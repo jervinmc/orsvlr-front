@@ -113,7 +113,7 @@
           <div>Email: {{ email }}</div>
           <div>Reservation Type : {{ reservation_type }}</div>
           <div>Remaining Balance : {{ status=='To Pay' || status=='pending'  ? formatPrice(total_price)  : formatPrice(remaining_balance) }}</div>
-          <div>To Pay :  {{ status=='To Pay' || status=='pending'  ? formatPrice(total_price)  : formatPrice(to_pay) }}</div>
+          <div>To Pay :  {{  formatPrice(to_pay) }}</div>
           <div>Total Price : {{ formatPrice(total_price) }}</div>
           <v-row>
             <v-col cols="auto">
