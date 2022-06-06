@@ -350,12 +350,12 @@ export default {
     },
     async submit() {
          let form_data = new FormData();
-      if( this.total_price / parseInt(this.to_pay)==2){
-            form_data.append("to_pay", this.total_price/2);
-      }
-      else{
-        form_data.append("to_pay",0);
-      }
+      // if( this.total_price / parseInt(this.to_pay)==2){
+      //       form_data.append("to_pay", this.total_price/2);
+      // }
+      // else{
+      //   form_data.append("to_pay",0);
+      // }
       this.buttonLoad = true;
       try {
      

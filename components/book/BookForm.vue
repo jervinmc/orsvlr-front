@@ -351,6 +351,7 @@
                   </div>
                   <!-- end of pool private-->
                   <div v-else-if="book.pool_type == 'Public Pool'">
+             
                     <div align="center">Cottage</div>
                     <div>
                       <v-row
@@ -435,20 +436,17 @@
                       </div>
                     </v-col>
 
-                    <div class="red--text">Reminder</div>
+                  <div>Down Terms<span class="red--text" style="font-size:12px">*</span></div>
+                    <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select>
                     <div>
-                      To reserve the booking you need to pay 50%<br />
-                      of the said total prices
-                    </div>
-                    <v-divider></v-divider>
-                    <div class="text-h5">
-                      To be paid : Php
+                    To be paid : Php
                       {{
                         formatPrice(
-                          book.price * 0.5 == NaN ? 0 : book.price * 0.5
+                          priceToCompute * 0.5 == NaN ? 0 :   priceToCompute * (book.down=='50%'? 0.5 : 1)
                         )
                       }}
-                    </div>
+                    </div> 
+                    <v-divider></v-divider>
                   </div>
                 </div>
                 <div v-if="service_type == 'Room'" style="width: 100%">
@@ -515,15 +513,18 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                    <!-- <div>Down Terms<span class="red--text" style="font-size:12px">*</span></div>
-                    <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select> -->
-                     <!-- <div class="red--text">Reminder</div>
+                   <div>Down Terms<span class="red--text" style="font-size:12px">*</span></div>
+                    <v-select outlined :items="['100%','50%']" v-model="book.down"></v-select>
                     <div>
-                      To reserve the booking you need to pay 50%<br />
-                      of the said total prices
-                    </div> -->
+                    To be paid : Php
+                      {{
+                        formatPrice(
+                          priceToCompute * 0.5 == NaN ? 0 :   priceToCompute * (book.down=='50%'? 0.5 : 1)
+                        )
+                      }}
+                    </div> 
                     <v-divider></v-divider>
-                    <div class="text-h5">
+                    <!-- <div class="text-h5">
                       To be paid : Php
                       {{
                         formatPrice(
@@ -531,7 +532,7 @@
                         )
                       }}
                       
-                    </div>
+                    </div> -->
                 </div>
               </v-row>
             </div>
@@ -591,6 +592,7 @@
               Total Amount of 50% Downpayment: Php {{ formatPrice((priceToCompute-(priceToCompute - (priceToCompute*parseInt(percentage)/100)*.50))) }}
             </div> -->
             <v-divider></v-divider>
+            {{book.down}}
              <div class="green--text text-h5" align="center" v-if="this.book.pool_type=='Public Pool'">
             <b> Downpayment required: Php {{formatPrice((this.priceToCompute - (this.total_price_person * (this.percentage/100)))/ (this.book.down=='50%' ? 2 : 1)) }}</b>
             </div>
@@ -809,9 +811,9 @@ export default {
         });
     },
     validatePage2(){
-      if(this.service_type=='Room' || this.service_type=='Public Pool'){
-        this.book.down = "50%"
-      }
+      // if(this.service_type=='Room' || this.service_type=='Public Pool'){
+      //   this.book.down = "50%"
+      // }
        if (this.book.price == null) {
         this.isErrorEmail = true;
         return;
@@ -1038,7 +1040,7 @@ export default {
         let form_data = new FormData();
         form_data.append("package", this.book.package);
         form_data.append("price", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100))) : (this.priceToCompute - (this.priceToCompute * (this.percentage/100))));
-        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? (this.priceToCompute - (this.total_price_person * (this.percentage/100))/ (this.book.down=='50%' ? 2 : 1))  : (this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1));
+        form_data.append("to_pay", this.book.pool_type=='Public Pool' ? this.priceToCompute /(this.book.down=='50%' ? 2 : 1)  : (this.priceToCompute - (this.priceToCompute * (this.percentage/100)))/(this.book.down=='50%' ? 2 : 1));
         form_data.append("date_start", this.service_type =='Room' ? this.date_range[0] : this.date);
         form_data.append("date_end", this.service_type =='Room' ? this.date_range[1] : this.date);
         form_data.append("email", this.book.email);

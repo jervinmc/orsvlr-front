@@ -6,7 +6,10 @@
       @cancel="dialogCheckin = false"
       @save="save"
       @refresh="loadData"
-      :items="events"
+      :ad_label="ad_label"
+      :ad_price="ad_price"
+      :ad_quantity="ad_quantity"
+      :items="items"
     />
     <v-overlay :absolute="true" :value="fullscreenImage">
       <v-img :src="items.proofOfPayment" height="800" width="800">
@@ -33,6 +36,7 @@
                 <div>Contact : {{ items.contact_number }}</div>
                 <div>Email : {{ items.email }}</div>
                 <div>Total Price : {{ items.price }}</div>
+                <div>To Pay : {{ items.to_pay }}</div>
                 <div>
                   <!-- {{items}} -->
                   Remaining Balance :
@@ -265,7 +269,7 @@
               color="transparent"
               @click="checkedIn"
               :loading="buttonLoad"
-              v-if="items.status == 'confirmed'"
+              v-if="items.status == 'confirmed' &&  dateNow ==items.date_start"
             >
               Check In
             </v-btn>
@@ -323,13 +327,18 @@ export default {
   components: { CheckIn },
   props: ["isOpen", "items", "isAdd"],
   watch: {
-    items() {
+    items() { 
+      this.adOnsGetall();
       //   this.announcement=this.items
     },
   },
-  created() {},
+  created() {
+    this.originalDate()
+  },
   data() {
     return {
+      adsPend:[],
+      dateNow:'',
       amountReceived: 0,
       dialogCheckin: false,
       room_list: ["Standard", "Deluxe", "Suite"],
@@ -337,6 +346,9 @@ export default {
       fullscreenImage: false,
       buttonLoad: false,
       ads: [],
+      ad_price:[],
+      ad_label:[],
+      ad_quantity:[],
       ad_total: 0,
       img_holder: "image_placeholder.png",
       discount: [],
@@ -346,6 +358,32 @@ export default {
     };
   },
   methods: {
+   async adOnsGetall(){
+  res = await this.$axios.get(`/adpend-bookid/${this.items.id}/`)
+      .then((res)=>{
+        var results = []
+        var res = res.data
+        var total = 0
+        this.ad_label=[]
+        for(let key in res){
+            results.push(`${res[key].label} - ${res[key].price} (${res[key].quantity}x = ${parseInt(res[key].price*parseInt(res[key].quantity))} )`)
+            this.ad_label.push(res[key].label)
+            this.ad_total = this.ad_total + parseInt(res[key].price*parseInt(res[key].quantity))
+            this.ad_product = this.ad_product + parseInt(res[key].price*parseInt(res[key].quantity))
+            this.ad_price.push(res[key].price)
+            this.ad_quantity.push(res[key].quantity)
+      }  this.ads = results})
+    },
+    originalDate(){
+      var today = new Date();
+      var day = today.getDate() ;
+      if(day.toString().length==1){
+        day = 0+day.toString()
+      }
+      var date =
+        today.getFullYear() + "-0" + (today.getMonth() + 1) + "-" +day;
+      this.dateNow = date
+    },
        datediff(first, second) {
       return Math.round((moment(second) - moment(first)) / (1000 * 60 * 60 * 24));
     },
@@ -444,6 +482,7 @@ export default {
         today.getDate();
       var time = today.getHours() + ":" + today.getMinutes();
       var dateTime = date + " " + time;
+      this.dateNow = dateTime
 
       return dateTime;
     },

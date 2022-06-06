@@ -138,10 +138,37 @@
 
 <script>
 export default {
-  props: ["isOpen", "items", "isAdd"],
+  props: ["isOpen", "items", "isAdd","ad_label","ad_price","ad_quantity"],
   watch: {
-    items() {
-      //   this.announcement=this.items
+    ad_label() {
+     try {
+         for(let key in this.ad_label){
+         this.ads_label.push(this.ad_label[key])
+      }
+     } catch (error) {
+       
+     }
+     
+    },
+    ad_price() {
+     try {
+         for(let key in this.ad_price){
+         this.ads_price.push(this.ad_price[key])
+      }
+     } catch (error) {
+       
+     }
+     
+    },
+    ad_quantity() {
+     try {
+         for(let key in this.ad_quantity){
+         this.ads_quantity.push(this.ad_quantity[key])
+      }
+     } catch (error) {
+       
+     }
+     
     },
   },
   data() {
@@ -215,6 +242,7 @@ export default {
       this.discount_price.push("");
     },
     async addEvents() {
+
       this.buttonLoad = true;
       var ads = []
       var discount = []
@@ -225,6 +253,7 @@ export default {
       for(let key in this.ads_label){
             ads.push(`${this.ads_label[key]} - ${this.ads_price[key]} (${this.ads_quantity[key]}x = ${parseInt(this.ads_price[key]*parseInt(this.ads_quantity[key]))} )`)
             total = total + parseInt(this.ads_price[key]*parseInt(this.ads_quantity[key]))
+            this.$axios.post('/adpend/',{"price":this.ads_price[key],"label":this.ads_label[key],"quantity":this.ads_quantity[key],"book_id":this.items.id})
         }
          for(let key in this.discount_label){
             discount.push(`${this.discount_label[key]} - ${this.discount_price[key]}`)
