@@ -406,6 +406,36 @@
               </v-row>
             </v-col>
              <v-col
+              :class="active_page == 8 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 8"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-timer-sand-complete</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >CKI</b
+                >
+              </v-row>
+            </v-col>
+             <v-col
+              :class="active_page == 9 ? 'tab active pa-5' : 'tab pa-5'"
+              align="center"
+              @click="active_page = 9"
+            >
+              <v-row class="tab-contents justify-start ml-6">
+                <v-icon class="mr-2 action-icons"
+                  >mdi-timer-sand-complete</v-icon
+                ><b
+                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
+                  class="tab-name"
+                  >CKO</b
+                >
+              </v-row>
+            </v-col>
+             <v-col
               :class="active_page == 4 ? 'tab active pa-5' : 'tab pa-5'"
               align="center"
               @click="active_page = 4"
@@ -465,59 +495,32 @@
                 >
               </v-row>
             </v-col>
-             <v-col
-              :class="active_page == 8 ? 'tab active pa-5' : 'tab pa-5'"
-              align="center"
-              @click="active_page = 8"
-            >
-              <v-row class="tab-contents justify-start ml-6">
-                <v-icon class="mr-2 action-icons"
-                  >mdi-timer-sand-complete</v-icon
-                ><b
-                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
-                  class="tab-name"
-                  >CKI</b
-                >
-              </v-row>
-            </v-col>
-             <v-col
-              :class="active_page == 9 ? 'tab active pa-5' : 'tab pa-5'"
-              align="center"
-              @click="active_page = 9"
-            >
-              <v-row class="tab-contents justify-start ml-6">
-                <v-icon class="mr-2 action-icons"
-                  >mdi-timer-sand-complete</v-icon
-                ><b
-                  v-if="$vuetify.breakpoint.lg || $vuetify.breakpoint.xl"
-                  class="tab-name"
-                  >CKO</b
-                >
-              </v-row>
-            </v-col>
+            
           </v-row>
         </v-container>
     <div class="px-3 ">
       <v-card  class="card-settings pa-10 px-2" elevation="10" >
         <div align="end">
               <v-col align-self="center" align="end" cols="1">
-              <JsonExcel
+              <!-- <JsonExcel
           class="btn btn-default"
           :data="active_page==0 ? bookToPay : active_page==1 ? bookPending : active_page==2 ? bookCancellation : active_page==3 ? bookConfirmed : active_page==4 ? bookRejected : active_page==5 ? bookCancelled : active_page==6 ? bookCompleted : bookReschedule "
           :name="new Date()"
-        >
+        > -->
           <v-btn
             class="rnd-btn"
             rounded
             large
+            @click="downloadPdf"
             color="black"
+
             depressed
             dark
             width="170"
           >
             <span class="text-none">Download Report</span>
           </v-btn>
-        </JsonExcel>
+        <!-- </JsonExcel> -->
           </v-col>
            <v-col align-self="center" align="end" cols="1" v-if="active_page==3">
               <JsonExcel
@@ -708,6 +711,7 @@
 </template>
 
 <script>
+import jsPDF from 'jspdf'
 import JsonCSV from "vue-json-csv";
 import DialogActions from "./DialogActions.vue";
 import DialogDelete from './DialogDelete.vue';
@@ -787,12 +791,14 @@ export default {
     } 
   },
   created() {
+    this.originalDate()
     this.name = localStorage.getItem('name')
   this.account_type = localStorage.getItem('account_type')
   this.loadData();
   },
   data() {
     return {
+      dateNow:'',
       deleteConfirmationBulk:false,
       isOpenSetArchived:false,
       itemContainer:[],
@@ -852,6 +858,80 @@ export default {
     };
   },
   methods: {
+     originalDate(){
+      var today = new Date();
+      var day = today.getDate() ;
+      if(day.toString().length==1){
+        day = 0+day.toString()
+      }
+      var date =
+        today.getFullYear() + "-0" + (today.getMonth() + 1) + "-" +day;
+      this.dateNow = date
+    },
+        downloadPdf(){
+
+       const pdf = new jsPDF({orientation: 'landscape',});
+    var listIitem=[]
+    for(let key in this.headers){
+      if(this.headers[key].value!='opt' && this.headers[key].value!='status' && this.headers[key].value!='transaction_date'){
+         listIitem.push(this.headers[key].value)
+      }
+     
+    }
+    var data = []
+    if(this.active_page==0){
+      data = this.bookToPay
+    }
+      if(this.active_page==1){
+      data = this.bookPending
+    }
+      if(this.active_page==2){
+      data = this.bookCancellation
+    }
+      if(this.active_page==3){
+      data = this.bookConfirmed
+    }
+      if(this.active_page==4){
+      data = this.bookRejected
+    }
+      if(this.active_page==5){
+      data = this.bookCancelled
+    }
+      if(this.active_page==6){
+      data = this.bookCompleted
+    }
+       if(this.active_page==7){
+      data = this.bookReschedule
+    }
+        if(this.active_page==8){
+      data = this.bookCheckedIn
+      data = this.bookCheckedIn.filter(data=>data.date_start==this.dateNow)
+    }
+        if(this.active_page==9){
+      data = this.bookCheckedOut
+       data = this.bookCheckedIn.filter(data=>data.date_start==this.dateNow)
+    }
+    
+   let header = listIitem;
+      let headerConfig = header.map(key=>({ 'name': key,
+      'prompt': key,
+      'width':41,
+      'align':'center',
+      'padding':0}));
+      pdf.table(0, 30, data, headerConfig);
+      if(this.active_page==8){
+        pdf.text(0, 10, `Villa Leonora Report and Venue: Check in Report for Date ${this.dateNow}`)
+      }
+      else if(this.active_page==9){
+        pdf.text(0, 10, `Villa Leonora Report and Venue: Check Out Report for Date ${this.dateNow}`)
+      }
+      else{
+        pdf.text(0, 10, `Villa Leonora Report and Venue Report`)
+      }
+
+      pdf.text(0, 20, `Prepared by: Villa Leonora Resort and Venue`)
+      pdf.save("pdf.pdf");
+    },
       async bulkDelete(){
      this.buttonLoad=true
       this.$axios.post(`/bulk-delete-book/`,{items:this.checkedItems},{

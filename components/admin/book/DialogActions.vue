@@ -42,6 +42,21 @@ export default {
   },
   methods: {
          async confirm() {
+           
+          if(this.book.price-this.book.to_pay==0){
+              const res = await this.$axios
+        .patch(
+          `/book/${this.book.id}/`,
+          {
+            to_pay: 0,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+          }
       this.buttonLoad = true;
       const res = await this.$axios
         .post(

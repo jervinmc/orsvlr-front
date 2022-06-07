@@ -403,31 +403,7 @@ export default {
     doc.text(`Other : ${this.items.ad_other}`, 10, 60);
     doc.text(`Add Ons : ${this.items.ad_ons}`, 10, 65);
     doc.text(`Total Paid : ${this.items.total_paid}`, 10, 70);
-        //  <div style="padding-left:20px">
-        //    <div  style="padding:0px;width:100px;font-size:5px">Contact : {{items.contact_number}} </div>
-        //   <div style="padding:0px;width:100px;font-size:5px">Email : {{items.email}} </div>
-        //  <div style="padding:0px;width:100px;font-size:5px">Accommodation Type : {{items.service_type}} </div>
-        //   <div style="padding:0px;width:100px;font-size:5px">Package Type : {{items.package}} </div>
-        //    <div style="padding:0px;width:100px;font-size:5px">Date of Schedule : {{items.date_start}} </div>
-        //    <div style="padding-top:10px">
-             
-        //    </div>
-        //    <div style="padding:0px;width:100px;font-size:5px">Discount : {{items.ad_discount}} </div>
-        //    <div style="padding:0px;width:100px;font-size:5px">Other : {{items.ad_other}} </div>
-        //    <div style="padding:0px;width:100px;font-size:5px">Add Ons : {{items.ad_ons}} </div>
-        //     <div style="padding:0px;width:100px;font-size:5px">Total Paid : {{items.total_paid}} </div>
-        //  </div>
     doc.save(pdfName + '.pdf');
-  //      const doc = new jspdf()
-  //     const html = this.$refs.content.innerHTML
-  //    doc.html(html, {
-  //  callback: function (doc) {
-    
-  //    doc.save("out.pdf");
-  //       }
-  //     });
- 
-    
     },
     async checkedOut() {
       // if(this.amountReceived!=this.items.to_pay){

@@ -50,11 +50,7 @@
         </v-btn>
       </v-col>
       <v-col align-self="center" align="end" class="pr-12">
-        <JsonExcel
-          class="btn btn-default"
-          :data="bookCompleted"
-          :name="new Date()"
-        >
+     
           <v-btn
             class="rnd-btn"
             rounded
@@ -62,11 +58,12 @@
             color="black"
             depressed
             dark
+            @click="downloadPdf"
             width="170"
           >
             <span class="text-none">Download Report</span>
           </v-btn>
-        </JsonExcel>
+
       </v-col>
     </v-row>
     <v-data-table
@@ -95,6 +92,7 @@
 </template>
 
 <script>
+import jsPDF from 'jspdf'
 import JsonCSV from "vue-json-csv";
 import JsonExcel from "vue-json-excel";
 import moment from 'moment';
@@ -153,6 +151,30 @@ export default {
   },
 
   methods: {
+     downloadPdf(){
+
+       const pdf = new jsPDF({orientation: 'landscape',});
+    var listIitem=[]
+    for(let key in this.headers){
+      if(this.headers[key].value!='opt' && this.headers[key].value!='status' && this.headers[key].value!='transaction_date'){
+         listIitem.push(this.headers[key].value)
+      }
+     
+    }
+    var data = []
+
+    
+   let header = listIitem;
+      let headerConfig = header.map(key=>({ 'name': key,
+      'prompt': key,
+      'width':41,
+      'align':'center',
+      'padding':0}));
+      pdf.table(0, 30, this.bookCompleted, headerConfig);
+      pdf.text(0, 10, `Villa Leonora Report and Venue: Revenue Report`)
+      pdf.text(0, 20, `Prepared by: Villa Leonora Resort and Venue`)
+      pdf.save("pdf.pdf");
+    },
     formatPrice(value) {
       let val = (value / 1).toFixed(2).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
