@@ -282,11 +282,11 @@
               Check Out
             </v-btn>
           </v-col>
-          <v-col v-if="items.status=='completed'">
+          <v-col v-if="items.status=='completed' || items.status=='Checked Out'">
              <v-btn
               color="success"
               text
-              @click="downloadPdf"
+              @click="receiptPdf"
               :loading="buttonLoad"
             >
               Print
@@ -358,6 +358,34 @@ export default {
     };
   },
   methods: {
+      receiptPdf(){
+      console.log(this.items)
+      const pdf = new jsPDF({orientation: 'landscape',});
+      let header = ['firstname','lastname','code','email','service_type','date_start','date_end','price'];
+      let headerConfig = header.map(key=>({ 'name': key,
+      'prompt': key,
+      'width':41,
+      'align':'center',
+      'padding':0}));
+      let header1 = ['ad_ons'];
+      pdf.table(0, 30, [this.items], headerConfig);
+      let headerConfig2 = header1.map(key=>({ 'name': key,
+      'prompt': key,
+      'width':328,
+      'align':'center',
+      'padding':0}));
+      pdf.table(0, 78, [this.items], headerConfig2);
+      pdf.text(0, 10, `Villa Leonora Report and Venue: Receipt`)
+      pdf.text(0, 20, `Prepared by: Villa Leonora Resort and Venue`)
+      pdf.text(0, 140, `If you have any query about this invoice, please contact us at:`)
+      pdf.text(0, 145, `Lenora Fernando`)
+      pdf.text(0, 150, `Villaleonor00@gmail.com`)
+      pdf.text(0, 155, `09350885817`)   
+      pdf.text(0, 125, `Total Price: Php ${this.items.total_paid}`)
+      pdf.text(100, 125, `___________________________`)
+      pdf.text(75, 125, `Signature`)
+      pdf.save("pdf.pdf");
+    },
    async adOnsGetall(){
   res = await this.$axios.get(`/adpend-bookid/${this.items.id}/`)
       .then((res)=>{

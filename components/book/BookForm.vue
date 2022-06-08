@@ -980,8 +980,8 @@ export default {
     },
     validatePage1() {
       if(this.otpVal!=this.book.code_verification){
-        alert("Verification Doesn't")
-        return
+        // alert("Verification Doesn't")
+        // return
       }
       if (this.book.email == null || this.book.email == '') {
         this.isErrorEmail = true;

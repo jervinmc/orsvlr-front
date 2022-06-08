@@ -932,6 +932,7 @@ export default {
       pdf.text(0, 20, `Prepared by: Villa Leonora Resort and Venue`)
       pdf.save("pdf.pdf");
     },
+    
       async bulkDelete(){
      this.buttonLoad=true
       this.$axios.post(`/bulk-delete-book/`,{items:this.checkedItems},{

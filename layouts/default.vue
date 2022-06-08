@@ -196,6 +196,11 @@ export default {
           to: "/admin/archived",
         },
         {
+          icon: "mdi-image",
+          title: "Checked In",
+          to: "/admin/checkin",
+        },
+        {
           icon: "mdi-account-multiple",
           title: "User Management",
           to: "/admin/usermanagement",
